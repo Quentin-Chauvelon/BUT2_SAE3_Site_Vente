@@ -1,5 +1,6 @@
 # equipe1-3
-
+IP: 172.26.82.56
+Pass: c8PFN69nv7mV
 
 
 ## Getting started

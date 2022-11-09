@@ -22,11 +22,13 @@ CREATE TABLE Coupon(
 
 CREATE TABLE Commande(
     id_commande INT PRIMARY KEY,
-    id_client INT NOT NULL FOREIGN KEY REFERENCES Client(id_client),
+    id_client INT NOT NULL,
     date_commande DATE NOT NULL,
     date_livraison_estimee DATE NOT NULL,
     date_livraison DATE,
-    id_coupon VARCHAR(20) FOREIGN KEY REFERENCES Coupon(code)
+    id_coupon VARCHAR(20),
+    CONSTRAINT fk_commande_coupon FOREIGN KEY(id_coupon) REFERENCES Coupon(code),
+    CONSTRAINT fk_commande_client FOREIGN KEY(id_client) REFERENCES Client(id_client),
     CONSTRAINT livraison_estimee_apres_commande CHECK(date_livraison_estimee > date_commande),
     CONSTRAINT livraison_apres_commande CHECK(date_livraison IS NULL OR date_livraison > date_commande)
 );
@@ -40,13 +42,14 @@ CREATE TABLE Collection (
 
 CREATE TABLE Produit(
     id_produit INT PRIMARY KEY,
-    id_collection INT FOREIGN KEY REFERENCES Collection(id_collection),
+    id_collection INT,
     nom VARCHAR(100) UNIQUE NOT NULL,
     prix INT NOT NULL, -- prix en centimes
     reduction INT NOT NULL DEFAULT 0, -- une réduction en centimes, pourcentage calculé dans le php
     description VARCHAR(500) NOT NULL DEFAULT '',
     categorie VARCHAR(50),
-    CONSTRAINT check_prix_positif CHECK(prix >= 0)
+    CONSTRAINT fk_produit_collection FOREIGN KEY(id_collection) REFERENCES Collection(id_collection),
+    CONSTRAINT check_prix_positif CHECK(prix >= 0),
     CONSTRAINT check_reduction_positive CHECK(reduction >= 0),
     CONSTRAINT check_prix_superieur_reduction CHECK(reduction <= prix),
 );
@@ -62,18 +65,22 @@ CREATE VIEW Tshirt AS SELECT * FROM Produit WHERE categorie = "tshirt";
 
 CREATE TABLE Exemplaire(
     id_exemplaire INT PRIMARY KEY,
-    id_produit INT NOT NULL FOREIGN KEY REFERENCES Produit(id_produit),
-    id_commande INT FOREIGN KEY REFERENCES Commande(id_commande), -- TODO trigger pour vérifier si la date d'obtention correspond à la date de commande
+    id_produit INT NOT NULL,
+    id_commande INT, -- TODO trigger pour vérifier si la date d'obtention correspond à la date de commande
     date_obtention DATE NOT NULL,
     est_disponible BOOLEAN NOT NULL DEFAULT true,
     taille VARCHAR(50) NOT NULL,
+    CONSTRAINT fk_exemplaire_produit FOREIGN KEY(id_produit) REFERENCES Produit(id_produit),
+    CONSTRAINT fk_exemplaire_commande FOREIGN KEY(id_commande) REFERENCES Commande(id_commande)
     CONSTRAINT dispo_pas_commande CHECK(id_commande IS NULL OR est_disponible = false) -- empêche l'article d'être dispo alors qu'il est commandé
 );
 
 CREATE VIEW ExemplaireDispo AS SELECT * FROM Exemplaire WHERE est_disponible = true;
 
 CREATE TABLE Favori(
-    id_client INT NOT NULL FOREIGN KEY REFERENCES Client(id_client),
-    id_produit INT NOT NULL FOREIGN KEY REFERENCES Produit(id_produit),
+    id_client INT NOT NULL,
+    id_produit INT NOT NULL ,
+    CONSTRAINT fk_favori_client FOREIGN KEY(id_client) REFERENCES Client(id_client),
+    CONSTRAINT fk_favori_produit FOREIGN KEY(id_produit) REFERENCES Produit(id_produit),
     PRIMARY KEY(id_client, id_produit)
 );

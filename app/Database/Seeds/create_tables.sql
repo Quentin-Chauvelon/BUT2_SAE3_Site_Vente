@@ -45,6 +45,7 @@ CREATE TABLE Produit(
     prix INT NOT NULL, -- prix en centimes
     reduction INT NOT NULL DEFAULT 0, -- une réduction en centimes, pourcentage calculé dans le php
     description VARCHAR(500) NOT NULL DEFAULT '',
+    categorie VARCHAR(50),
     CONSTRAINT check_prix_positif CHECK(prix >= 0)
     CONSTRAINT check_reduction_positive CHECK(reduction >= 0),
     CONSTRAINT check_prix_superieur_reduction CHECK(reduction <= prix),
@@ -52,12 +53,20 @@ CREATE TABLE Produit(
 
 CREATE VIEW ProduitReduction AS SELECT * FROM Produit WHERE reduction > 0;
 
+CREATE VIEW Poster AS SELECT * FROM Produit WHERE categorie = "poster";
+CREATE VIEW Accessoire AS SELECT * FROM Produit WHERE categorie = "accessoire";
+CREATE VIEW Vetement AS SELECT * FROM Produit WHERE categorie in ("pantalon", "sweat", "tshirt");
+CREATE VIEW Pantalon AS SELECT * FROM Produit WHERE categorie = "pantalon";
+CREATE VIEW Sweat AS SELECT * FROM Produit WHERE categorie = "sweat";
+CREATE VIEW Tshirt AS SELECT * FROM Produit WHERE categorie = "tshirt";
+
 CREATE TABLE Exemplaire(
     id_exemplaire INT PRIMARY KEY,
     id_produit INT NOT NULL FOREIGN KEY REFERENCES Produit(id_produit),
     id_commande INT FOREIGN KEY REFERENCES Commande(id_commande), -- TODO trigger pour vérifier si la date d'obtention correspond à la date de commande
     date_obtention DATE NOT NULL,
-    est_disponible BOOLEAN NOT NULL DEFAULT true
+    est_disponible BOOLEAN NOT NULL DEFAULT true,
+    taille VARCHAR(50) NOT NULL,
     CONSTRAINT dispo_pas_commande CHECK(id_commande IS NULL OR est_disponible = false) -- empêche l'article d'être dispo alors qu'il est commandé
 );
 

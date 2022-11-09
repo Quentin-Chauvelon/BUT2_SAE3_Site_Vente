@@ -23,8 +23,8 @@ TABLE
         code VARCHAR(20) PRIMARY KEY,
         nom VARCHAR(50) NOT NULL,
         montant INT NOT NULL CHECK(montant > 0),
-        est_pourcentage BOOLEAN,
-        est_valable BOOLEAN,
+        est_pourcentage BOOLEAN NOT NULL,
+        est_valable BOOLEAN NOT NULL,
         date_limite DATE,
         utilisations_max INT,
         CONSTRAINT pourcentage_valable CHECK(
@@ -32,6 +32,9 @@ TABLE
             OR montant <= 100
         )
     );
+
+CREATE OR REPLACE VIEW CouponValable AS
+SELECT * FROM Coupon WHERE est_valable = true;
 
 CREATE
 OR
@@ -65,6 +68,7 @@ REPLACE
 TABLE
     Collection (
         id_collection INT PRIMARY KEY,
+        nom VARCHAR(50) NOT NULL,
         parution DATE NOT NULL,
         date_limite DATE,
         CONSTRAINT fin_apres_parution CHECK(
@@ -87,6 +91,7 @@ TABLE
         -- une réduction en centimes, pourcentage calculé dans le php
         description VARCHAR(500) NOT NULL DEFAULT '',
         categorie VARCHAR(50),
+        parution DATE NOT NULL,
         CONSTRAINT fk_produit_collection FOREIGN KEY(id_collection) REFERENCES Collection(id_collection),
         CONSTRAINT check_prix_positif CHECK(prix >= 0),
         CONSTRAINT check_reduction_positive CHECK(reduction >= 0),
@@ -135,6 +140,7 @@ TABLE
         date_obtention DATE NOT NULL,
         est_disponible BOOLEAN NOT NULL DEFAULT true,
         taille VARCHAR(50) NOT NULL,
+        couleur VARCHAR(20),
         CONSTRAINT fk_exemplaire_produit FOREIGN KEY(id_produit) REFERENCES Produit(id_produit),
         CONSTRAINT fk_exemplaire_commande FOREIGN KEY(id_commande) REFERENCES Commande(id_commande),
         CONSTRAINT dispo_pas_commande CHECK(

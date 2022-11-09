@@ -12,11 +12,11 @@ TABLE
         est_fidele BOOLEAN NOT NULL DEFAULT false -- TODO ajouter avec un trigger
     );
 
-CREATE OR REPLACE VIEW ADMIN AS
+CREATE OR REPLACE VIEW Admin AS
 	SELECT * FROM Client WHERE est_admin =
 TRUE;
 
-CREATE OR REPLACE VIEW FIDELE AS
+CREATE OR REPLACE VIEW Fidele AS
 	SELECT * FROM Client WHERE est_fidele =
 TRUE;
 
@@ -89,43 +89,36 @@ TABLE
         CONSTRAINT fk_produit_collection FOREIGN KEY(id_collection) REFERENCES Collection(id_collection),
         CONSTRAINT check_prix_positif CHECK(prix >= 0),
         CONSTRAINT check_reduction_positive CHECK(reduction >= 0),
-        CONSTRAINT check_prix_superieur_reduction CHECK(reduction <= prix),
+        CONSTRAINT check_prix_superieur_reduction CHECK(reduction <= prix)
     );
 
-CREATE OR REPLACE VIEW PRODUITREDUCTION AS
+CREATE OR REPLACE VIEW ProduitReduction AS
 	SELECT * FROM Produit WHERE reduction >
 0;
 
-CREATE OR REPLACE VIEW POSTER AS
+CREATE OR REPLACE VIEW Poster AS
 	SELECT * FROM Produit WHERE categorie =
 "POSTER";
 
-CREATE OR REPLACE VIEW ACCESSOIRE AS
+CREATE OR REPLACE VIEW Accessoire AS
 	SELECT * FROM Produit WHERE categorie =
 "ACCESSOIRE";
 
-CREATE OR REPLACE VIEW VETEMENT AS
+CREATE OR REPLACE VIEW Vetement AS
 	SELECT *
 	FROM Produit
 	WHERE
 	    categorie in ("pantalon", "sweat", "tshirt");
-;
 
-;
-
-;
-
-;
-
-CREATE OR REPLACE VIEW PANTALON AS
+CREATE OR REPLACE VIEW Pantalon AS
 	SELECT * FROM Produit WHERE categorie =
 "PANTALON";
 
-CREATE OR REPLACE VIEW SWEAT AS
+CREATE OR REPLACE VIEW Sweat AS
 	SELECT * FROM Produit WHERE categorie =
 "SWEAT";
 
-CREATE OR REPLACE VIEW TSHIRT AS
+CREATE OR REPLACE VIEW Tshirt AS
 	SELECT * FROM Produit WHERE categorie =
 "TSHIRT";
 
@@ -142,13 +135,14 @@ TABLE
         est_disponible BOOLEAN NOT NULL DEFAULT true,
         taille VARCHAR(50) NOT NULL,
         CONSTRAINT fk_exemplaire_produit FOREIGN KEY(id_produit) REFERENCES Produit(id_produit),
-        CONSTRAINT fk_exemplaire_commande FOREIGN KEY(id_commande) REFERENCES Commande(id_commande) CONSTRAINT dispo_pas_commande CHECK(
+        CONSTRAINT fk_exemplaire_commande FOREIGN KEY(id_commande) REFERENCES Commande(id_commande),
+        CONSTRAINT dispo_pas_commande CHECK(
             id_commande IS NULL
             OR est_disponible = false
         ) -- empêche l'article d'être dispo alors qu'il est commandé
     );
 
-CREATE OR REPLACE VIEW EXEMPLAIREDISPO AS
+CREATE OR REPLACE VIEW ExemplaireDispo AS
 	SELECT * FROM Exemplaire WHERE est_disponible =
 TRUE;
 

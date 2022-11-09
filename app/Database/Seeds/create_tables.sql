@@ -8,16 +8,11 @@ TABLE
         nom VARCHAR(255) NOT NULL,
         prenom VARCHAR(64) NOT NULL,
         password VARCHAR(64) NOT NULL,
-        est_admin BOOLEAN NOT NULL DEFAULT false,
-        est_fidele BOOLEAN NOT NULL DEFAULT false -- TODO ajouter avec un trigger
+        est_admin BOOLEAN NOT NULL DEFAULT false
     );
 
 CREATE OR REPLACE VIEW Admin AS
 	SELECT * FROM Client WHERE est_admin =
-TRUE;
-
-CREATE OR REPLACE VIEW Fidele AS
-	SELECT * FROM Client WHERE est_fidele =
 TRUE;
 
 CREATE
@@ -30,6 +25,8 @@ TABLE
         montant INT NOT NULL CHECK(montant > 0),
         est_pourcentage BOOLEAN,
         est_valable BOOLEAN,
+        date_limite DATE,
+        utilisations_max INT,
         CONSTRAINT pourcentage_valable CHECK(
             NOT est_pourcentage
             OR montant <= 100
@@ -57,6 +54,10 @@ TABLE
             OR date_livraison > date_commande
         )
     );
+
+CREATE OR REPLACE VIEW Fidele AS
+	SELECT * FROM Client c WHERE 3 <=
+    (SELECT COUNT(*) FROM Commande co WHERE co.id_client = c.id_client);
 
 CREATE
 OR

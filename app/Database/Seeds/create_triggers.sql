@@ -3,7 +3,7 @@
 -- COUPON EXPIRÉ
 CREATE TRIGGER coupon_trop_utilise_insert
 BEFORE INSERT ON Commande FOR EACH ROW BEGIN
-DECLARE use_max INT
+DECLARE use_max INT;
 DECLARE comm INT;
 IF new.id_coupon IS NOT NULL THEN
 	SELECT MAX(utilisations_max) INTO use_max FROM Coupon WHERE code = NEW.id_coupon;

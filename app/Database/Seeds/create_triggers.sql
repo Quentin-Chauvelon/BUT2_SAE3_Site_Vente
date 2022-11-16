@@ -5,7 +5,7 @@
 CREATE OR REPLACE TRIGGER coupon_trop_utilise_insert
 BEFORE INSERT ON Commande FOR EACH ROW BEGIN
 	IF NEW.id_coupon IS NOT NULL AND
-		SELECT(MAX(c.utilisations_max) FROM Coupon c WHERE c.id_coupon = NEW.id_coupon) <=
+		(SELECT MAX(c.utilisations_max) FROM Coupon c WHERE c.id_coupon = NEW.id_coupon) <=
 		(SELECT COUNT(*) FROM Commande c WHERE c.id_coupon = NEW.id_coupon)
 		THEN
 			SIGNAL SQLSTATE '45000' SET message_text = 'Ce coupon de réduction a été trop souvent utilisé.';

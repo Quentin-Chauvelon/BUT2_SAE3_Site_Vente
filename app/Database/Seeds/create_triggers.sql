@@ -3,10 +3,14 @@
 -- COUPON EXPIRÉ
 CREATE TRIGGER coupon_trop_utilise_insert
 BEFORE INSERT ON Commande FOR EACH ROW BEGIN
-IF new.id_coupon IS NOT NULL AND
-(SELECT MAX(utilisations_max) FROM Coupon WHERE code = NEW.id_coupon) <=
-(SELECT COUNT(*) FROM Commande WHERE id_coupon = NEW.id_coupon) THEN
+DECLARE use_max INT
+DECLARE comm INT;
+IF new.id_coupon IS NOT NULL THEN
+	SELECT MAX(utilisations_max) INTO use_max FROM Coupon WHERE code = NEW.id_coupon;
+	SELECT COUNT(*) INTO comm FROM Commande WHERE id_coupon = NEW.id_coupon;
+	IF use_max <= comm THEN
 	SIGNAL SQLSTATE '45000' SET message_text = 'Ce coupon de réduction a été trop souvent utilisé.';
+END IF;
 END IF;
 END;
 /* CREATE TRIGGER coupon_trop_utilise_insert

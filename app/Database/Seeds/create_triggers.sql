@@ -1,6 +1,13 @@
 -- COUPON TROP UTILISÉ
-
+-- COUPON NON VALABLE
 -- COUPON EXPIRÉ
+DROP TRIGGER IF EXISTS coupon_trop_utilise_insert;
+DROP TRIGGER IF EXISTS coupon_trop_utilise_update;
+DROP TRIGGER IF EXISTS coupon_expire_insert;
+DROP TRIGGER IF EXISTS coupon_expire_update;
+DROP TRIGGER IF EXISTS coupon_non_valable_insert;
+DROP TRIGGER IF EXISTS coupon_non_valable_update;
+
 CREATE TRIGGER coupon_trop_utilise_insert
 BEFORE INSERT ON Commande FOR EACH ROW BEGIN
 DECLARE use_max INT;
@@ -13,56 +20,44 @@ IF new.id_coupon IS NOT NULL THEN
 END IF;
 END IF;
 END;
-/* CREATE TRIGGER coupon_trop_utilise_insert
-BEFORE INSERT ON Commande FOR EACH ROW BEGIN
-	IF NEW.id_coupon IS NOT NULL AND (SELECT MAX(c.utilisations_max) FROM Coupon c WHERE c.code = NEW.id_coupon) <= (SELECT COUNT(*) FROM Commande c WHERE c.id_coupon = NEW.id_coupon)
-	THEN
-		SIGNAL SQLSTATE '45000' SET message_text = 'Ce coupon de réduction a été trop souvent utilisé.';
-	END IF;
-END;
 
 CREATE OR REPLACE TRIGGER coupon_trop_utilise_update
 BEFORE UPDATE ON Commande FOR EACH ROW BEGIN
-	IF NEW.id_coupon IS NOT NULL AND
-		SELECT(MAX(c.utilisations_max) FROM Coupon c WHERE c.id_coupon = NEW.id_coupon) <=
-		(SELECT COUNT(*) FROM Commande c WHERE c.id_coupon = NEW.id_coupon)
-		THEN
-			SIGNAL SQLSTATE '45000' SET message_text = 'Ce coupon de réduction a été trop souvent utilisé.';
-	END IF;
-END; */
-
-/* CREATE OR REPLACE TRIGGER coupon_expire_insert
-BEFORE INSERT ON Commande FOR EACH ROW
-DECLARE DATE_COUPON DATE;
-BEGIN
-	IF NEW.id_coupon IS NOT NULL THEN
-	SELECT
-	    date_limite INTO date_coupon
-	FROM Coupon c
-	WHERE
-	    c.id_coupon = NEW.id_coupon;
-	IF EXISTS(date_limite)
-	AND date_limite IS NOT NULL
-	AND date_limite < NEW.date_Commande THEN SIGNAL SQLSTATE '45000'
-	SET
-	    message_text = 'Ce coupon de réduction a été trop souvent utilisé.';
-	END IF;
-	END IF;
+DECLARE use_max INT;
+DECLARE comm INT;
+IF new.id_coupon IS NOT NULL THEN
+	SELECT MAX(utilisations_max) INTO use_max FROM Coupon WHERE code = NEW.id_coupon;
+	SELECT COUNT(*) INTO comm FROM Commande WHERE id_coupon = NEW.id_coupon;
+	IF use_max <= comm THEN
+	SIGNAL SQLSTATE '45000' SET message_text = 'Ce coupon de réduction a été trop souvent utilisé.';
+END IF;
+END IF;
 END;
 
-CREATE OR REPLACE TRIGGER COUPON_EXPIRE_UPDATE BEFORE
-UPDATE ON Commande DECLARE DATE_COUPON DATE; BEGIN
-	IF NEW.id_coupon IS NOT NULL THEN
-	SELECT
-	    date_limite INTO date_coupon
-	FROM Coupon c
-	WHERE
-	    c.id_coupon = NEW.id_coupon;
-	IF EXISTS(date_limite)
-	AND date_limite IS NOT NULL
-	AND date_limite < NEW.date_Commande THEN SIGNAL SQLSTATE '45000'
-	SET
-	    message_text = 'Ce coupon de réduction a été trop souvent utilisé.';
-	END IF;
-	END IF;
-END; */
+CREATE OR REPLACE TRIGGER coupon_expire_insert
+BEFORE INSERT ON Commande FOR EACH ROW BEGIN
+IF NEW.id_coupon IN (SELECT code FROM Coupon WHERE date_limite IS NOT NULL AND date_limite < NEW.date_commande) THEN
+    SIGNAL SQLSTATE '45000' SET message_text = 'Ce coupon de réduction a expiré.';
+END IF;
+END;
+
+CREATE OR REPLACE TRIGGER coupon_expire_update BEFORE
+UPDATE ON Commande FOR EACH ROW BEGIN
+IF NEW.id_coupon IN (SELECT code FROM Coupon WHERE date_limite IS NOT NULL AND date_limite < NEW.date_commande) THEN
+    SIGNAL SQLSTATE '45000' SET message_text = 'Ce coupon de réduction a expiré.';
+END IF;
+END;
+
+CREATE OR REPLACE TRIGGER coupon_non_valable_insert BEFORE
+INSERT ON Commande FOR EACH ROW BEGIN
+IF NEW.id_coupon IN (SELECT code FROM Coupon WHERE est_valable = false) THEN
+    SIGNAL SQLSTATE '45000' SET message_text = 'Ce coupon de réduction n\'est pas valable.';
+END IF;
+END;
+
+CREATE OR REPLACE TRIGGER coupon_non_valable_update BEFORE
+UPDATE ON Commande FOR EACH ROW BEGIN
+IF NEW.id_coupon IN (SELECT code FROM Coupon WHERE est_valable = false) THEN
+    SIGNAL SQLSTATE '45000' SET message_text = 'Ce coupon de réduction n\'est pas valable.';
+END IF;
+END;

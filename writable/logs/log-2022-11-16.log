@@ -1,0 +1,22 @@
+CRITICAL - 2022-11-16 14:03:54 --> The framework needs the following extension(s) installed and loaded: curl, intl, mbstring, xml.
+in SYSTEMPATH/CodeIgniter.php on line 219.
+ 1 SYSTEMPATH/CodeIgniter.php(219): CodeIgniter\Exceptions\FrameworkException::forMissingExtension()
+ 2 SYSTEMPATH/CodeIgniter.php(177): CodeIgniter\CodeIgniter->resolvePlatformExtensions()
+ 3 ROOTPATH/spark(83): CodeIgniter\CodeIgniter->initialize()
+CRITICAL - 2022-11-16 14:03:54 --> Uncaught Error: Call to undefined function CodeIgniter\CLI\mb_strpos() in /var/www/html/equipe1-3/system/CLI/CLI.php:776
+Stack trace:
+#0 /var/www/html/equipe1-3/system/CLI/CLI.php(161): CodeIgniter\CLI\CLI::parseCommandLine()
+#1 /var/www/html/equipe1-3/system/CLI/CLI.php(1018): CodeIgniter\CLI\CLI::init()
+#2 /var/www/html/equipe1-3/system/Autoloader/Autoloader.php(282): include_once('...')
+#3 /var/www/html/equipe1-3/system/Autoloader/Autoloader.php(259): CodeIgniter\Autoloader\Autoloader->includeFile()
+#4 /var/www/html/equipe1-3/system/Autoloader/Autoloader.php(237): CodeIgniter\Autoloader\Autoloader->loadInNamespace()
+#5 /var/www/html/equipe1-3/app/Views/errors/cli/error_exception.php(6): CodeIgniter\Autoloader\Autoloader->loadClass()
+#6 /var/www/html/equipe1-3/app/Views/errors/cli/production.php(5): include('...')
+#7 /var/www/html/equipe1-3/system/Debug/Exceptions.php(251): include('...')
+#8 /var/www/html/equipe1-3/system/Debug/Exceptions.php(254): CodeIgniter\Debug\Exceptions->CodeIgniter\Debug\{closure}()
+#9 /var/www/html/equipe1-3/system/Debug/Exceptions.php(138): CodeIgniter\Debug\Exceptions->render()
+#10 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler()
+#11 {main}
+  thrown
+in SYSTEMPATH/CLI/CLI.php on line 776.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()

@@ -1,0 +1,33 @@
+CRITICAL - 2022-11-18 10:35:03 --> include(/var/www/html/equipe1-3/app/Views/home.php): Failed to open stream: Permission denied
+in SYSTEMPATH/View/View.php on line 213.
+ 1 SYSTEMPATH/View/View.php(213): CodeIgniter\Debug\Exceptions->errorHandler()
+ 2 SYSTEMPATH/View/View.php(213): include()
+ 3 SYSTEMPATH/View/View.php(216): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH/Common.php(1142): CodeIgniter\View\View->render()
+ 5 APPPATH/Controllers/Home.php(16): view()
+ 6 SYSTEMPATH/CodeIgniter.php(902): App\Controllers\Home->index()
+ 7 SYSTEMPATH/CodeIgniter.php(457): CodeIgniter\CodeIgniter->runController()
+ 8 SYSTEMPATH/CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest()
+ 9 FCPATH/index.php(67): CodeIgniter\CodeIgniter->run()
+CRITICAL - 2022-11-18 10:35:27 --> include(/var/www/html/equipe1-3/app/Views/home.php): Failed to open stream: Permission denied
+in SYSTEMPATH/View/View.php on line 213.
+ 1 SYSTEMPATH/View/View.php(213): CodeIgniter\Debug\Exceptions->errorHandler()
+ 2 SYSTEMPATH/View/View.php(213): include()
+ 3 SYSTEMPATH/View/View.php(216): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH/Common.php(1142): CodeIgniter\View\View->render()
+ 5 APPPATH/Controllers/Home.php(16): view()
+ 6 SYSTEMPATH/CodeIgniter.php(902): App\Controllers\Home->index()
+ 7 SYSTEMPATH/CodeIgniter.php(457): CodeIgniter\CodeIgniter->runController()
+ 8 SYSTEMPATH/CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest()
+ 9 FCPATH/index.php(67): CodeIgniter\CodeIgniter->run()
+CRITICAL - 2022-11-18 10:35:51 --> include(/var/www/html/equipe1-3/app/Views/home.php): Failed to open stream: Permission denied
+in SYSTEMPATH/View/View.php on line 213.
+ 1 SYSTEMPATH/View/View.php(213): CodeIgniter\Debug\Exceptions->errorHandler()
+ 2 SYSTEMPATH/View/View.php(213): include()
+ 3 SYSTEMPATH/View/View.php(216): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH/Common.php(1142): CodeIgniter\View\View->render()
+ 5 APPPATH/Controllers/Home.php(16): view()
+ 6 SYSTEMPATH/CodeIgniter.php(902): App\Controllers\Home->index()
+ 7 SYSTEMPATH/CodeIgniter.php(457): CodeIgniter\CodeIgniter->runController()
+ 8 SYSTEMPATH/CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest()
+ 9 FCPATH/index.php(67): CodeIgniter\CodeIgniter->run()

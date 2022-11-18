@@ -3,7 +3,7 @@ OR
 REPLACE
 TABLE
     Client(
-        id_client INT PRIMARY KEY,
+        id_client INT PRIMARY KEY AUTO_INCREMENT,
         adresse_email VARCHAR(255) UNIQUE NOT NULL,
         nom VARCHAR(255) NOT NULL,
         prenom VARCHAR(64) NOT NULL,
@@ -41,7 +41,7 @@ OR
 REPLACE
 TABLE
     Commande(
-        id_commande INT PRIMARY KEY,
+        id_commande INT PRIMARY KEY AUTO_INCREMENT,
         id_client INT NOT NULL,
         date_commande DATE NOT NULL,
         date_livraison_estimee DATE NOT NULL,
@@ -67,7 +67,7 @@ OR
 REPLACE
 TABLE
     Collection (
-        id_collection INT PRIMARY KEY,
+        id_collection INT PRIMARY KEY AUTO_INCREMENT,
         nom VARCHAR(50) NOT NULL,
         parution DATE NOT NULL,
         date_limite DATE,
@@ -82,7 +82,7 @@ OR
 REPLACE
 TABLE
     Produit(
-        id_produit INT PRIMARY KEY,
+        id_produit INT PRIMARY KEY AUTO_INCREMENT,
         id_collection INT,
         nom VARCHAR(100) UNIQUE NOT NULL,
         prix INT NOT NULL,
@@ -133,7 +133,7 @@ OR
 REPLACE
 TABLE
     Exemplaire(
-        id_exemplaire INT PRIMARY KEY,
+        id_exemplaire INT PRIMARY KEY AUTO_INCREMENT,
         id_produit INT NOT NULL,
         id_commande INT,
         -- TODO trigger pour vérifier si la date d'obtention correspond à la date de commande

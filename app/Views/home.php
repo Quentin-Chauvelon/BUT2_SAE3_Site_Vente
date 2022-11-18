@@ -11,16 +11,164 @@
 
 <body>
   <header>
-    <img src="assets/logo.png" alt="Logo">
+    <div id="header_not_sticky" class="header_not_sticky">
+      <div class="header_top">
+        <div></div>
 
-    <nav>
-      <a href="">SHOP</a>
-      <a href="">FEED</a>
-      <a href="">LOOKBOOK</a>
-      <a href="">QUI SOMMES NOUS?</a>
-      <a href="">CONTACT</a>
-    </nav>
+        <img class="logo" src="assets/logo.png" alt="Logo">
+
+        <div class="icons_container">
+          <div class="icon_container">
+            <div class="icon_logo_background">
+              <img class="icon_logo" src="assets/icons/cart.png">
+            </div>
+
+            <h3>Mon panier</h3>
+          </div>
+
+          <div class="icon_container">
+            <div class="icon_logo_background">
+              <img class="icon_logo" src="assets/icons/favoris.png">
+            </div>
+
+            <h3>Mes favoris</h3>
+          </div>
+
+          <div class="icon_container">
+            <div class="icon_logo_background">
+              <img class="icon_logo" src="assets/icons/account.png">
+            </div>
+
+            <h3>Mon compte</h3>
+          </div>
+        </div>
+      </div>
+
+      <nav>
+        <div class="shop_dropdown">
+          <a href="">SHOP ˅</a>
+
+          <div class="dropdown_content">
+            <div><h3>Sweats</h3></div>
+            <div><h3>T-shirts</h3></div>
+            <div><h3>Pantalons</h3></div>
+            <div><h3>Accessoires</h3></div>
+            <div><h3>Posters</h3></div>
+          </div>
+        </div>
+
+        <a href="">FEED</a>
+        <a href="">LOOKBOOK</a>
+        <a href="">QUI SOMMES NOUS?</a>
+        <a href="">CONTACT</a>
+      </nav>
+    </div>
+
+
+    <div id="header_sticky" class="header_sticky isSticky">
+      <div>
+        <img class="logo" src="assets/logo.png" alt="Logo">
+      </div>
+
+      <div class="navigation">
+        <nav>
+          <div class="shop_dropdown">
+            <a href="">SHOP ˅</a>
+
+            <div class="dropdown_content">
+              <div><h3>Sweats</h3></div>
+              <div><h3>T-shirts</h3></div>
+              <div><h3>Pantalons</h3></div>
+              <div><h3>Accessoires</h3></div>
+              <div><h3>Posters</h3></div>
+            </div>
+          </div>
+
+
+          <a href="">FEED</a>
+          <a href="">LOOKBOOK</a>
+          <a href="">QUI SOMMES NOUS?</a>
+          <a href="">CONTACT</a>
+        </nav>
+      </div>
+
+      <div class="icons_container">
+        <div class="icon_logo_background">
+          <img class="icon_logo" src="assets/icons/cart.png">
+        </div>
+
+        <div class="icon_logo_background">
+          <img class="icon_logo" src="assets/icons/favoris.png">
+        </div>
+
+        <div class="icon_logo_background">
+          <img class="icon_logo" src="assets/icons/account.png">
+        </div>
+      </div>
+    </div>
   </header>
+
+  <div class="sticky_detection"></div>
+
+  <!-- <script>
+    const el = document.querySelector(".sticky_detection")
+
+    const header = document.querySelector(".header")
+    const logo = document.querySelector(".logo")
+
+    const observer = new IntersectionObserver( 
+      ([e]) => e.target.classList.toggle("isSticky", e.intersectionRatio < 1),
+      { threshold: [1] }
+    );
+
+    const logoObserver = new IntersectionObserver( 
+      ([e]) => e.target.style.display = 'none'
+    );
+
+    observer.observe(el);
+    logoObserver.observe(logo);
+  </script>
+ -->
+  <!-- <script>
+    const el = document.querySelector(".sticky_detection")
+
+    const observer = new IntersectionObserver( 
+      ([e]) => e.target.classList.toggle("isSticky", e.intersectionRatio < 1),
+      { threshold: [1] }
+    );
+
+    observer.observe(el);
+  </script> -->
+
+  <script>
+    const el = document.querySelector(".sticky_detection")
+
+    var headerNotSticky = document.getElementById("header_not_sticky");
+    var headerSticky = document.getElementById("header_sticky");
+
+    // marche pas car isStickyHeader est appelé avant (changer les classes en fonction de si la page est déjà scrollé, event pour ça?)
+    window.addEventListener('DOMContentLoaded', (event) => {
+      if (window.scrollY > 75) {
+        headerNotSticky.classList.remove("isSticky");
+        headerSticky.classList.add("isSticky");
+      }
+    });
+
+    function isStickyHeader() {
+      headerNotSticky.classList.toggle("isSticky");
+      headerSticky.classList.toggle("isSticky");
+    }
+
+    isStickyHeader()
+
+    const observer = new IntersectionObserver( 
+      ([e]) => isStickyHeader(),
+      { threshold: [1] }
+    );
+    
+    observer.observe(el);
+  </script>
+
 
     <!--
     <div id="carrousel">
@@ -122,17 +270,27 @@
        <img src="https://cdn.shopify.com/s/files/1/1297/1509/files/model-min_550x.png?v=1640328855">
 
        <div class="populaires_details">
-         <h3>Nom/Categories</h3>
+         <h3>NOM PRODUIT</h3>
          <button>ACHETER</button>
        </div>
      </div>
 
      <div style="background-color: #a40c12">
        <img src="https://cdn.shopify.com/s/files/1/1297/1509/files/model-min_550x.png?v=1640328855">
+
+       <div class="populaires_details">
+        <h3>NOM PRODUIT</h3>
+        <button>ACHETER</button>
+      </div>
      </div>
 
      <div style="background-color: #622d85">
        <img src="https://cdn.shopify.com/s/files/1/1297/1509/files/model-min_550x.png?v=1640328855">
+
+       <div class="populaires_details">
+        <h3>NOM PRODUIT</h3>
+        <button>ACHETER</button>
+      </div>
      </div>
    </div>
  </div>
@@ -142,8 +300,91 @@
    <h2>Notre dernière collection</h2>
 
    <div class="collection">
-     <!-- grid -->
+    
+    <!-- <script>
+      var element = document.getElementById('collection');
+      console.log(element.clientWidth)
+      element.clientHeight = element.clientWidth;
+      // element.style.height = element.clientWidth;
+      console.log(element.style.height)
+      console.log(element.clientHeight)
+    </script> -->
+
+    <div class="one" style="grid-column: 1; grid-row: 1 / 3"></div>
+    <div class="two" style="grid-column: 2 / 4; grid-row: 1 / 3"></div>
+    <div class="three" style="grid-column: 4 / 5; grid-row: 1"></div>
+    <div class="four" style="grid-column: 5 / 6; grid-row: 1 / 3"></div>
+    <div class="five" style="grid-column: 1 / 3; grid-row: 3"></div>
+    <div class="six" style="grid-column: 3 / 4; grid-row: 3"></div>
+    <div class="seven" style="grid-column: 4 / 5; grid-row: 2 / 4"></div>
+    <div class="eight" style="grid-column: 5 / 6; grid-row: 3"></div>
    </div>
+ </div>
+
+
+ <div class="footer">
+  <div class="cgu">
+    <ul>
+      <li>
+        <a href="">Conditions générales d'utilisation</a>
+      </li>
+
+      <li>
+        <a href="">Conditions générales d'utilisation</a>
+      </li>
+
+      <li>
+        <a href="">Conditions générales d'utilisation</a>
+      </li>
+
+      <li>
+        <a href="">Conditions générales d'utilisation</a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="contact">
+    <h3>DONNEZ-NOUS VOTRE AVIS</h3>
+
+    <div class="contact_container">
+      <input class="contact_field" type="text">
+      <button class="contact_button">ENVOYER</button>
+    </div>
+  </div>
+  
+  <div class="reseaux">
+    <ul>
+      <li>
+        <div class="reseau_container">
+          <h4>@jfkdqljfqjlj</h4>
+
+          <a href="">
+            <img src="assets/reseaux/instagram.png" alt="Instagram">
+          </a>
+        </div>
+      </li>
+
+      <li>
+        <div class="reseau_container">
+          <h4>@jfkdqljfqjlj</h4>
+
+          <a href="">
+            <img src="assets/reseaux/instagram.png" alt="Instagram">
+          </a>
+        </div>
+      </li>
+
+      <li>
+        <div class="reseau_container">
+          <a class="reseau_container" href="">
+            <h4>@jfkdqljfqjlj</h4>
+          </a>
+
+          <img src="assets/reseaux/instagram.png" alt="Instagram">
+        </div>
+      </li>
+    </ul>
+  </div>
  </div>
 
 </body>

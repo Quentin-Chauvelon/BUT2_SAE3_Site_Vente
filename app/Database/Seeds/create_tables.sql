@@ -68,7 +68,7 @@ REPLACE
 TABLE
     Collection (
         id_collection INT PRIMARY KEY AUTO_INCREMENT,
-        nom VARCHAR(50) NOT NULL,
+        nom VARCHAR(50) NOT NULL UNIQUE,
         parution DATE NOT NULL,
         date_limite DATE,
         CONSTRAINT fin_apres_parution CHECK(

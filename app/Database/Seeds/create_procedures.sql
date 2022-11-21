@@ -29,6 +29,20 @@
 - GetAllCouponsNonExpires()
 - GetAllCouponsUtilisables()
 - SupprimerCoupon(code)
+
+### Table Produit
+- CreerProduit(nom, prix, description, categorie)
+- GetAllProduits()
+- GetAllProduitsReduction()
+- GetProduitParId(id_produit)
+- ModifierProduit(id_produit, nom, prix, description, categorie, parution, reduction, id_collection)
+- SupprimerProduit(id_produit)
+- GetAllPantalons()
+- GetAllSweats()
+- GetAllTshirts()
+- GetAllVetements()
+- GetAllPosters()
+- GetAllAccessoires()
 */
 
 
@@ -181,4 +195,70 @@ END;
 CREATE OR REPLACE PROCEDURE SupprimerCoupon(IN _code VARCHAR(20))
 BEGIN
    DELETE FROM Coupon WHERE code=_code;
+END;
+
+
+CREATE OR REPLACE PROCEDURE CreerProduit(IN _nom VARCHAR(100), IN _prix INT, IN _description VARCHAR(500),
+IN _categorie VARCHAR(50))
+BEGIN
+    INSERT INTO Produit(nom, prix, reduction, description, categorie, parution, id_collection)
+    VALUES (_nom, _prix, 0, _description, _categorie, CURDATE(), NULL);
+END;
+
+CREATE OR REPLACE PROCEDURE GetAllProduits()
+BEGIN
+    SELECT * FROM Produit;
+END;
+
+CREATE OR REPLACE PROCEDURE GetAllProduitsReduction()
+BEGIN
+    SELECT * FROM ProduitReduction;
+END;
+
+CREATE OR REPLACE PROCEDURE GetProduitParId(IN _id_produit INT)
+BEGIN
+    SELECT * FROM Produit WHERE id_produit=_id_produit;
+END;
+
+CREATE OR REPLACE PROCEDURE ModifierProduit(IN _id_produit INT, IN _nom VARCHAR(100), _prix INT, IN _description VARCHAR(500),
+IN _categorie VARCHAR(50), IN _parution DATE, IN _reduction INT, IN _id_collection INT)
+BEGIN
+   UPDATE Produit SET nom=_nom, prix=_prix, description=_description,
+                      categorie=_categorie, parution=_parution, reduction=_reduction, id_collection=_id_collection
+                  WHERE id_produit=_id_produit;
+END;
+
+CREATE OR REPLACE PROCEDURE SupprimerProduit(IN _id_produit INT)
+BEGIN
+    DELETE FROM Produit WHERE id_produit=_id_produit;
+END;
+
+CREATE OR REPLACE PROCEDURE GetAllPantalons()
+BEGIN
+    SELECT * FROM Pantalon;
+END;
+
+CREATE OR REPLACE PROCEDURE GetAllSweats()
+BEGIN
+   SELECT * FROM Sweat;
+END;
+
+CREATE OR REPLACE PROCEDURE GetAllTshirts()
+BEGIN
+    SELECT * FROM Tshirt;
+END;
+
+CREATE OR REPLACE PROCEDURE GetAllVetements()
+BEGIN
+    SELECT * FROM Vetement;
+END;
+
+CREATE OR REPLACE PROCEDURE GetAllPosters()
+BEGIN
+    SELECT * FROM Poster;
+END;
+
+CREATE OR REPLACE PROCEDURE GetAllAccessoires()
+BEGIN
+    SELECT * FROM Accessoire;
 END;

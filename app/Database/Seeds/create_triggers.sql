@@ -12,6 +12,8 @@ DROP TRIGGER IF EXISTS supprimer_client_cascade;
 DROP TRIGGER IF EXISTS exemplaire_pas_dispo_commande; -- Met est_dispo à false quand on ajoute à une commande
 DROP TRIGGER IF EXISTS suppression_commande_liberer_exemplaire; -- met dispo à true quand on supprime une commande
 DROP TRIGGER IF EXISTS suppression_collection;
+DROP TRIGGER IF EXISTS categorie_produit_invalide_insert;
+DROP TRIGGER IF EXISTS categorie_produit_invalide_update;
 
 CREATE OR REPLACE TRIGGER coupon_trop_utilise_insert
 BEFORE INSERT ON Commande FOR EACH ROW BEGIN
@@ -88,4 +90,18 @@ END;
 CREATE OR REPLACE TRIGGER suppression_collection BEFORE
 DELETE ON Collection FOR EACH ROW BEGIN
    UPDATE Produit SET id_collection=NULL WHERE id_collection=OLD.id_collection;
+END;
+
+CREATE OR REPLACE TRIGGER categorie_produit_invalide_insert BEFORE
+INSERT ON Produit FOR EACH ROW BEGIN
+    IF NEW.categorie NOT IN ('tshirt', 'sweat', 'pantalon', 'accessoire', 'poster') THEN
+        SIGNAL SQLSTATE '45000' SET message_text = 'Cette catégorie de vêtement n\'est pas valide.';
+    END IF;
+END;
+
+CREATE OR REPLACE TRIGGER categorie_produit_invalide_update BEFORE
+UPDATE ON Produit FOR EACH ROW BEGIN
+    IF NEW.categorie NOT IN ('tshirt', 'sweat', 'pantalon', 'accessoire', 'poster') THEN
+        SIGNAL SQLSTATE '45000' SET message_text = 'Cette catégorie de vêtement n\'est pas valide.';
+    END IF;
 END;

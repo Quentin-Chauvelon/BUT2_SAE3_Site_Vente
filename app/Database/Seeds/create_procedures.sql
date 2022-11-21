@@ -43,9 +43,37 @@
 - GetAllVetements()
 - GetAllPosters()
 - GetAllAccessoires()
+- GetAllProduitsDispo()
+
+### Table Favori
+- CreerFavori(id_client, id_produit)
+- SupprimerFavori(id_client, id_produit)
+- GetAllFavoris()
+- GetFavorisClient(id_client)
+- ProduitsPlusFavoris()
+
+### Table Exemplaire
+- CreerExemplaire(id_produit, couleur, taille)
+- SupprimerExemplaire(id_exemplaire)
+- ModifierExemplaire(id_exemplaire, id_produit, couleur, taille, est_disponible, date_obtention, id_commande)
+- GetAllExemplaires()
+- GetAllExemplairesDispo()
+- GetExemplaireParId(id_exemplaire)
+- GetExemplairesParProduit(id_produit)
+- GetExemplairesDispoParProduit(id_produit)
+- GetExemplairesParProduitCouleurTaille(id_produit, couleur, taille)
+- GetExemplairesDispoParProduitCouleurTaille(id_produit, couleur, taille)
+
+### Table Commande
+- CreerCommande(id_client)
+- ModifierCommande(id_commande, id_client, date_commande, date_livraison_estimee, date_livraison, id_coupon)
+- SupprimerCommande(id_commande)
+- GetAllCommandes()
+- GetCommandeParId(id_commande)
+- GetContenuCommande(id_commande)
 */
 
-
+-- TODO Procédures calculer prix commande et colonne est_valide
 CREATE OR REPLACE PROCEDURE GetAllClients()
 BEGIN
     SELECT * FROM Client;
@@ -261,4 +289,122 @@ END;
 CREATE OR REPLACE PROCEDURE GetAllAccessoires()
 BEGIN
     SELECT * FROM Accessoire;
+END;
+
+CREATE OR REPLACE PROCEDURE GetAllProduitsDispo()
+BEGIN
+   SELECT * FROM Produit WHERE id_produit IN (SELECT DISTINCT id_produit FROM ExemplaireDispo);
+END;
+
+CREATE OR REPLACE PROCEDURE CreerFavori(IN _id_client INT, IN _id_produit INT)
+BEGIN
+    INSERT INTO Favori(id_client, id_produit) VALUES (_id_client, _id_produit);
+END;
+
+CREATE OR REPLACE PROCEDURE SupprimerFavori(IN _id_client INT, IN _id_produit INT)
+BEGIN
+    DELETE FROM Favori WHERE id_client=_id_client AND id_produit=_id_produit;
+END;
+
+CREATE OR REPLACE PROCEDURE GetAllFavoris()
+BEGIN
+    SELECT * FROM Favori;
+END;
+
+CREATE OR REPLACE PROCEDURE GetFavorisClient(IN _id_client INT)
+BEGIN
+   SELECT * FROM Favori WHERE id_client=_id_client;
+END;
+
+CREATE OR REPLACE PROCEDURE ProduitsPlusFavoris()
+BEGIN
+   SELECT id_produit, COUNT(*) AS nombre FROM Favori GROUP BY id_produit ORDER BY nombre DESC;
+END;
+
+CREATE OR REPLACE PROCEDURE CreerExemplaire(IN _id_produit INT, IN _couleur VARCHAR(20), IN _taille VARCHAR(50))
+BEGIN
+    INSERT INTO Exemplaire(id_produit, couleur, taille, est_disponible, date_obtention, id_commande)
+    VALUES (_id_produit, _couleur, _taille, true, CURDATE(), NULL) ;
+END;
+
+CREATE OR REPLACE PROCEDURE SupprimerExemplaire(IN _id_exemplaire INT)
+BEGIN
+   DELETE FROM Exemplaire WHERE id_exemplaire=_id_exemplaire;
+END;
+
+CREATE OR REPLACE PROCEDURE ModifierExemplaire(IN _id_exemplaire INT, IN _id_produit INT, IN _couleur VARCHAR(20),
+IN _taille VARCHAR(50), IN _est_disponible BOOLEAN, IN _date_obtention DATE, IN _id_commande INT)
+BEGIN
+    UPDATE Exemplaire SET id_produit=_id_produit, couleur=_couleur, taille=_taille, est_disponible=_est_disponible,
+                          date_obtention=_date_obtention, id_commande=_id_commande
+    WHERE id_exemplaire=_id_exemplaire;
+END;
+
+CREATE OR REPLACE PROCEDURE GetAllExemplaires()
+BEGIN
+   SELECT * FROM Exemplaire;
+END;
+
+CREATE OR REPLACE PROCEDURE GetAllExemplairesDispo()
+BEGIN
+   SELECT * FROM ExemplaireDispo;
+END;
+
+CREATE OR REPLACE PROCEDURE GetExemplaireParId(IN _id_exemplaire INT)
+BEGIN
+    SELECT * FROM Exemplaire WHERE id_exemplaire=_id_exemplaire;
+END;
+
+CREATE OR REPLACE PROCEDURE GetExemplairesParProduit(IN _id_produit INT)
+BEGIN
+    SELECT * FROM Exemplaire WHERE id_produit=_id_produit;
+END;
+
+CREATE OR REPLACE PROCEDURE GetExemplairesDispoParProduit(IN _id_produit INT)
+BEGIN
+   SELECT * FROM ExemplaireDispo WHERE id_produit=_id_produit;
+END;
+
+CREATE OR REPLACE PROCEDURE GetExemplairesParProduitCouleurTaille(IN _id_produit INT, IN _couleur VARCHAR(20), IN _taille VARCHAR(50))
+BEGIN
+    SELECT * FROM Exemplaire WHERE id_produit=_id_produit AND couleur=_couleur AND taille=_taille;
+END;
+
+CREATE OR REPLACE PROCEDURE GetExemplairesDispoParProduitCouleurTaille(IN _id_produit INT, IN _couleur VARCHAR(20), IN _taille VARCHAR(50))
+BEGIN
+    SELECT * FROM ExemplaireDispo WHERE id_produit=_id_produit AND couleur=_couleur AND taille=_taille;
+END;
+
+CREATE OR REPLACE PROCEDURE CreerCommande(IN _id_client INT)
+BEGIN
+   INSERT INTO Commande(id_client, date_commande, date_livraison_estimee, date_livraison, id_coupon)
+    VALUES(_id_client, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 15 DAY), NULL, NULL);
+END;
+
+CREATE OR REPLACE PROCEDURE ModifierCommande(IN _id_commande INT, IN _id_client INT, IN _date_commande DATE,
+IN _date_livraison_estimee DATE, IN _date_livraison DATE, IN _id_coupon VARCHAR(20))
+BEGIN
+    UPDATE Commande SET id_coupon=_id_client, date_commande=_date_commande, date_livraison_estimee=_date_livraison_estimee,
+                        date_livraison=_date_livraison, id_coupon=_id_coupon
+    WHERE id_commande=_id_commande;
+END;
+
+CREATE OR REPLACE PROCEDURE SupprimerCommande(IN _id_commande INT)
+BEGIN
+    DELETE FROM Commande WHERE id_commande=_id_commande;
+END;
+
+CREATE OR REPLACE PROCEDURE GetAllCommandes()
+BEGIN
+    SELECT * FROM Commande;
+END;
+
+CREATE OR REPLACE PROCEDURE GetCommandeParId(IN _id_commande INT)
+BEGIN
+    SELECT * FROM Commande WHERE id_commande=_id_commande;
+END;
+
+CREATE OR REPLACE PROCEDURE GetContenuCommande(IN _id_commande INT)
+BEGIN
+    SELECT id_exemplaire FROM Exemplaire WHERE id_commande=_id_exemplaire;
 END;

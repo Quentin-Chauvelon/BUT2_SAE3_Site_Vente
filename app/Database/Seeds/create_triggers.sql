@@ -2,6 +2,7 @@
 -- COUPON NON VALABLE
 -- COUPON EXPIRÉ
 -- Suppression de client -> Mise de l'id de la commande à NULL, suppression des favoris
+-- TODO trigger taille valide et est_fidele
 DROP TRIGGER IF EXISTS coupon_trop_utilise_insert;
 DROP TRIGGER IF EXISTS coupon_trop_utilise_update;
 DROP TRIGGER IF EXISTS coupon_expire_insert;

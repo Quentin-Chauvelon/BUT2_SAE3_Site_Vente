@@ -406,5 +406,5 @@ END;
 
 CREATE OR REPLACE PROCEDURE GetContenuCommande(IN _id_commande INT)
 BEGIN
-    SELECT id_exemplaire FROM Exemplaire WHERE id_commande=_id_exemplaire;
+    SELECT id_exemplaire FROM Exemplaire WHERE id_commande=_id_commande;
 END;

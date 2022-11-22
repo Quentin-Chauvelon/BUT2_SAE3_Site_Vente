@@ -1,54 +1,58 @@
 function moveToSelected(element) {
 
-  if (element == "next") {
-    var selected = $(".selected").next();
-  } else if (element == "prev") {
-    var selected = $(".selected").prev();
-  } else {
-    var selected = element;
-  }
+  if (element == "next")
+    var selected = document.getElementsByClassName(".next")
+  
+  else if (element == "prev")
+    var selected = document.getElementsByClassName(".prev")
+  // } else {
+  //   var selected = element;
 
-  var next = $(selected).next();
-  var prev = $(selected).prev();
-  var prevSecond = $(prev).prev();
-  var nextSecond = $(next).next();
+  console.log(element)
+  console.log(selected)
 
-  $(selected).removeClass().addClass("selected");
+  // var next = $(selected).next();
+  // var prev = $(selected).prev();
+  // var prevSecond = $(prev).prev();
+  // var nextSecond = $(next).next();
 
-  $(prev).removeClass().addClass("prev");
-  $(next).removeClass().addClass("next");
+  // $(selected).removeClass().addClass("selected");
 
-  $(nextSecond).removeClass().addClass("nextRightSecond");
-  $(prevSecond).removeClass().addClass("prevLeftSecond");
+  // $(prev).removeClass().addClass("prev");
+  // $(next).removeClass().addClass("next");
 
-  $(nextSecond).nextAll().removeClass().addClass('hideRight');
-  $(prevSecond).prevAll().removeClass().addClass('hideLeft');
+  // $(nextSecond).removeClass().addClass("nextRightSecond");
+  // $(prevSecond).removeClass().addClass("prevLeftSecond");
+
+  // $(nextSecond).nextAll().removeClass().addClass('hideRight');
+  // $(prevSecond).prevAll().removeClass().addClass('hideLeft');
 
 }
 
-$(document).keydown(function (e) {
-  switch (e.which) {
-    case 37:
-      moveToSelected('prev');
-      break;
+// $(document).keydown(function (e) {
+//   switch (e.which) {
+//     case 37:
+//       moveToSelected('prev');
+//       break;
 
-    case 39:
-      moveToSelected('next');
-      break;
+//     case 39:
+//       moveToSelected('next');
+//       break;
 
-    default: return;
-  }
-  e.preventDefault();
-});
+//     default: return;
+//   }
+//   e.preventDefault();
+// });
 
-$('#carousel div').click(function () {
-  moveToSelected($(this));
-});
 
-$('#prev').click(function () {
-  moveToSelected('prev');
-});
 
-$('#next').click(function () {
-  moveToSelected('next');
+// $('#carousel div').click(function () {
+//   moveToSelected($(this));
+// });
+
+document.addEventListener("DOMContentLoaded", function(event) { 
+  // document.getElementById("carrousel_previous_button").click(moveToSelected("prev"))
+  document.getElementById("carrousel_previous_button").click(console.log("test"))
+
+  document.getElementById("carrousel_next_button").click(moveToSelected("next"))
 });

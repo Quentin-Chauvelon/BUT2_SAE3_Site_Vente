@@ -1,0 +1,17 @@
+CRITICAL - 2022-11-22 08:43:08 --> The framework needs the following extension(s) installed and loaded: curl, intl, mbstring, xml.
+in SYSTEMPATH/CodeIgniter.php on line 219.
+ 1 SYSTEMPATH/CodeIgniter.php(219): CodeIgniter\Exceptions\FrameworkException::forMissingExtension()
+ 2 SYSTEMPATH/CodeIgniter.php(177): CodeIgniter\CodeIgniter->resolvePlatformExtensions()
+ 3 ROOTPATH/spark(83): CodeIgniter\CodeIgniter->initialize()
+CRITICAL - 2022-11-22 08:43:08 --> Uncaught Error: Call to undefined function CodeIgniter\CLI\mb_strpos() in /home/E217517G/reseau/Perso/Documents/SAE/equipe1-3/system/CLI/CLI.php:776
+Stack trace:
+#0 /home/E217517G/reseau/Perso/Documents/SAE/equipe1-3/system/CLI/CLI.php(161): CodeIgniter\CLI\CLI::parseCommandLine()
+#1 /home/E217517G/reseau/Perso/Documents/SAE/equipe1-3/system/CLI/CLI.php(1018): CodeIgniter\CLI\CLI::init()
+#2 /home/E217517G/reseau/Perso/Documents/SAE/equipe1-3/system/Autoloader/Autoloader.php(282): include_once('/home/E217517G/...')
+#3 /home/E217517G/reseau/Perso/Documents/SAE/equipe1-3/system/Autoloader/Autoloader.php(259): CodeIgniter\Autoloader\Autoloader->includeFile()
+#4 /home/E217517G/reseau/Perso/Documents/SAE/equipe1-3/system/Autoloader/Autoloader.php(237): CodeIgniter\Autoloader\Autoloader->loadInNamespace()
+#5 [internal function]: CodeIgniter\Autoloader\Autoloader->loadClass()
+#6 /home/E217517G/reseau/Perso/Documents/SAE/equipe1-3/app/Views/errors/cli/error_exception.php(6): spl_autoload_call()
+#7 /home/E217517G/resea
+in SYSTEMPATH/CLI/CLI.php on line 776.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()

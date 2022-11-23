@@ -42,7 +42,7 @@ REPLACE
 TABLE
     Commande(
         id_commande INT PRIMARY KEY AUTO_INCREMENT,
-        id_client INT NOT NULL,
+        id_client INT,
         date_commande DATE NOT NULL,
         date_livraison_estimee DATE NOT NULL,
         date_livraison DATE,
@@ -68,7 +68,7 @@ REPLACE
 TABLE
     Collection (
         id_collection INT PRIMARY KEY AUTO_INCREMENT,
-        nom VARCHAR(50) NOT NULL,
+        nom VARCHAR(50) NOT NULL UNIQUE,
         parution DATE NOT NULL,
         date_limite DATE,
         CONSTRAINT fin_apres_parution CHECK(
@@ -104,29 +104,29 @@ CREATE OR REPLACE VIEW ProduitReduction AS
 
 CREATE OR REPLACE VIEW Poster AS
 	SELECT * FROM Produit WHERE categorie =
-"POSTER";
+'poster';
 
 CREATE OR REPLACE VIEW Accessoire AS
 	SELECT * FROM Produit WHERE categorie =
-"ACCESSOIRE";
+'accessoire';
 
 CREATE OR REPLACE VIEW Vetement AS
 	SELECT *
 	FROM Produit
 	WHERE
-	    categorie in ("pantalon", "sweat", "tshirt");
+	    categorie in ('pantalon', 'sweat', 'tshirt');
 
 CREATE OR REPLACE VIEW Pantalon AS
 	SELECT * FROM Produit WHERE categorie =
-"PANTALON";
+'pantalon';
 
 CREATE OR REPLACE VIEW Sweat AS
 	SELECT * FROM Produit WHERE categorie =
-"SWEAT";
+'sweat';
 
 CREATE OR REPLACE VIEW Tshirt AS
 	SELECT * FROM Produit WHERE categorie =
-"TSHIRT";
+'tshirt';
 
 CREATE
 OR

@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="home.js"></script>
-  <link rel="stylesheet" href="home.css">
+  <link rel="stylesheet" href="../../../assets/css/home.css">
   <title>Hot genre</title>
 </head>
 
@@ -15,12 +15,12 @@
       <div class="header_top">
         <div></div>
 
-        <img class="logo" src="assets/logo.png" alt="Logo">
+        <img class="logo" src="../../../assets/images/logo.png" alt="Logo">
 
         <div class="icons_container">
           <div class="icon_container">
             <div class="icon_logo_background">
-              <img class="icon_logo" src="assets/icons/cart.png">
+              <img class="icon_logo" src="../../../assets/images/icons/cart.png">
             </div>
 
             <h3>Mon panier</h3>
@@ -28,7 +28,7 @@
 
           <div class="icon_container">
             <div class="icon_logo_background">
-              <img class="icon_logo" src="assets/icons/favoris.png">
+              <img class="icon_logo" src="../../../assets/images/icons/favoris.png">
             </div>
 
             <h3>Mes favoris</h3>
@@ -36,7 +36,7 @@
 
           <div class="icon_container">
             <div class="icon_logo_background">
-              <img class="icon_logo" src="assets/icons/account.png">
+              <img class="icon_logo" src="../../../assets/images/icons/account.png">
             </div>
 
             <h3>Mon compte</h3>
@@ -67,7 +67,7 @@
 
     <div id="header_sticky" class="header_sticky isSticky">
       <div>
-        <img class="logo" src="assets/logo.png" alt="Logo">
+        <img class="logo" src="../../../assets/images/logo.png" alt="Logo">
       </div>
 
       <div class="navigation">
@@ -94,15 +94,15 @@
 
       <div class="icons_container">
         <div class="icon_logo_background">
-          <img class="icon_logo" src="assets/icons/cart.png">
+          <img class="icon_logo" src="../../../assets/images/icons/cart.png">
         </div>
 
         <div class="icon_logo_background">
-          <img class="icon_logo" src="assets/icons/favoris.png">
+          <img class="icon_logo" src="../../../assets/images/icons/favoris.png">
         </div>
 
         <div class="icon_logo_background">
-          <img class="icon_logo" src="assets/icons/account.png">
+          <img class="icon_logo" src="../../../assets/images/icons/account.png">
         </div>
       </div>
     </div>
@@ -220,42 +220,42 @@
  <div class="categories">
    <div class="posters">
     <div class="posters_image">
-     <img src="assets/categories/poster.jpeg" alt="Posters">
+     <img src="../../../assets/images/categories/poster.jpeg" alt="Posters">
     </div>
     <h2>Posters</h2>
    </div>
 
    <div class="accessoires">
     <div class="accessoires_image">
-     <img src="assets/categories/accessoire.jpeg" alt="Accessoires">
+     <img src="../../../assets/images/categories/accessoire.jpeg" alt="Accessoires">
     </div>
     <h2>Accessoires</h2>
    </div>
 
    <div class="posters">
     <div class="posters_image">
-     <img src="assets/categories/poster.jpeg" alt="Posters">
+     <img src="../../../assets/images/categories/poster.jpeg" alt="Posters">
     </div>
     <h2>T-shirts</h2>
    </div>
 
    <div class="accessoires">
     <div class="accessoires_image">
-     <img src="assets/categories/accessoire.jpeg" alt="Accessoires">
+     <img src="../../../assets/images/categories/accessoire.jpeg" alt="Accessoires">
     </div>
     <h2>Pantalons</h2>
    </div>
 
    <div class="posters">
     <div class="posters_image">
-     <img src="assets/categories/poster.jpeg" alt="Posters">
+     <img src="../../../assets/images/categories/poster.jpeg" alt="Posters">
     </div>
     <h2>Sweats</h2>
    </div>
 
    <div class="accessoires">
     <div class="accessoires_image">
-     <img src="assets/categories/accessoire.jpeg" alt="Accessoires">
+     <img src="../../../assets/images/categories/accessoire.jpeg" alt="Accessoires">
     </div>
     <h2>Sweats</h2>
    </div>
@@ -359,7 +359,7 @@
           <h4>@jfkdqljfqjlj</h4>
 
           <a href="">
-            <img src="assets/reseaux/instagram.png" alt="Instagram">
+            <img src="../../../assets/images/reseaux/instagram.png" alt="Instagram">
           </a>
         </div>
       </li>
@@ -369,7 +369,7 @@
           <h4>@jfkdqljfqjlj</h4>
 
           <a href="">
-            <img src="assets/reseaux/instagram.png" alt="Instagram">
+            <img src="../../../assets/images/reseaux/instagram.png" alt="Instagram">
           </a>
         </div>
       </li>
@@ -380,7 +380,7 @@
             <h4>@jfkdqljfqjlj</h4>
           </a>
 
-          <img src="assets/reseaux/instagram.png" alt="Instagram">
+          <img src="../../../assets/images/reseaux/instagram.png" alt="Instagram">
         </div>
       </li>
     </ul>

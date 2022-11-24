@@ -10,14 +10,15 @@ class Home extends BaseController
 	// }
 
     public function index()
-    {
+    {/*
         $this->load->model('ProductModel');
         $products = $this->ProductModel->findAll();
 		$data = array("prods"=>$products);
 
 		// Les 3 plus populaires
 		// Les images de la dernière collection
-
+        */
         return view('home');
+        
     }
 }

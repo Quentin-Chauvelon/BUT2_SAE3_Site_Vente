@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	var mainImage = document.getElementById("product_image");
 
 	for (const e of imagesContainer.childNodes) {
-		if (e.nodeType == 1) {
+		if (e.nodeType == 1 && !e.classList.contains("arrow_background")) {
 			
 			e.addEventListener('click', function(){
 				mainImage.src = selectImage(selectedImage, e);
@@ -64,4 +64,31 @@ document.addEventListener("DOMContentLoaded", function(event) {
 			});
 		}
 	}
+
+
+	var upArrow = document.getElementsByClassName("up_arrow")[0];
+	var downArrow = document.getElementsByClassName("down_arrow")[0];
+
+	upArrow.addEventListener('click', function(){
+		imagesContainer.scrollTop -= 220;
+	});
+
+	downArrow.addEventListener('click', function(){
+		imagesContainer.scrollTop += 220;
+	});
+
+	window.addEventListener("load", event => {
+		var img = document.querySelector('#product_images_container img');
+
+		var productIamgesContainer = document.getElementById('product_images_container');
+		var productImage = document.getElementById('product_image');
+
+		var imageWidth = productImage.clientWidth;
+		var imageHeight = productImage.clientHeight;
+
+		productIamgesContainer.style.height = imageHeight.toString() + "px";
+		downArrow.style.marginTop = (imageHeight - 80).toString() + "px";
+
+		productImage.style.width = imageWidth.toString() + "px";
+	});
 });

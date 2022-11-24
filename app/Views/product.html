@@ -6,7 +6,8 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script src="../../js_script/product.js"></script>
-	<link rel="stylesheet" href="../assets/css/product.css">
+	<!-- <link rel="stylesheet" href="../assets/css/product.css"> -->
+	<link rel="stylesheet" href="../../public/css/product.css">
 	<title>Hot genre</title>
 </head>
 
@@ -17,6 +18,9 @@
 			
 			<!-- php foreach and create divs with images -->
 			<!-- fil d'ariane en haut -->
+			<div class="arrow_background up_arrow">
+				<img class="arrow_image" src="../assets/images/icons/account.png">
+			</div>
 
 			<div class="selected">
 				<img src="../assets/images/product.jpg">
@@ -40,6 +44,10 @@
 
 			<div>
 				<img src="../assets/images/product.jpg">
+			</div>
+
+			<div class="arrow_background down_arrow">
+				<img class="arrow_image" src="../assets/images/icons/account.png">
 			</div>
 		</div>
 
@@ -98,21 +106,5 @@
 		</div>
 
 	</div>
-
-	<!-- Mettre la div product_container_images de la même taille que l'image principale -->
-	<script>
-
-		window.addEventListener("load", event => {
-			var img = document.querySelector('#product_images_container img');
-
-			// console.log(productImage.clientHeight);
-			// console.log("Image is Loaded Successfully");
-
-			var productIamgesContainer = document.getElementById('product_images_container');
-			var productImage = document.getElementById('product_image');
-		// productIamgesContainer.style.height = productImage.clientHeight;
-			productIamgesContainer.style.height = productImage.clientHeight.toString() + "px";
-		});
-    </script>
 </body>
 </html>

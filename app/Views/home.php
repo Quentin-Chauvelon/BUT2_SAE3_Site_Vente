@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="home.js"></script>
-  <link rel="stylesheet" href="<?= base_url('assets/css/home.css') ?>">
+  <script src="../js_script/home.js"></script>
+  <link rel="stylesheet" href="../assets/css/home.css">
   <title>Hot genre</title>
 </head>
 
@@ -15,38 +16,38 @@
       <div class="header_top">
         <div></div>
 
-        <img class="logo" src="../../../assets/images/logo.png" alt="Logo">
+        <img class="logo" src="../assets/images/logo.png" alt="Logo">
 
         <div class="icons_container">
           <div class="icon_container">
             <div class="icon_logo_background">
-              <img class="icon_logo" src="../../../assets/images/icons/cart.png">
+              <img class="icon_logo" src="../assets/images/icons/cart.png">
             </div>
 
-            <h3>Mon panier</h3>
+            <h3 class="underline_animation">Mon panier</h3>
           </div>
 
           <div class="icon_container">
             <div class="icon_logo_background">
-              <img class="icon_logo" src="../../../assets/images/icons/favoris.png">
+              <img class="icon_logo" src="../assets/images/icons/favoris.png">
             </div>
 
-            <h3>Mes favoris</h3>
+            <h3 class="underline_animation">Mes favoris</h3>
           </div>
 
           <div class="icon_container">
             <div class="icon_logo_background">
-              <img class="icon_logo" src="../../../assets/images/icons/account.png">
+              <img class="icon_logo" src="../assets/images/icons/account.png">
             </div>
 
-            <h3>Mon compte</h3>
+            <h3 class="underline_animation">Mon compte</h3>
           </div>
         </div>
       </div>
 
       <nav>
         <div class="shop_dropdown">
-          <a href="">SHOP ˅</a>
+          <a class="underline_animation" href="">SHOP ˅</a>
 
           <div class="dropdown_content">
             <div><h3>Sweats</h3></div>
@@ -57,23 +58,23 @@
           </div>
         </div>
 
-        <a href="">FEED</a>
-        <a href="">LOOKBOOK</a>
-        <a href="">QUI SOMMES NOUS?</a>
-        <a href="">CONTACT</a>
+        <a class="underline_animation" href="">FEED</a>
+        <a class="underline_animation" href="">LOOKBOOK</a>
+        <a class="underline_animation" href="">QUI SOMMES NOUS?</a>
+        <a class="underline_animation" href="">CONTACT</a>
       </nav>
     </div>
 
 
     <div id="header_sticky" class="header_sticky isSticky">
       <div>
-        <img class="logo" src="../../../assets/images/logo.png" alt="Logo">
+        <img class="logo" src="../assets/images/logo.png" alt="Logo">
       </div>
 
       <div class="navigation">
         <nav>
           <div class="shop_dropdown">
-            <a href="">SHOP ˅</a>
+            <a class="underline_animation" href="">SHOP ˅</a>
 
             <div class="dropdown_content">
               <div><h3>Sweats</h3></div>
@@ -85,24 +86,24 @@
           </div>
 
 
-          <a href="">FEED</a>
-          <a href="">LOOKBOOK</a>
-          <a href="">QUI SOMMES NOUS?</a>
-          <a href="">CONTACT</a>
+          <a class="underline_animation" href="">FEED</a>
+          <a class="underline_animation" href="">LOOKBOOK</a>
+          <a class="underline_animation" href="">QUI SOMMES NOUS?</a>
+          <a class="underline_animation" href="">CONTACT</a>
         </nav>
       </div>
 
       <div class="icons_container">
         <div class="icon_logo_background">
-          <img class="icon_logo" src="../../../assets/images/icons/cart.png">
+          <img class="icon_logo" src="../assets/images/icons/cart.png">
         </div>
 
         <div class="icon_logo_background">
-          <img class="icon_logo" src="../../../assets/images/icons/favoris.png">
+          <img class="icon_logo" src="../assets/images/icons/favoris.png">
         </div>
 
         <div class="icon_logo_background">
-          <img class="icon_logo" src="../../../assets/images/icons/account.png">
+          <img class="icon_logo" src="../assets/images/icons/account.png">
         </div>
       </div>
     </div>
@@ -208,9 +209,9 @@
     <button class="carrousel_prev carrousel_button"><</button>
 
     <div class="carrousel_images">
-     <img class="prev" src="https://i1.sndcdn.com/artworks-000165384395-rhrjdn-t500x500.jpg">
+     <img id="carrousel_previous_button" class="prev" src="https://i1.sndcdn.com/artworks-000165384395-rhrjdn-t500x500.jpg">
      <img class="selected" src="https://i1.sndcdn.com/artworks-000185743981-tuesoj-t500x500.jpg">
-     <img class="next" src="https://i1.sndcdn.com/artworks-000158708482-k160g1-t500x500.jpg">
+     <img id="carrousel_next_button" class="next" src="https://i1.sndcdn.com/artworks-000158708482-k160g1-t500x500.jpg">
    </div>
 
    <button class="carrousel_next carrousel_button">></button>
@@ -220,42 +221,42 @@
  <div class="categories">
    <div class="posters">
     <div class="posters_image">
-     <img src="../../../assets/images/categories/poster.jpeg" alt="Posters">
+     <img src="../assets/images/categories/poster.jpeg" alt="Posters">
     </div>
     <h2>Posters</h2>
    </div>
 
    <div class="accessoires">
     <div class="accessoires_image">
-     <img src="../../../assets/images/categories/accessoire.jpeg" alt="Accessoires">
+     <img src="../assets/images/categories/accessoire.jpeg" alt="Accessoires">
     </div>
     <h2>Accessoires</h2>
    </div>
 
    <div class="posters">
     <div class="posters_image">
-     <img src="../../../assets/images/categories/poster.jpeg" alt="Posters">
+     <img src="../assets/images/categories/poster.jpeg" alt="Posters">
     </div>
     <h2>T-shirts</h2>
    </div>
 
    <div class="accessoires">
     <div class="accessoires_image">
-     <img src="../../../assets/images/categories/accessoire.jpeg" alt="Accessoires">
+     <img src="../assets/images/categories/accessoire.jpeg" alt="Accessoires">
     </div>
     <h2>Pantalons</h2>
    </div>
 
    <div class="posters">
     <div class="posters_image">
-     <img src="../../../assets/images/categories/poster.jpeg" alt="Posters">
+     <img src="../assets/images/categories/poster.jpeg" alt="Posters">
     </div>
     <h2>Sweats</h2>
    </div>
 
    <div class="accessoires">
     <div class="accessoires_image">
-     <img src="../../../assets/images/categories/accessoire.jpeg" alt="Accessoires">
+     <img src="../assets/images/categories/accessoire.jpeg" alt="Accessoires">
     </div>
     <h2>Sweats</h2>
    </div>
@@ -356,20 +357,20 @@
     <ul>
       <li>
         <div class="reseau_container">
-          <h4>@jfkdqljfqjlj</h4>
+          <h4 class="underline_animation">@jfkdqljfqjlj</h4>
 
           <a href="">
-            <img src="../../../assets/images/reseaux/instagram.png" alt="Instagram">
+            <img src="../assets/images/reseaux/instagram.png" alt="Instagram">
           </a>
         </div>
       </li>
 
       <li>
         <div class="reseau_container">
-          <h4>@jfkdqljfqjlj</h4>
+          <h4 class="underline_animation">@jfkdqljfqjlj</h4>
 
           <a href="">
-            <img src="../../../assets/images/reseaux/instagram.png" alt="Instagram">
+            <img src="../assets/images/reseaux/instagram.png" alt="Instagram">
           </a>
         </div>
       </li>
@@ -377,10 +378,10 @@
       <li>
         <div class="reseau_container">
           <a class="reseau_container" href="">
-            <h4>@jfkdqljfqjlj</h4>
+            <h4 class="underline_animation">@jfkdqljfqjlj</h4>
           </a>
 
-          <img src="../../../assets/images/reseaux/instagram.png" alt="Instagram">
+          <img src="../assets/images/reseaux/instagram.png" alt="Instagram">
         </div>
       </li>
     </ul>

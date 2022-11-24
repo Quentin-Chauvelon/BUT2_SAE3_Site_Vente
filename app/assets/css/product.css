@@ -13,7 +13,7 @@ body {
 
 .product_container {
 	display: flex;
-	/*flex: 0 0 auto;*/
+	flex: 0 0 auto;
 
 	margin: 100px auto 100px auto;
 
@@ -34,7 +34,7 @@ body {
 	overflow-x: hidden;
 }
 
-.product_images_container > div:not(.arrow_background) {
+.product_images_container > div {
 	width: calc(100% - 4px);
 	height: 200px;
 
@@ -43,48 +43,14 @@ body {
 	transition: border 0.2s;
 }
 
-.product_images_container > div > img:not(.arrow_image) {
+.product_images_container > div > img {
 	width: 100%;
 	height: 200px;
 
 	border-radius: 5px;
 }
 
-.arrow_background {
-	position: absolute;
-
-	display: flex;
-	justify-content: center;
-	align-items: center;
-
-
-	--size: 70px;
-	width: var(--size);
-	height: var(--size);
-
-	margin-left: calc(164px / 2 - (var(--size) / 2));
-
-	background-color: white;
-	border-radius: 100%;
-	opacity: 0.95;
-}
-
-.arrow_background > img {
-	--size: 50%;
-	width: var(--size);
-	height: var(--size);
-}
-
-.arrow_background.up_arrow {
-	margin-top: 10px;
-}
-
-.arrow_background.down_arrow {
-	transform: rotate(180deg);
-}
-
-
-.product_images_container > div:not(.selected):not(.arrow_background):hover,
+.product_images_container > div:not(.selected):hover,
 .colour_image_container:not(.selected):hover,
 .sizes_container > button:not(.selected):hover {
 	border: solid 2px #999999;
@@ -105,7 +71,6 @@ body {
 .product_image > img {
 	max-width:100%;
 	height: auto;
-	max-height: 700px;
 }
 
 

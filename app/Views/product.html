@@ -5,7 +5,8 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="../../assets/css/product.css">
+	<script src="../../js_script/product.js"></script>
+	<link rel="stylesheet" href="../assets/css/product.css">
 	<title>Hot genre</title>
 </head>
 
@@ -13,34 +14,37 @@
 	<div class="product_container">
 
 		<div id="product_images_container" class="product_images_container">
+			
 			<!-- php foreach and create divs with images -->
+			<!-- fil d'ariane en haut -->
+
 			<div class="selected">
-				<img src="../../assets/images/product.jpg">
+				<img src="../assets/images/product.jpg">
 			</div>
 
 			<div>
-				<img src="../../assets/images/product.jpg">
+				<img src="../assets/pull_rouge.png">
 			</div>
 
 			<div>
-				<img src="../../assets/images/product.jpg">
+				<img src="../assets/pull_vert.png">
 			</div>
 
 			<div>
-				<img src="../../assets/images/product.jpg">
+				<img src="../assets/images/product.jpg">
 			</div>
 
 			<div>
-				<img src="../../assets/images/product.jpg">
+				<img src="../assets/images/product.jpg">
 			</div>
 
 			<div>
-				<img src="../../assets/images/product.jpg">
+				<img src="../assets/images/product.jpg">
 			</div>
 		</div>
 
 		<div class="product_image">
-			<img id="product_image" src="../../assets/images/product.jpg">
+			<img id="product_image" src="../assets/images/product.jpg">
 		</div>
 
 		<div class="product_details">
@@ -48,26 +52,48 @@
 
 			<h2 class="product_price">29.99€</h2>
 
-			<div class="sizes_container">
-				<div>
-					<h3>S</h3>
+			<p class="product_description">fdjfkljdqfkqdjfl fjdklfj qlkfjdklfjqdklf jdklfjdkljfk qjfkdljfklqdjfk ljfdlksjfklj jfdksl jfkl jfkdlsj fkldj flksj flskdjf klj kdslj fkldsj fklsdj fksdj fkldsj fkdls jfkdsl jfksdqljfklsdqsdkl j fkldsj fklsdjf kldjfkqlsjfkljfsklfjkl jfdklj fqlsk</p>
+
+			<div id="colours_container" class="colours_container">
+				<div class="colour_container">
+					<button class="colour_image_container selected">
+						<img class="colour_image" src="../assets/pull_rouge.png">
+					</button>
+
+					<div class="colour_name_container">
+						<div class="colour" style="background-color: red"></div>
+
+						<h3 class="colour_name">Rouge</h3>
+					</div>
 				</div>
 
-				<div>
-					<h3>M</h3>
-				</div>
+				<div class="colour_container">
+					<button class="colour_image_container">
+						<img class="colour_image" src="../assets/pull_vert.png">
+					</button>
 
-				<div>
-					<h3>L</h3>
-				</div>
+					<div class="colour_name_container">
+						<div class="colour" style="background-color: green"></div>
 
-				<div>
-					<h3>XL</h3>
+						<h3 class="colour_name">Vert</h3>
+					</div>
 				</div>
+			</div>
 
-				<div>
-					<h3>XXL</h3>
-				</div>
+			<div id="sizes_container" class="sizes_container">
+				<button class="selected">S</button>
+				<button>M</button>
+				<button>L</button>
+				<button>XL</button>
+				<button>XXL</button>
+			</div>
+
+			<div class="buttons_container">
+				<button class="add_to_cart">AJOUTER AU PANIER</button>
+
+				<button class="add_to_favorite">
+					<img src="../assets/images/icons/favoris.png">
+				</button>
 			</div>
 		</div>
 

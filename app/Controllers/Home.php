@@ -9,11 +9,13 @@ class Home extends BaseController
 	// 	$this->load->helper('url');
 	// }
 
-    public function index()
+    private ProductModel $ProductModel;
+
+    public function index(): string
     {
-        $this->load->model('ProductModel');
+/*        $this->ProductModel = model('ProductModel');
         $products = $this->ProductModel->findAll();
-		$data = array("prods"=>$products);
+		$data = array("prods"=>$products);*/
 
 		// Les 3 plus populaires
 		// Les images de la dernière collection

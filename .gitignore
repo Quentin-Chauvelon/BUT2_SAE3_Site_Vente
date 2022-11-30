@@ -6,3 +6,5 @@ logs/
 /composer.lock
 /composer.phar
 vendor/
+app/Database/Seeds/drop_tables.sql
+

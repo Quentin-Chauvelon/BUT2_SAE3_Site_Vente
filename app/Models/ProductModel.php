@@ -37,4 +37,35 @@ class ProductModel extends Model
 
         return $result;
     }
+
+
+    public function trouverToutDeCategorie(string $categorie) {
+        
+        $sql = "";
+
+        switch ($categorie) {
+            case "sweat":
+                $sql = "CALL GetAllSweats()";
+                break;
+
+            case "tshirt":
+                $sql = "CALL GetAllTshirts()";
+                break;
+
+            case "pantalon":
+                $sql = "CALL GetAllPantalons()";
+                break;
+
+            case "accessoire":
+                $sql = "CALL GetAllAccessoires()";
+                break;
+
+            case "poster":
+                $sql = "CALL GetAllPosters()";
+                break;
+        }
+
+		$query = $this->db->query($sql, [$categorie]);
+        return $query->getCustomResultObject('App\Models\ProductEntity');
+    }
 }

@@ -7,6 +7,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src=<?= site_url() . "js_script/home.js"?>></script>
   <link rel="stylesheet" href=<?= site_url() . "css/home.css"?>>
+  <link rel="stylesheet" href=<?= site_url() . "css/header.css"?>>
+  <link rel="stylesheet" href=<?= site_url() . "css/footer.css"?>>
   <title>Hot genre DEV</title>
 </head>
 
@@ -184,14 +186,14 @@
       console.log(element.clientHeight)
     </script> -->
 
-    <a href="<?= url_to('Product::display', '1') ?>"><div class="one" style="grid-column: 1; grid-row: 1 / 3"></div></a>
-    <div class="two" style="grid-column: 2 / 4; grid-row: 1 / 3"></div>
-    <div class="three" style="grid-column: 4 / 5; grid-row: 1"></div>
-    <div class="four" style="grid-column: 5 / 6; grid-row: 1 / 3"></div>
-    <div class="five" style="grid-column: 1 / 3; grid-row: 3"></div>
-    <div class="six" style="grid-column: 3 / 4; grid-row: 3"></div>
-    <div class="seven" style="grid-column: 4 / 5; grid-row: 2 / 4"></div>
-    <div class="eight" style="grid-column: 5 / 6; grid-row: 3"></div>
+    <a href="<?= url_to('Product::display', '1') ?>" style="grid-column: 1; grid-row: 1 / 3"><div class="one"></div></a>
+    <a href="<?= url_to('Product::display', '1') ?>" style="grid-column: 2 / 4; grid-row: 1 / 3"><div class="two"></div></a>
+    <a href="<?= url_to('Product::display', '1') ?>" style="grid-column: 4 / 5; grid-row: 1"><div class="three"></div></a>
+    <a href="<?= url_to('Product::display', '1') ?>" style="grid-column: 5 / 6; grid-row: 1 / 3"><div class="four"></div></a>
+    <a href="<?= url_to('Product::display', '1') ?>" style="grid-column: 1 / 3; grid-row: 3"><div class="five"></div></a>
+    <a href="<?= url_to('Product::display', '1') ?>" style="grid-column: 3 / 4; grid-row: 3"><div class="six"></div></a>
+    <a href="<?= url_to('Product::display', '1') ?>" style="grid-column: 4 / 5; grid-row: 2 / 4"><div class="seven"></div></a>
+    <a href="<?= url_to('Product::display', '1') ?>" style="grid-column: 5 / 6; grid-row: 3"><div class="eight"></div></a>
    </div>
  </div>
 

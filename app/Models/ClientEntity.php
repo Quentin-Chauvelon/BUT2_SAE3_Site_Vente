@@ -1,6 +1,10 @@
 <?php
 
-class Client
+namespace App\Models;
+
+use CodeIgniter\Model;
+
+class ClientEntity extends Model
 {
     /** @var int L'identifiant unique du client
      * 

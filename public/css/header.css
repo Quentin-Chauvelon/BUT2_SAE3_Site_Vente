@@ -208,7 +208,13 @@ nav a {
     padding: 10px 30px;
 }
 
-.dropdown_content > div:hover {
+
+.dropdown_content a {
+    text-decoration: none;
+    font-size: 1.17em;
+}
+
+.dropdown_content div:hover {
     background-color: #e6e6e6;
 }
 

@@ -54,9 +54,10 @@ if (is_file(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
     require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
 }
 
-$routes->get('product/(:any)', 'Product::display/$1');
+$routes->get('product/(:num)', 'Product::display/$1');
 $routes->get('product', 'Product::display');
 $routes->get('products', 'Product::displayAll');
+$routes->get('products/categories/(:any)', 'Product::trouverToutDeCategorie/$1');
 
 // $routes->group('home', function ($routes) {
 // });

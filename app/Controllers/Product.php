@@ -37,9 +37,9 @@ class Product extends BaseController
         return view('products', array("products"=>$products));
     }
 
-    public function displayAllOfCategorie($categorie)
+    public function trouverToutDeCategorie($categorie)
     {
-        $products =  $this->ProductModel->findAllOfCategorie($categorie);
-        return view('products', array("product"=>$products));
+        $products =  $this->ProductModel->trouverToutDeCategorie($categorie);
+        return view('products', array("products"=>$products));
     }
 }

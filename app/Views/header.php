@@ -39,11 +39,11 @@
           <a class="underline_animation" href="<?= url_to('Product::displayAll') ?>">SHOP ˅</a>
 
           <div class="dropdown_content">
-            <div><h3>Sweats</h3></div>
-            <div><h3>T-shirts</h3></div>
-            <div><h3>Pantalons</h3></div>
-            <div><h3>Accessoires</h3></div>
-            <div><h3>Posters</h3></div>
+            <a href="<?= url_to('Product::trouverToutDeCategorie', 'sweat') ?>"><div><h3>Sweats</h3></div></a>
+            <a href="<?= url_to('Product::trouverToutDeCategorie', 'tshirt') ?>"><div><h3>T-shirts</h3></div></a>
+            <a href="<?= url_to('Product::trouverToutDeCategorie', 'pantalon') ?>"><div><h3>Pantalons</h3></div></a>
+            <a href="<?= url_to('Product::trouverToutDeCategorie', 'accessoire') ?>"><div><h3>Accessoires</h3></div></a>
+            <a href="<?= url_to('Product::trouverToutDeCategorie', 'poster') ?>"><div><h3>Posters</h3></div></a>
           </div>
         </div>
 

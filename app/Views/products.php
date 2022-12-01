@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html>
 
+<!-- - GetAllPantalons()
+- GetAllSweats()
+- GetAllTshirts()
+- GetAllVetements()
+- GetAllPosters()
+- GetAllAccessoires() -->
+
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,16 +17,19 @@
 </head>
 
 <body>
-    <div class="products_container">
-
+<div class="products_container">
+    <?php foreach($products as $product) : ?>
         <div class="product">
-            <div class="image_container">
-                <img src="images/produits/1/images/image_2.png">
-            </div>
+            <a href="<?= url_to('Product::display', $product->getId_produit()) ?>">
+                <div class="image_container">
+                    <img src=<?= "images/produits" . DIRECTORY_SEPARATOR . $product->getId_produit() . DIRECTORY_SEPARATOR . "images/image_1.png"?>>
+                </div>
+            </a>
 
-            <h3>Nom du produit</h3>
-            <h2>0.30€</h2>
+            <h3><?= $product->getNom()?></h3>
+            <h2><?= sprintf('%01.2f€', (float)$product->getPrix() / 100); ?></h2>
         </div>
-    </div>
+    <?php endforeach; ?>
+</div>
 </body>
 </html>

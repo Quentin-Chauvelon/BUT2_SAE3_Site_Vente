@@ -13,17 +13,28 @@ class ProductModel extends Model
         
         $sql = "CALL GetProduitParId(?)";
 		$query = $this->db->query($sql, [$id]);
-        $result = $query->getRow(0);
+        $product = $query->getCustomRowObject(0, 'App\Models\ProductEntity');
+        
+        //$result = $query->getRow(0);
 
-        $product = new ProductEntity();
-        $product->setId_produit($result->id_produit);
-        $product->setId_collection($result->id_collection);
-        $product->setNom($result->nom);
-        $product->setPrix($result->prix);
-        $product->setReduction($result->reduction);
-        $product->setDescription($result->description);
-        $product->setCategorie($result->categorie);
+        // $product = new ProductEntity();
+        // $product->setId_produit($result->id_produit);
+        // $product->setId_collection($result->id_collection);
+        // $product->setNom($result->nom);
+        // $product->setPrix($result->prix);
+        // $product->setReduction($result->reduction);
+        // $product->setDescription($result->description);
+        // $product->setCategorie($result->categorie);
 
         return $product;
+    }
+
+
+    public function chercherTout() {
+        $sql = "CALL GetAllProduits()";
+		$query = $this->db->query($sql);
+        $result = $query->getCustomResultObject('App\Models\ProductEntity');
+
+        return $result;
     }
 }

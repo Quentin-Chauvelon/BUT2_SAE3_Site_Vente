@@ -58,7 +58,7 @@
 		</div>
 
 		<div class="product_image">
-			<img id="product_image" src=<?= "images/produits/" . $product->getId_produit() . "/images/image_1.jpg" ?>>
+			<img id="product_image" src=<?= $productImages[0] ?>>
 		</div>
 
 		<div class="product_details">

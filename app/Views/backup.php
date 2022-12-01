@@ -14,3 +14,6 @@
         </div>
     <?php endforeach; ?>
 </div>
+
+<!-- product.php line 61 -->
+<img id="product_image" src=<?= "images/produits/" . $product->getId_produit() . "/images/image_1.jpg" ?>>

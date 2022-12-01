@@ -7,7 +7,9 @@ body {
 
 .products_container {
     display: flex;
+    justify-content: center;
     flex-wrap: wrap;
+    gap: 40px;
 
     max-width: 100%;
     margin: 30px;
@@ -19,7 +21,17 @@ body {
     align-items: center;
 
     width: 400px;
+    margin-bottom: 50px;
 }
+
+.product a {
+    width: 100%;
+}
+
+.product:hover img {
+    scale: 1.05;
+}
+
 
 .image_container {
     display: flex;
@@ -27,13 +39,15 @@ body {
     align-items: center;
 
     width: 100%;
+    height: 500px;
+
     background-color: #e6e6e6;
     border-radius: 8px;
 }
 
 .product img {
-    margin: 50px;
-    width: 100%;
+    width: calc(100% - 50px);
+    transition: scale 0.4s
 }
 
 .product h3 {

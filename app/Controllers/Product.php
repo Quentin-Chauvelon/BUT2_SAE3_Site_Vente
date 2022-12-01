@@ -26,7 +26,6 @@ class Product extends BaseController
 
     public function display($id)
     {
-        //$product =  $this->ProductModel->findById((int)$id);
         $product =  $this->ProductModel->findById((int)$id);
         return view('product', array("product"=>$product));
     }
@@ -34,9 +33,8 @@ class Product extends BaseController
 
     public function displayAll()
     {
-        //$products =  $this->ProductModel->findAll();
-        $products =  $this->ProductModel->findById(1);
-        return view('product', array("product"=>$products));
+        $products =  $this->ProductModel->chercherTout();
+        return view('products', array("products"=>$products));
     }
 
     public function displayAllOfCategorie($categorie)

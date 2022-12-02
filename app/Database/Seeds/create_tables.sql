@@ -20,7 +20,7 @@ OR
 REPLACE
 TABLE
     Coupon(
-        code VARCHAR(20) PRIMARY KEY,
+        id_coupon VARCHAR(20) PRIMARY KEY,
         nom VARCHAR(50) NOT NULL,
         montant INT NOT NULL CHECK(montant > 0),
         est_pourcentage BOOLEAN NOT NULL,
@@ -36,6 +36,13 @@ TABLE
 CREATE OR REPLACE VIEW CouponValable AS
 SELECT * FROM Coupon WHERE est_valable = true;
 
+CREATE OR REPLACE TABLE Adresse(
+    id_adresse INT PRIMARY KEY AUTO_INCREMENT,
+    code_postal INT NOT NULL,
+    rue VARCHAR(100) NOT NULL,
+    CONSTRAINT adresse_unique UNIQUE(code_postal, rue)
+);
+
 CREATE
 OR
 REPLACE
@@ -43,11 +50,15 @@ TABLE
     Commande(
         id_commande INT PRIMARY KEY AUTO_INCREMENT,
         id_client INT,
+        id_adresse INT,
         date_commande DATE NOT NULL,
         date_livraison_estimee DATE NOT NULL,
         date_livraison DATE,
         id_coupon VARCHAR(20),
-        CONSTRAINT fk_commande_coupon FOREIGN KEY(id_coupon) REFERENCES Coupon(code),
+        est_validee BOOLEAN DEFAULT false,
+        montant INT default 0,
+        CONSTRAINT fk_commande_coupon FOREIGN KEY(id_coupon) REFERENCES Coupon(id_coupon),
+        CONSTRAINT fk_commande_adresse FOREIGN KEY(id_adresse) REFERENCES Adresse(id_adresse),
         CONSTRAINT fk_commande_client FOREIGN KEY(id_client) REFERENCES Client(id_client),
         CONSTRAINT livraison_estimee_apres_commande CHECK(
             date_livraison_estimee > date_commande
@@ -128,6 +139,22 @@ CREATE OR REPLACE VIEW Tshirt AS
 	SELECT * FROM Produit WHERE categorie =
 'tshirt';
 
+CREATE OR REPLACE TABLE Taille(
+    taille VARCHAR(3) PRIMARY KEY,
+    categorie VARCHAR(10) NOT NULL
+);
+INSERT INTO Taille VALUES('A0', 'poster');
+INSERT INTO Taille VALUES('A1', 'poster');
+INSERT INTO Taille VALUES('A2', 'poster');
+INSERT INTO Taille VALUES('A3', 'poster');
+
+INSERT INTO Taille VALUES('XS', 'vetement');
+INSERT INTO Taille VALUES('S', 'vetement');
+INSERT INTO Taille VALUES('M', 'vetement');
+INSERT INTO Taille VALUES('L', 'vetement');
+INSERT INTO Taille VALUES('XL', 'vetement');
+INSERT INTO Taille VALUES('XXL', 'vetement');
+
 CREATE
 OR
 REPLACE
@@ -136,17 +163,17 @@ TABLE
         id_exemplaire INT PRIMARY KEY AUTO_INCREMENT,
         id_produit INT NOT NULL,
         id_commande INT,
-        -- TODO trigger pour vérifier si la date d'obtention correspond à la date de commande
         date_obtention DATE NOT NULL,
         est_disponible BOOLEAN NOT NULL DEFAULT true,
-        taille VARCHAR(50) NOT NULL,
+        taille VARCHAR(3),
         couleur VARCHAR(20),
         CONSTRAINT fk_exemplaire_produit FOREIGN KEY(id_produit) REFERENCES Produit(id_produit),
         CONSTRAINT fk_exemplaire_commande FOREIGN KEY(id_commande) REFERENCES Commande(id_commande),
         CONSTRAINT dispo_pas_commande CHECK(
             id_commande IS NULL
             OR est_disponible = false
-        ) -- empêche l'article d'être dispo alors qu'il est commandé
+        ), -- empêche l'article d'être dispo alors qu'il est commandé
+        CONSTRAINT fk_taille FOREIGN KEY (taille) REFERENCES Taille(taille)
     );
 
 CREATE OR REPLACE VIEW ExemplaireDispo AS
@@ -164,3 +191,4 @@ TABLE
         CONSTRAINT fk_favori_produit FOREIGN KEY(id_produit) REFERENCES Produit(id_produit),
         PRIMARY KEY(id_client, id_produit)
     );
+

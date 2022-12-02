@@ -20,15 +20,15 @@
 - SupprimerCollection(id)
 
 ### Table Coupon
-- CreerCoupon(code, nom, montant, est_pourcentage, est_valable) Pas de date limite ni de nombre d'utilisations max par défaut.
-- ModifierCoupon(code, nom, montant, est_pourcentage, est_valable, date_limite, utilisations_max)
+- CreerCoupon(id_coupon, nom, montant, est_pourcentage, est_valable) Pas de date limite ni de nombre d'utilisations max par défaut.
+- ModifierCoupon(id_coupon, nom, montant, est_pourcentage, est_valable, date_limite, utilisations_max)
 - GetAllCoupons()
 - GetAllCouponsValables()
-- GetCouponParCode(code)
-- NombreUtilisationsCoupon(code)
+- GetCouponParId(id_coupon)
+- NombreUtilisationsCoupon(id_coupon)
 - GetAllCouponsNonExpires()
 - GetAllCouponsUtilisables()
-- SupprimerCoupon(code)
+- SupprimerCoupon(id_coupon)
 
 ### Table Produit
 - CreerProduit(nom, prix, description, categorie)
@@ -66,14 +66,23 @@
 
 ### Table Commande
 - CreerCommande(id_client)
-- ModifierCommande(id_commande, id_client, date_commande, date_livraison_estimee, date_livraison, id_coupon)
+- ModifierCommande(id_commande, id_client, date_commande, date_livraison_estimee, date_livraison, id_coupon, est_validee, montant, id_adresse)
 - SupprimerCommande(id_commande)
 - GetAllCommandes()
 - GetCommandeParId(id_commande)
 - GetContenuCommande(id_commande)
+- CalculerMontant(id_commande)
+
+### Table Adresse
+- CreerAdresse(code_postal, rue)
+- ModifierAdresse(id_adresse, code_postal, rue)
+- SupprimerAdresse(id_adresse)
+- GetAllAdresses()
+- GetAdressesParCodePostal(code_postal)
+- GetAdresseParId(id_adresse)
+- GetAdressesParClient(id_client)
 */
 
--- TODO Procédures calculer prix commande et colonne est_valide
 CREATE OR REPLACE PROCEDURE GetAllClients()
 BEGIN
     SELECT * FROM Client;
@@ -166,18 +175,18 @@ BEGIN
 END;
 
 CREATE OR REPLACE PROCEDURE CreerCoupon(
-    IN _code VARCHAR(20),
+    IN _id_coupon VARCHAR(20),
     IN _nom VARCHAR(50),
     IN _montant INT,
     IN _est_pourcentage BOOLEAN,
     IN _est_valable BOOLEAN)
 BEGIN
-    INSERT INTO Coupon(code, nom, montant, est_pourcentage, est_valable, date_limite, utilisations_max) VALUES
-    (_code, _nom, _montant, _est_pourcentage, _est_valable, NULL, NULL);
+    INSERT INTO Coupon(id_coupon, nom, montant, est_pourcentage, est_valable, date_limite, utilisations_max) VALUES
+    (_id_coupon, _nom, _montant, _est_pourcentage, _est_valable, NULL, NULL);
 END;
 
 CREATE OR REPLACE PROCEDURE ModifierCoupon(
-    IN _code VARCHAR(20),
+    IN _id_coupon VARCHAR(20),
     IN _nom VARCHAR(50),
     IN _montant INT,
     IN _est_pourcentage BOOLEAN,
@@ -186,7 +195,7 @@ CREATE OR REPLACE PROCEDURE ModifierCoupon(
     IN _utilisations_max INT)
 BEGIN
    UPDATE Coupon SET nom=_nom, montant=_montant, est_pourcentage=_est_pourcentage,
-    est_valable=_est_valable, date_limite=_date_limite, utilisations_max=_utilisations_max WHERE code=_code;
+    est_valable=_est_valable, date_limite=_date_limite, utilisations_max=_utilisations_max WHERE id_coupon=_id_coupon;
 END;
 
 CREATE OR REPLACE PROCEDURE GetAllCoupons()
@@ -199,14 +208,14 @@ BEGIN
    SELECT * FROM CouponValable;
 END;
 
-CREATE OR REPLACE PROCEDURE GetCouponParCode(IN _code VARCHAR(20))
+CREATE OR REPLACE PROCEDURE GetCouponParId(IN _id_coupon VARCHAR(20))
 BEGIN
-    SELECT * FROM Coupon WHERE code=_code;
+    SELECT * FROM Coupon WHERE id_coupon = _id_coupon;
 END;
 
-CREATE OR REPLACE PROCEDURE NombreUtilisationsCoupon(IN _code VARCHAR(20))
+CREATE OR REPLACE PROCEDURE NombreUtilisationsCoupon(IN _id_coupon VARCHAR(20))
 BEGIN
-    SELECT COUNT(*) AS nombre_utilisations FROM Commande where id_coupon=_code;
+    SELECT COUNT(*) AS nombre_utilisations FROM Commande where id_coupon=_id_coupon;
 END;
 
 CREATE OR REPLACE PROCEDURE GetAllCouponsNonExpires()
@@ -216,13 +225,13 @@ END;
 
 CREATE OR REPLACE PROCEDURE GetAllCouponsUtilisables()
 BEGIN
-    SELECT * FROM Coupon WHERE est_valable AND (date_limite IS NULL OR date_limite >= CURDATE())
-    AND (utilisations_max IS NULL OR utilisations_max > (SELECT COUNT(*) FROM Commande where id_coupon=code));
+    SELECT * FROM Coupon AS cp WHERE est_valable AND (date_limite IS NULL OR date_limite >= CURDATE())
+    AND (utilisations_max IS NULL OR utilisations_max > (SELECT COUNT(*) FROM Commande As c where c.id_coupon=cp.id_coupon));
 END;
 
-CREATE OR REPLACE PROCEDURE SupprimerCoupon(IN _code VARCHAR(20))
+CREATE OR REPLACE PROCEDURE SupprimerCoupon(IN _id_coupon VARCHAR(20))
 BEGIN
-   DELETE FROM Coupon WHERE code=_code;
+   DELETE FROM Coupon WHERE id_coupon=_id_coupon;
 END;
 
 
@@ -377,15 +386,15 @@ END;
 
 CREATE OR REPLACE PROCEDURE CreerCommande(IN _id_client INT)
 BEGIN
-   INSERT INTO Commande(id_client, date_commande, date_livraison_estimee, date_livraison, id_coupon)
-    VALUES(_id_client, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 15 DAY), NULL, NULL);
+   INSERT INTO Commande(id_client, date_commande, date_livraison_estimee, date_livraison, id_coupon, est_validee, montant, id_adresse)
+    VALUES(_id_client, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 15 DAY), NULL, NULL, false, 0, NULL);
 END;
 
 CREATE OR REPLACE PROCEDURE ModifierCommande(IN _id_commande INT, IN _id_client INT, IN _date_commande DATE,
-IN _date_livraison_estimee DATE, IN _date_livraison DATE, IN _id_coupon VARCHAR(20))
+IN _date_livraison_estimee DATE, IN _date_livraison DATE, IN _id_coupon VARCHAR(20), IN _est_validee BOOL, IN _montant INT, IN _id_adresse INT)
 BEGIN
     UPDATE Commande SET id_coupon=_id_client, date_commande=_date_commande, date_livraison_estimee=_date_livraison_estimee,
-                        date_livraison=_date_livraison, id_coupon=_id_coupon
+                        date_livraison=_date_livraison, id_coupon=_id_coupon, est_validee=_est_validee, montant=_montant, id_adresse=_id_adresse
     WHERE id_commande=_id_commande;
 END;
 
@@ -407,4 +416,57 @@ END;
 CREATE OR REPLACE PROCEDURE GetContenuCommande(IN _id_commande INT)
 BEGIN
     SELECT id_exemplaire FROM Exemplaire WHERE id_commande=_id_commande;
+END;
+
+CREATE OR REPLACE PROCEDURE CalculerMontant(IN _id_commande INT)
+BEGIN
+    DECLARE coupon VARCHAR(20);
+    DECLARE montant INT DEFAULT 0;
+    SELECT id_coupon INTO coupon FROM Commande WHERE id_commande=_id_commande;
+    SELECT SUM(prix) INTO montant FROM Produit AS p INNER JOIN Exemplaire AS e ON p.id_produit = e.id_produit
+                    WHERE id_commande=_id_commande;
+    IF coupon IS NOT NULL THEN
+        IF EXISTS(SELECT * FROM Coupon WHERE id_coupon=coupon AND est_pourcentage=false) THEN
+            SET montant = montant - (SELECT montant FROM Coupon WHERE id_coupon=coupon);
+            IF montant < 0 THEN SET montant = 0; END IF;
+        ELSE
+            SET montant = montant * (100 - (SELECT montant FROM Coupon WHERE id_coupon=coupon)) / 100;
+        END IF;
+    END IF;
+    UPDATE Commande SET montant=montant WHERE id_commande=_id_commande;
+END;
+
+CREATE OR REPLACE PROCEDURE CreerAdresse(IN _code_postal INT, IN _rue VARCHAR(100))
+BEGIN
+    INSERT INTO Adresse(code_postal, rue) VALUES (_code_postal, _rue);
+END;
+
+CREATE OR REPLACE PROCEDURE ModifierAdresse(IN _id_adresse INT, IN _code_postal INT, IN _rue VARCHAR(100))
+BEGIN
+    UPDATE Adresse SET code_postal=_code_postal, rue=_rue WHERE id_adresse=_id_adresse;
+END;
+
+CREATE OR REPLACE PROCEDURE SupprimerAdresse(IN _id_adresse INT)
+BEGIN
+    DELETE FROM Adresse WHERE id_adresse=_id_adresse;
+END;
+
+CREATE OR REPLACE PROCEDURE GetAllAdresses()
+BEGIN
+    SELECT * FROM Adresse;
+END;
+
+CREATE OR REPLACE PROCEDURE GetAdressesParCodePostal(IN _code_postal INT)
+BEGIN
+    SELECT * FROM Adresse WHERE code_postal=_code_postal;
+END;
+
+CREATE OR REPLACE PROCEDURE GetAdresseParId(IN _id_adresse INT)
+BEGIN
+    SELECT * FROM Adresse WHERE id_adresse=_id_adresse;
+END;
+
+CREATE OR REPLACE PROCEDURE GetAdressesParClient(IN _id_client INT)
+BEGIN
+    SELECT * FROM Adresse WHERE id_adresse IN (SELECT id_adresse FROM Client NATURAL JOIN Commande WHERE id_client=_id_client);
 END;

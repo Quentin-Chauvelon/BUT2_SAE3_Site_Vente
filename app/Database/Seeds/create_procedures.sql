@@ -1,86 +1,86 @@
 /*
 ### Table Client
-- GetAllClients()
-- GetClientParID(ID)
-- GetClientParEmail(email)
-- GetAllAdmins()
-- GetAllFideles()
-- CreerClient(mail, nom, prenom, password) Pas admin par défaut
-- ModifierClient(id, mail, nom, prenom, password, admin)
-- SupprimerClient(id)
+- `GetAllClients()`
+- `GetClientParID(ID)`
+- `GetClientParEmail(email)`
+- `GetAllAdmins()`
+- `GetAllFideles()`
+- `CreerClient(mail, nom, prenom, password)` Pas admin par défaut
+- `ModifierClient(id, mail, nom, prenom, password, admin)`
+- `SupprimerClient(id)`
 
 ### Table Collection
-- CreerCollection(nom) Parution aujourd'hui et pas de date limite par défaut
-- ModifierCollection(id, nom, parution, date_limite)
-- GetAllCollections()
-- GetCollectionParId(id)
-- GetCollectionParNom(nom)
-- GetCollectionsActuelles()
-- GetCollectionsEphemeresActuelles()
-- SupprimerCollection(id)
+- `CreerCollection(nom)` Parution aujourd'hui et pas de date limite par défaut
+- `ModifierCollection(id, nom, parution, date_limite)`
+- `GetAllCollections()`
+- `GetCollectionParId(id)`
+- `GetCollectionParNom(nom)`
+- `GetCollectionsActuelles()`
+- `GetCollectionsEphemeresActuelles()`
+- `SupprimerCollection(id)`
 
 ### Table Coupon
-- CreerCoupon(id_coupon, nom, montant, est_pourcentage, est_valable) Pas de date limite ni de nombre d'utilisations max par défaut.
-- ModifierCoupon(id_coupon, nom, montant, est_pourcentage, est_valable, date_limite, utilisations_max)
-- GetAllCoupons()
-- GetAllCouponsValables()
-- GetCouponParId(id_coupon)
-- NombreUtilisationsCoupon(id_coupon)
-- GetAllCouponsNonExpires()
-- GetAllCouponsUtilisables()
-- SupprimerCoupon(id_coupon)
+- `CreerCoupon(id_coupon, nom, montant, est_pourcentage, est_valable)` Pas de date limite ni de nombre d'utilisations max par défaut.
+- `ModifierCoupon(id_coupon, nom, montant, est_pourcentage, est_valable, date_limite, utilisations_max)`
+- `GetAllCoupons()`
+- `GetAllCouponsValables()`
+- `GetCouponParId(id_coupon)`
+- `NombreUtilisationsCoupon(id_coupon)`
+- `GetAllCouponsNonExpires()
+- `GetAllCouponsUtilisables()`
+- `SupprimerCoupon(id_coupon)`
 
 ### Table Produit
-- CreerProduit(nom, prix, description, categorie)
-- GetAllProduits()
-- GetAllProduitsReduction()
-- GetProduitParId(id_produit)
-- ModifierProduit(id_produit, nom, prix, description, categorie, parution, reduction, id_collection)
-- SupprimerProduit(id_produit)
-- GetAllPantalons()
-- GetAllSweats()
-- GetAllTshirts()
-- GetAllVetements()
-- GetAllPosters()
-- GetAllAccessoires()
-- GetAllProduitsDispo()
+- `CreerProduit(nom, prix, description, categorie)`
+- `GetAllProduits()`
+- `GetAllProduitsReduction()`
+- `GetProduitParId(id_produit)`
+- `ModifierProduit(id_produit, nom, prix, description, categorie, parution, reduction, id_collection)`
+- `SupprimerProduit(id_produit)`
+- `GetAllPantalons()`
+- `GetAllSweats()`
+- `GetAllTshirts()`
+- `GetAllVetements()`
+- `GetAllPosters()`
+- `GetAllAccessoires()`
+- `GetAllProduitsDispo()`
 
 ### Table Favori
-- CreerFavori(id_client, id_produit)
-- SupprimerFavori(id_client, id_produit)
-- GetAllFavoris()
-- GetFavorisClient(id_client)
-- ProduitsPlusFavoris()
+- `CreerFavori(id_client, id_produit)`
+- `SupprimerFavori(id_client, id_produit)`
+- `GetAllFavoris()`
+- `GetFavorisClient(id_client)`
+- `ProduitsPlusFavoris()`
 
 ### Table Exemplaire
-- CreerExemplaire(id_produit, couleur, taille)
-- SupprimerExemplaire(id_exemplaire)
-- ModifierExemplaire(id_exemplaire, id_produit, couleur, taille, est_disponible, date_obtention, id_commande)
-- GetAllExemplaires()
-- GetAllExemplairesDispo()
-- GetExemplaireParId(id_exemplaire)
-- GetExemplairesParProduit(id_produit)
-- GetExemplairesDispoParProduit(id_produit)
-- GetExemplairesParProduitCouleurTaille(id_produit, couleur, taille)
-- GetExemplairesDispoParProduitCouleurTaille(id_produit, couleur, taille)
+- `CreerExemplaire(id_produit, couleur, taille)`
+- `SupprimerExemplaire(id_exemplaire)`
+- `ModifierExemplaire(id_exemplaire, id_produit, couleur, taille, est_disponible, date_obtention, id_commande)`
+- `GetAllExemplaires()`
+- `GetAllExemplairesDispo()`
+- `GetExemplaireParId(id_exemplaire)`
+- `GetExemplairesParProduit(id_produit)`
+- `GetExemplairesDispoParProduit(id_produit)`
+- `GetExemplairesParProduitCouleurTaille(id_produit, couleur, taille)`
+- `GetExemplairesDispoParProduitCouleurTaille(id_produit, couleur, taille)`
 
 ### Table Commande
-- CreerCommande(id_client)
-- ModifierCommande(id_commande, id_client, date_commande, date_livraison_estimee, date_livraison, id_coupon, est_validee, montant, id_adresse)
-- SupprimerCommande(id_commande)
-- GetAllCommandes()
-- GetCommandeParId(id_commande)
-- GetContenuCommande(id_commande)
-- CalculerMontant(id_commande)
+- `CreerCommande(id_client)`
+- `ModifierCommande(id_commande, id_client, date_commande, date_livraison_estimee, date_livraison, id_coupon, est_validee, montant, id_adresse)`
+- `SupprimerCommande(id_commande)`
+- `GetAllCommandes()`
+- `GetCommandeParId(id_commande)`
+- `GetContenuCommande(id_commande)`
+- `CalculerMontant(id_commande)`
 
 ### Table Adresse
-- CreerAdresse(code_postal, rue)
-- ModifierAdresse(id_adresse, code_postal, rue)
-- SupprimerAdresse(id_adresse)
-- GetAllAdresses()
-- GetAdressesParCodePostal(code_postal)
-- GetAdresseParId(id_adresse)
-- GetAdressesParClient(id_client)
+- `CreerAdresse(code_postal, rue)`
+- `ModifierAdresse(id_adresse, code_postal, rue)`
+- `SupprimerAdresse(id_adresse)`
+- `GetAllAdresses()`
+- `GetAdressesParCodePostal(code_postal)`
+- `GetAdresseParId(id_adresse)`
+- `GetAdressesParClient(id_client)`
 */
 
 CREATE OR REPLACE PROCEDURE GetAllClients()

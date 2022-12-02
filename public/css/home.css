@@ -61,29 +61,29 @@ a {
     justify-content: center;
 }
 
-.categories > div {
+.categories div {
     width: 13%;
 }
 
-.categories > div > div {
+.categories div div {
     -moz-box-shadow: 0 0 10px #e6e6e6;
     -webkit-box-shadow: 0 0 10px #e6e6e6;
     box-shadow: 0 0 10px #e6e6e6;
     transition: scale 0.4s
 }
 
-.categories > div > div:hover {
+.categories div div:hover {
     scale: 1.15;
 }
 
-.categories > div > div {
+.categories div div {
     border-radius: 100%;
     width: 100%;
     aspect-ratio: 1/1;
     background-color: #e6e6e6;
 }
 
-.categories > div > h2 {
+.categories div h2 {
     font-size: 180%;
 }
 

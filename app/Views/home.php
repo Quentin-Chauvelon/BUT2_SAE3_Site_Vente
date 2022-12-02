@@ -94,46 +94,50 @@
 
 
  <div class="categories">
-   <div class="posters">
-    <div class="posters_image">
-     <img src="images/categories/poster.jpeg" alt="Posters">
+  <div class="sweats">
+    <a href="<?= url_to('Product::trouverToutDeCategorie', 'sweat') ?>"> 
+      <div class="sweats_image">
+        <img src="images/categories/poster.jpeg" alt="Sweats">
+      </div>
+    </a>
+    
+    <h2>Sweats</h2>
+  </div>
+
+   <div class="tshirts">
+     <a href="<?= url_to('Product::trouverToutDeCategorie', 'tshirt') ?>"> 
+    <div class="tshirts_image">
+     <img src="images/categories/accessoire.jpeg" alt="T-shirts">
     </div>
-    <h2>Posters</h2>
+    </a>
+    <h2>T-shirts</h2>
+   </div>
+
+   <div class="pantalons">
+     <a href="<?= url_to('Product::trouverToutDeCategorie', 'pantalon') ?>"> 
+    <div class="pantalons_image">
+     <img src="images/categories/poster.jpeg" alt="Pantalons">
+    </div>
+    </a>
+    <h2>Pantalons</h2>
    </div>
 
    <div class="accessoires">
+   <a href="<?= url_to('Product::trouverToutDeCategorie', 'accessoire') ?>"> 
     <div class="accessoires_image">
      <img src="images/categories/accessoire.jpeg" alt="Accessoires">
     </div>
+    </a>
     <h2>Accessoires</h2>
    </div>
 
    <div class="posters">
+   <a href="<?= url_to('Product::trouverToutDeCategorie', 'poster') ?>"> 
     <div class="posters_image">
      <img src="images/categories/poster.jpeg" alt="Posters">
     </div>
-    <h2>T-shirts</h2>
-   </div>
-
-   <div class="accessoires">
-    <div class="accessoires_image">
-     <img src="images/categories/accessoire.jpeg" alt="Accessoires">
-    </div>
-    <h2>Pantalons</h2>
-   </div>
-
-   <div class="posters">
-    <div class="posters_image">
-     <img src="images/categories/poster.jpeg" alt="Posters">
-    </div>
-    <h2>Sweats</h2>
-   </div>
-
-   <div class="accessoires">
-    <div class="accessoires_image">
-     <img src="images/categories/accessoire.jpeg" alt="Accessoires">
-    </div>
-    <h2>Sweats</h2>
+    </a>
+    <h2>Posters</h2>
    </div>
  </div>
 

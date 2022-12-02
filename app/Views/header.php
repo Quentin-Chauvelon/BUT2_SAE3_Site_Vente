@@ -4,13 +4,13 @@
         <div></div>
 
         <a href="<?= url_to('Home::index') ?>">
-            <img class="logo" src="images/logos/logo hg noir.png" alt="Logo">
+            <img class="logo" src="<?= site_url() . "images/logos/logo hg noir.png"?>" alt="Logo">
         </a>
 
         <div class="icons_container">
           <div class="icon_container">
             <div class="icon_logo_background">
-              <img class="icon_logo" src="images/icons/cart.png">
+              <img class="icon_logo" src="<?= site_url() . "images/icons/cart.png"?>">
             </div>
 
             <h3 class="underline_animation">Mon panier</h3>
@@ -18,7 +18,7 @@
 
           <div class="icon_container">
             <div class="icon_logo_background">
-              <img class="icon_logo" src="images/icons/favoris.png">
+              <img class="icon_logo" src="<?= site_url() . "images/icons/favoris.png"?>">
             </div>
 
             <h3 class="underline_animation">Mes favoris</h3>
@@ -26,7 +26,7 @@
 
           <div class="icon_container">
             <div class="icon_logo_background">
-              <img class="icon_logo" src="images/icons/account.png">
+              <img class="icon_logo" src="<?= site_url() . "images/icons/account.png"?>">
             </div>
 
             <h3 class="underline_animation">Mon compte</h3>
@@ -57,7 +57,7 @@
 
     <div id="header_sticky" class="header_sticky isSticky">
       <div>
-        <img class="logo" src="images/logos/logo hg noir.png" alt="Logo">
+        <img class="logo" src="<?= site_url() . "images/logos/logo hg noir.png"?>" alt="Logo">
       </div>
 
       <div class="navigation">
@@ -84,15 +84,15 @@
 
       <div class="icons_container">
         <div class="icon_logo_background">
-          <img class="icon_logo" src="images/icons/cart.png">
+        <img class="icon_logo" src="<?= site_url() . "images/icons/cart.png"?>">
         </div>
 
         <div class="icon_logo_background">
-          <img class="icon_logo" src="images/icons/favoris.png">
+        <img class="icon_logo" src="<?= site_url() . "images/icons/favoris.png"?>">
         </div>
 
         <div class="icon_logo_background">
-          <img class="icon_logo" src="images/icons/account.png">
+        <img class="icon_logo" src="<?= site_url() . "images/icons/account.png"?>">
         </div>
       </div>
     </div>

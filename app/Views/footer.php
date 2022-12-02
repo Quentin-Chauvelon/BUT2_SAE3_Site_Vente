@@ -35,7 +35,7 @@
           <h4 class="underline_animation">@jfkdqljfqjlj</h4>
 
           <a href="">
-            <img src="images/reseaux/instagram.png" alt="Instagram">
+            <img src="<?= site_url() . "images/reseaux/instagram.png"?>" alt="Instagram">
           </a>
         </div>
       </li>
@@ -45,7 +45,7 @@
           <h4 class="underline_animation">@jfkdqljfqjlj</h4>
 
           <a href="">
-            <img src="images/reseaux/instagram.png" alt="Instagram">
+          <img src="<?= site_url() . "images/reseaux/instagram.png"?>" alt="Instagram">
           </a>
         </div>
       </li>
@@ -56,7 +56,7 @@
             <h4 class="underline_animation">@jfkdqljfqjlj</h4>
           </a>
 
-          <img src="images/reseaux/instagram.png" alt="Instagram">
+          <img src="<?= site_url() . "images/reseaux/instagram.png"?>" alt="Instagram">
         </div>
       </li>
     </ul>

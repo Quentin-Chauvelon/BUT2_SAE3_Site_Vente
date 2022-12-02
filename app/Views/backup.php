@@ -17,3 +17,6 @@
 
 <!-- product.php line 61 -->
 <img id="product_image" src=<?= "images/produits/" . $product->getId_produit() . "/images/image_1.jpg" ?>>
+
+
+<img src=<?= (file_exists(site_url() . "images/produits" . DIRECTORY_SEPARATOR . $product->getId_produit() . DIRECTORY_SEPARATOR . "images/image_1.png")) ? (site_url() . "images/produits" . DIRECTORY_SEPARATOR . $product->getId_produit() . DIRECTORY_SEPARATOR . "images/image_1.png") : (site_url() . "images/produits" . DIRECTORY_SEPARATOR . $product->getId_produit() . DIRECTORY_SEPARATOR . "images/image_1.jpg") ?>>

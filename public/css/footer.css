@@ -1,0 +1,101 @@
+/* FOOTER */
+.footer {
+    display: flex;
+    justify-content: space-between;
+
+    width: 100%;
+    padding: 20px 0;
+
+    background-color: #e6e6e6;
+}
+
+/* Mettre l'élément de gauche et de droite du footer de la même taille, de sorte à ce que le contact soit bien centré */
+.footer > div:first-of-type, .footer > div:last-of-type {
+    width: 20%;
+}
+
+.footer ul {
+    list-style: none;
+}
+
+.footer li {
+    margin: 5px 0;
+}
+
+.footer li a {
+    color: #2e2e2e;
+}
+
+
+.cgu {
+    display: flex;
+    align-items: center;
+}
+
+
+.contact {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contact h3 {
+    font-size: 25px;
+    font-weight: bold;
+    color: #2e2e2e;
+}
+
+.contact_container {
+    display: flex;
+}
+
+.contact_field {
+    width: 400px;
+    height: 35px;
+
+    border: solid 1px #b5b5b5;
+    border-radius: 8px 0 0 8px;
+}
+
+.contact_button {
+    border: none;
+    background-color: #2e2e2e;    
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    border-radius: 0 8px 8px 0;
+    padding: 10px;
+    transition: background-color 0.15s, color 0.15s, border 0.15s;
+}
+
+.contact_button:hover {
+    background-color: white;
+    color: #2e2e2e;
+    border: solid 1px #b5b5b5;
+}
+
+
+.reseaux ul {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    margin-right: 40px;
+}
+
+.reseaux img {
+    margin-left: 10px;
+
+    width: 20px;
+    height: 20px;
+}
+
+.reseau_container {
+    display: flex;
+    align-items: center;
+}
+
+.reseau_container h4 {
+    margin: 0;
+    color: #2e2e2e;
+}

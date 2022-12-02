@@ -5,111 +5,16 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="../js_script/home.js"></script>
-  <link rel="stylesheet" href="../assets/css/home.css">
-  <title>Hot genre</title>
+  <script src=<?= site_url() . "js_script/home.js"?>></script>
+  <link rel="stylesheet" href=<?= site_url() . "css/home.css"?>>
+  <link rel="stylesheet" href=<?= site_url() . "css/header.css"?>>
+  <link rel="stylesheet" href=<?= site_url() . "css/footer.css"?>>
+  <title>Hot genre DEV</title>
 </head>
 
 <body>
-  <header>
-    <div id="header_not_sticky" class="header_not_sticky">
-      <div class="header_top">
-        <div></div>
 
-        <img class="logo" src="../assets/images/logo.png" alt="Logo">
-
-        <div class="icons_container">
-          <div class="icon_container">
-            <div class="icon_logo_background">
-              <img class="icon_logo" src="../assets/images/icons/cart.png">
-            </div>
-
-            <h3 class="underline_animation">Mon panier</h3>
-          </div>
-
-          <div class="icon_container">
-            <div class="icon_logo_background">
-              <img class="icon_logo" src="../assets/images/icons/favoris.png">
-            </div>
-
-            <h3 class="underline_animation">Mes favoris</h3>
-          </div>
-
-          <div class="icon_container">
-            <div class="icon_logo_background">
-              <img class="icon_logo" src="../assets/images/icons/account.png">
-            </div>
-
-            <h3 class="underline_animation">Mon compte</h3>
-          </div>
-        </div>
-      </div>
-
-      <nav>
-        <div class="shop_dropdown">
-          <a class="underline_animation" href="">SHOP ˅</a>
-
-          <div class="dropdown_content">
-            <div><h3>Sweats</h3></div>
-            <div><h3>T-shirts</h3></div>
-            <div><h3>Pantalons</h3></div>
-            <div><h3>Accessoires</h3></div>
-            <div><h3>Posters</h3></div>
-          </div>
-        </div>
-
-        <a class="underline_animation" href="">FEED</a>
-        <a class="underline_animation" href="">LOOKBOOK</a>
-        <a class="underline_animation" href="">QUI SOMMES NOUS?</a>
-        <a class="underline_animation" href="">CONTACT</a>
-      </nav>
-    </div>
-
-
-    <div id="header_sticky" class="header_sticky isSticky">
-      <div>
-        <img class="logo" src="../assets/images/logo.png" alt="Logo">
-      </div>
-
-      <div class="navigation">
-        <nav>
-          <div class="shop_dropdown">
-            <a class="underline_animation" href="">SHOP ˅</a>
-
-            <div class="dropdown_content">
-              <div><h3>Sweats</h3></div>
-              <div><h3>T-shirts</h3></div>
-              <div><h3>Pantalons</h3></div>
-              <div><h3>Accessoires</h3></div>
-              <div><h3>Posters</h3></div>
-            </div>
-          </div>
-
-
-          <a class="underline_animation" href="">FEED</a>
-          <a class="underline_animation" href="">LOOKBOOK</a>
-          <a class="underline_animation" href="">QUI SOMMES NOUS?</a>
-          <a class="underline_animation" href="">CONTACT</a>
-        </nav>
-      </div>
-
-      <div class="icons_container">
-        <div class="icon_logo_background">
-          <img class="icon_logo" src="../assets/images/icons/cart.png">
-        </div>
-
-        <div class="icon_logo_background">
-          <img class="icon_logo" src="../assets/images/icons/favoris.png">
-        </div>
-
-        <div class="icon_logo_background">
-          <img class="icon_logo" src="../assets/images/icons/account.png">
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <div class="sticky_detection"></div>
+  <?php include 'header.php';?>
 
   <!-- <script>
     const el = document.querySelector(".sticky_detection")
@@ -140,36 +45,6 @@
 
     observer.observe(el);
   </script> -->
-
-  <script>
-    const el = document.querySelector(".sticky_detection")
-
-    var headerNotSticky = document.getElementById("header_not_sticky");
-    var headerSticky = document.getElementById("header_sticky");
-
-    // marche pas car isStickyHeader est appelé avant (changer les classes en fonction de si la page est déjà scrollé, event pour ça?)
-    window.addEventListener('DOMContentLoaded', (event) => {
-      if (window.scrollY > 75) {
-        headerNotSticky.classList.remove("isSticky");
-        headerSticky.classList.add("isSticky");
-      }
-    });
-
-    function isStickyHeader() {
-      headerNotSticky.classList.toggle("isSticky");
-      headerSticky.classList.toggle("isSticky");
-    }
-
-    isStickyHeader()
-
-    const observer = new IntersectionObserver( 
-      ([e]) => isStickyHeader(),
-      { threshold: [1] }
-    );
-    
-    observer.observe(el);
-  </script>
-
 
     <!--
     <div id="carrousel">
@@ -221,42 +96,42 @@
  <div class="categories">
    <div class="posters">
     <div class="posters_image">
-     <img src="../assets/images/categories/poster.jpeg" alt="Posters">
+     <img src="images/categories/poster.jpeg" alt="Posters">
     </div>
     <h2>Posters</h2>
    </div>
 
    <div class="accessoires">
     <div class="accessoires_image">
-     <img src="../assets/images/categories/accessoire.jpeg" alt="Accessoires">
+     <img src="images/categories/accessoire.jpeg" alt="Accessoires">
     </div>
     <h2>Accessoires</h2>
    </div>
 
    <div class="posters">
     <div class="posters_image">
-     <img src="../assets/images/categories/poster.jpeg" alt="Posters">
+     <img src="images/categories/poster.jpeg" alt="Posters">
     </div>
     <h2>T-shirts</h2>
    </div>
 
    <div class="accessoires">
     <div class="accessoires_image">
-     <img src="../assets/images/categories/accessoire.jpeg" alt="Accessoires">
+     <img src="images/categories/accessoire.jpeg" alt="Accessoires">
     </div>
     <h2>Pantalons</h2>
    </div>
 
    <div class="posters">
     <div class="posters_image">
-     <img src="../assets/images/categories/poster.jpeg" alt="Posters">
+     <img src="images/categories/poster.jpeg" alt="Posters">
     </div>
     <h2>Sweats</h2>
    </div>
 
    <div class="accessoires">
     <div class="accessoires_image">
-     <img src="../assets/images/categories/accessoire.jpeg" alt="Accessoires">
+     <img src="images/categories/accessoire.jpeg" alt="Accessoires">
     </div>
     <h2>Sweats</h2>
    </div>
@@ -311,82 +186,18 @@
       console.log(element.clientHeight)
     </script> -->
 
-    <div class="one" style="grid-column: 1; grid-row: 1 / 3"></div>
-    <div class="two" style="grid-column: 2 / 4; grid-row: 1 / 3"></div>
-    <div class="three" style="grid-column: 4 / 5; grid-row: 1"></div>
-    <div class="four" style="grid-column: 5 / 6; grid-row: 1 / 3"></div>
-    <div class="five" style="grid-column: 1 / 3; grid-row: 3"></div>
-    <div class="six" style="grid-column: 3 / 4; grid-row: 3"></div>
-    <div class="seven" style="grid-column: 4 / 5; grid-row: 2 / 4"></div>
-    <div class="eight" style="grid-column: 5 / 6; grid-row: 3"></div>
+    <a href="<?= url_to('Product::display', '1') ?>" style="grid-column: 1; grid-row: 1 / 3"><div class="one"></div></a>
+    <a href="<?= url_to('Product::display', '1') ?>" style="grid-column: 2 / 4; grid-row: 1 / 3"><div class="two"></div></a>
+    <a href="<?= url_to('Product::display', '1') ?>" style="grid-column: 4 / 5; grid-row: 1"><div class="three"></div></a>
+    <a href="<?= url_to('Product::display', '1') ?>" style="grid-column: 5 / 6; grid-row: 1 / 3"><div class="four"></div></a>
+    <a href="<?= url_to('Product::display', '1') ?>" style="grid-column: 1 / 3; grid-row: 3"><div class="five"></div></a>
+    <a href="<?= url_to('Product::display', '1') ?>" style="grid-column: 3 / 4; grid-row: 3"><div class="six"></div></a>
+    <a href="<?= url_to('Product::display', '1') ?>" style="grid-column: 4 / 5; grid-row: 2 / 4"><div class="seven"></div></a>
+    <a href="<?= url_to('Product::display', '1') ?>" style="grid-column: 5 / 6; grid-row: 3"><div class="eight"></div></a>
    </div>
  </div>
 
-
- <div class="footer">
-  <div class="cgu">
-    <ul>
-      <li>
-        <a href="">Conditions générales d'utilisation</a>
-      </li>
-
-      <li>
-        <a href="">Conditions générales d'utilisation</a>
-      </li>
-
-      <li>
-        <a href="">Conditions générales d'utilisation</a>
-      </li>
-
-      <li>
-        <a href="">Conditions générales d'utilisation</a>
-      </li>
-    </ul>
-  </div>
-
-  <div class="contact">
-    <h3>DONNEZ-NOUS VOTRE AVIS</h3>
-
-    <div class="contact_container">
-      <input class="contact_field" type="text">
-      <button class="contact_button">ENVOYER</button>
-    </div>
-  </div>
-  
-  <div class="reseaux">
-    <ul>
-      <li>
-        <div class="reseau_container">
-          <h4 class="underline_animation">@jfkdqljfqjlj</h4>
-
-          <a href="">
-            <img src="../assets/images/reseaux/instagram.png" alt="Instagram">
-          </a>
-        </div>
-      </li>
-
-      <li>
-        <div class="reseau_container">
-          <h4 class="underline_animation">@jfkdqljfqjlj</h4>
-
-          <a href="">
-            <img src="../assets/images/reseaux/instagram.png" alt="Instagram">
-          </a>
-        </div>
-      </li>
-
-      <li>
-        <div class="reseau_container">
-          <a class="reseau_container" href="">
-            <h4 class="underline_animation">@jfkdqljfqjlj</h4>
-          </a>
-
-          <img src="../assets/images/reseaux/instagram.png" alt="Instagram">
-        </div>
-      </li>
-    </ul>
-  </div>
- </div>
+  <?php include 'footer.php';?>
 
 </body>
 </html>

@@ -1,24 +1,30 @@
-	function selectImage(selectedImage, e) {
+// selectImage permet de séletionner une des images sur la gauche afin de la voir en plus grand à côté. 
+function selectImage(selectedImage, e) {
+
+	// On enlève la classe selected de l'élément précédemment sélectionné et on l'ajoute sur l'élément cliqué
+	// Le .selected permet de mettre 
 	selectedImage.classList.remove("selected");
 	e.classList.add("selected");
 
+	// On retourne le lien (src) de l'image qui a été cliqué pour l'afficher en grand à côté
 	var img = e.getElementsByTagName('img')[0];
-
 	return img.getAttribute("src");
 }
 
-
+// selectColour sélectionne la couleur d'un produit
 function selectColour(selectedColour, e) {
 	selectedColour.classList.remove("selected");
 	e.classList.add("selected");
 }
 
+// selectSize sélectionne la taille d'un produit
 function selectSize(selectedSize, e) {
 	selectedSize.classList.remove("selected");
 	e.classList.add("selected");
 }
 
 
+// On attent que le site soit chargé
 document.addEventListener("DOMContentLoaded", function(event) { 
 	// var imagesContainer = document.getElementById("product_images_container")
 	var imagesContainer = document.getElementById("product_images_container");

@@ -1,5 +1,10 @@
 <?php
-class Produit
+
+namespace App\Models;
+
+use CodeIgniter\Model;
+
+class ProductEntity extends Model
 {
     /** @var int L'identifiant unique du produit
      * 
@@ -42,6 +47,18 @@ class Produit
      * 
      */
     private $categorie;
+
+
+    /**
+	 * ProductEntity constructor.
+	 * @param int $id_produit
+	 * @param string $id_collection
+	 * @param string $nom
+	 * @param int $prix
+     * @param int $reduction
+     * @param string $description
+     * @param string $categorie
+	 */
 
 
 

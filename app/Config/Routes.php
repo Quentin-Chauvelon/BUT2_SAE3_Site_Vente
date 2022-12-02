@@ -25,7 +25,7 @@ $routes->set404Override();
 // where controller filters or CSRF protection are bypassed.
 // If you don't want to define all routes, please use the Auto Routing (Improved).
 // Set `$autoRoutesImproved` to true in `app/Config/Feature.php` and set the following to true.
-// $routes->setAutoRoute(false);
+// $routes->setAutoRoute(true);
 
 /*
  * --------------------------------------------------------------------
@@ -53,3 +53,11 @@ $routes->get('/', 'Home::index');
 if (is_file(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
     require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
 }
+
+$routes->get('product/(:num)', 'Product::display/$1');
+$routes->get('product', 'Product::display');
+$routes->get('products', 'Product::displayAll');
+$routes->get('products/categories/(:any)', 'Product::trouverToutDeCategorie/$1');
+
+// $routes->group('home', function ($routes) {
+// });

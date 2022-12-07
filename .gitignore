@@ -7,4 +7,4 @@ logs/
 /composer.phar
 vendor/
 app/Database/Seeds/drop_tables.sql
-
+writable/session/

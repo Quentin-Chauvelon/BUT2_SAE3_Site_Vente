@@ -81,6 +81,13 @@ header {
     height: var(--size);
 }
 
+.icon_container a {
+    text-decoration: none;
+    font-size: 18px;
+    color: #2e2e2e;
+}
+
+
 nav {
     border-bottom: 1px solid black;
     border-top: 1px solid black;

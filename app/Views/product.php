@@ -34,8 +34,6 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script src=<?= site_url() . "js_script/product.js"?>></script>
 	<link rel="stylesheet" href=<?= site_url() . "css/product.css"?>>
-	<link rel="stylesheet" href=<?= site_url() . "css/header.css"?>>
-    <link rel="stylesheet" href=<?= site_url() . "css/footer.css"?>>
 	<title>Hot genre</title>
 </head>
 
@@ -96,5 +94,6 @@
 	</div>
 
 	<?php include 'footer.php';?>
+	
 </body>
 </html>

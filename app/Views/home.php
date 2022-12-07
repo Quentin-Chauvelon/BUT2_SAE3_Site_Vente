@@ -7,8 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src=<?= site_url() . "js_script/home.js"?>></script>
   <link rel="stylesheet" href=<?= site_url() . "css/home.css"?>>
-  <link rel="stylesheet" href=<?= site_url() . "css/header.css"?>>
-  <link rel="stylesheet" href=<?= site_url() . "css/footer.css"?>>
   <title>Hot genre DEV</title>
 </head>
 
@@ -97,7 +95,7 @@
   <div class="sweats">
     <a href="<?= url_to('Product::trouverToutDeCategorie', 'sweat') ?>"> 
       <div class="sweats_image">
-        <img src="images/categories/poster.jpeg" alt="Sweats">
+        <img src="<?= site_url() . "images/home/categories/sweat.png" ?>" alt="Sweats">
       </div>
     </a>
     
@@ -107,7 +105,7 @@
    <div class="tshirts">
      <a href="<?= url_to('Product::trouverToutDeCategorie', 'tshirt') ?>"> 
     <div class="tshirts_image">
-     <img src="images/categories/accessoire.jpeg" alt="T-shirts">
+     <img src="<?= site_url() . "images/home/categories/tshirt.png" ?>" alt="T-shirts">
     </div>
     </a>
     <h2>T-shirts</h2>
@@ -116,7 +114,7 @@
    <div class="pantalons">
      <a href="<?= url_to('Product::trouverToutDeCategorie', 'pantalon') ?>"> 
     <div class="pantalons_image">
-     <img src="images/categories/poster.jpeg" alt="Pantalons">
+     <img src="<?= site_url() . "images/home/categories/pantalon.png" ?>" alt="Pantalons">
     </div>
     </a>
     <h2>Pantalons</h2>
@@ -125,7 +123,7 @@
    <div class="accessoires">
    <a href="<?= url_to('Product::trouverToutDeCategorie', 'accessoire') ?>"> 
     <div class="accessoires_image">
-     <img src="images/categories/accessoire.jpeg" alt="Accessoires">
+     <img src="<?= site_url() . "images/home/categories/accessoire.jpeg" ?>" alt="Accessoires">
     </div>
     </a>
     <h2>Accessoires</h2>
@@ -134,7 +132,7 @@
    <div class="posters">
    <a href="<?= url_to('Product::trouverToutDeCategorie', 'poster') ?>"> 
     <div class="posters_image">
-     <img src="images/categories/poster.jpeg" alt="Posters">
+     <img src="<?= site_url() . "images/home/categories/poster.jpg" ?>" alt="Posters">
     </div>
     </a>
     <h2>Posters</h2>

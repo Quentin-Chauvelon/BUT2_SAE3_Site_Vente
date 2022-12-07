@@ -59,5 +59,10 @@ $routes->get('product', 'Product::display');
 $routes->get('products', 'Product::displayAll');
 $routes->get('products/categories/(:any)', 'Product::trouverToutDeCategorie/$1');
 
-// $routes->group('home', function ($routes) {
-// });
+$routes->get('monCompte', 'Client::monCompte');
+$routes->get('inscription', 'Client::inscription');
+$routes->get('connexion', 'Client::connexion');
+$routes->get('deconnexion', 'Client::deconnexion');
+
+$routes->post('creerCompte','Client::creerCompte');
+$routes->post('connexionCompte','Client::connexionCompte');

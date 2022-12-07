@@ -1,3 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src=<?= site_url() . "js_script/header.js"?>></script>
+    <link rel="stylesheet" href=<?= site_url() . "css/header.css"?>>
+    <title>Hot genre</title>
+</head>
+<body>
 <header>
     <div id="header_not_sticky" class="header_not_sticky">
       <div class="header_top">
@@ -23,13 +34,17 @@
 
             <h3 class="underline_animation">Mes favoris</h3>
           </div>
-
+          
           <div class="icon_container">
-            <div class="icon_logo_background">
-              <img class="icon_logo" src="<?= site_url() . "images/icons/account.png"?>">
-            </div>
+            <a href="<?= url_to('Client::monCompte') ?>">
+              <div class="icon_logo_background">
+                <img class="icon_logo" src="<?= site_url() . "images/icons/account.png"?>">
+              </div>
+            </a>
 
-            <h3 class="underline_animation">Mon compte</h3>
+            <a href="<?= url_to('Client::monCompte') ?>">
+              <h3 class="underline_animation"><?= ($session["prenom"] != NULL) ? $session["prenom"] : "Mon Compte" ?></h3>
+            </a>
           </div>
         </div>
       </div>
@@ -99,3 +114,5 @@
   </header>
 
   <div class="sticky_detection"></div>
+</body>
+</html>

@@ -189,6 +189,8 @@ nav a {
 }
 
 .sticky_detection {
+    width: 100%;
+
     visibility: hidden;
     position: sticky;
     top: -1px;

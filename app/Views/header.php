@@ -72,20 +72,22 @@
 
     <div id="header_sticky" class="header_sticky isSticky">
       <div>
-        <img class="logo" src="<?= site_url() . "images/logos/logo hg noir.png"?>" alt="Logo">
+        <a href="<?= url_to('Home::index') ?>">
+            <img class="logo" src="<?= site_url() . "images/logos/logo hg noir.png"?>" alt="Logo">
+        </a>
       </div>
 
       <div class="navigation">
         <nav>
           <div class="shop_dropdown">
-            <a class="underline_animation" href="">SHOP ˅</a>
+          <a class="underline_animation" href="<?= url_to('Product::displayAll') ?>">SHOP ˅</a>
 
             <div class="dropdown_content">
-              <div><h3>Sweats</h3></div>
-              <div><h3>T-shirts</h3></div>
-              <div><h3>Pantalons</h3></div>
-              <div><h3>Accessoires</h3></div>
-              <div><h3>Posters</h3></div>
+            <a href="<?= url_to('Product::trouverToutDeCategorie', 'sweat') ?>"><div><h3>Sweats</h3></div></a>
+            <a href="<?= url_to('Product::trouverToutDeCategorie', 'tshirt') ?>"><div><h3>T-shirts</h3></div></a>
+            <a href="<?= url_to('Product::trouverToutDeCategorie', 'pantalon') ?>"><div><h3>Pantalons</h3></div></a>
+            <a href="<?= url_to('Product::trouverToutDeCategorie', 'accessoire') ?>"><div><h3>Accessoires</h3></div></a>
+            <a href="<?= url_to('Product::trouverToutDeCategorie', 'poster') ?>"><div><h3>Posters</h3></div></a>
             </div>
           </div>
 
@@ -106,9 +108,11 @@
         <img class="icon_logo" src="<?= site_url() . "images/icons/favoris.png"?>">
         </div>
 
-        <div class="icon_logo_background">
-        <img class="icon_logo" src="<?= site_url() . "images/icons/account.png"?>">
-        </div>
+        <a href="<?= url_to('Client::monCompte') ?>">
+          <div class="icon_logo_background">
+            <img class="icon_logo" src="<?= site_url() . "images/icons/account.png"?>">
+          </div>
+        </a>
       </div>
     </div>
   </header>

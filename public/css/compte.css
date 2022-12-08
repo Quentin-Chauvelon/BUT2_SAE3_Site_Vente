@@ -1,0 +1,154 @@
+body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	font-family: Arial, Helvetica, sans-serif;
+
+    background-color: #f5f5f5;
+}
+
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 100%;
+    height: 60px;
+
+    background-color: #e6e6e6;
+    box-shadow: 0 5px 10px 0 rgba(0,0,0,0.2);
+}
+
+header > div {
+    width: 500px;
+    margin: 0 20px;
+}
+
+header > div:last-child {
+    display: flex;
+    justify-content: flex-end;
+}
+
+header .logo {
+    width: 40px;
+}
+
+header h3 {
+    margin: 0;
+
+    color: #2e2e2e;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+header .deconnexion {
+    width: 200px;
+    height: 40px;
+
+    font-size: 24px;
+    font-weight: bold;
+    background-color: #2e2e2e;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+header .deconnexion:hover {
+    background-color: white;
+    color: #2e2e2e;   
+}
+
+
+.nav_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3px;
+
+    margin-top: 80px;
+}
+
+.nav_container > a:first-child .nav_element {
+    border-radius: 15px 0 0 15px;
+    /* border-left: solid 3px #2e2e2e; */
+}
+
+.nav_container > a:last-child .nav_element {
+    border-radius: 0 15px 15px 0;
+    /* border-right: solid 3px #2e2e2e; */
+}
+
+.nav_container a {
+    text-decoration: none;
+}
+
+.nav_element {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+
+    width: 180px;
+    height: 85px;
+
+    background-color: #2e2e2e;
+    /* border-top: solid 3px #2e2e2e; */
+    /* border-bottom: solid 3px #2e2e2e; */
+
+    transition: background-color 0.2s;
+}
+
+.nav_element .logo, .nav_element .hover_logo {
+    --size: 35px;
+    width: var(--size);
+    height: var(--size);
+}
+
+.nav_element .hover_logo {
+    display: none;
+}
+
+.nav_element h4 {
+    margin: 0;
+
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+
+    transition: color 0.2s;
+}
+
+
+.compte_action {
+    width: 80%;
+    margin: 100px auto;
+    padding: 50px;
+
+    background-color: white;
+    box-shadow: 0 0 15px 0 rgba(0,0,0,0.3);
+}
+
+.nav_element.selected {
+    background-color: black;
+    width: 198px;
+    height: 94px;
+}
+
+.nav_element:hover {
+    background-color: white;
+}
+
+.nav_element:hover .logo {
+    display: none;
+}
+
+.nav_element:hover .hover_logo {
+    display: inline;
+}
+
+.nav_element:hover h4 {
+    color: #2e2e2e;
+}

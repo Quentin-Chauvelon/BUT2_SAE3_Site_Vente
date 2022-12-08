@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\ClientModel;
 use App\Models\ClientEntity;
+use App\Models\ProductModel;
 
 class Client extends BaseController
 {
@@ -12,6 +13,7 @@ class Client extends BaseController
     public function __construct()
     {
         $this->ClientModel = new ClientModel();
+        $this->ProductModel = new ProductModel();
 
         // $this->session = \Config\Services::session();
         // $this->session->start();
@@ -34,9 +36,9 @@ class Client extends BaseController
     
     public function getDonneesSession() {
         $valeursSession = array(
-            'prenom'  => $this->session->get("id"),
-            'prenom'  => $this->session->get("prenom"),
-            'nom'     => $this->session->get("nom"),
+            'id'  => $this->session->get("id"),
+            'prenom' => $this->session->get("prenom"),
+            'nom' => $this->session->get("nom"),
             'email' => $this->session->get("email")
         );
 
@@ -44,9 +46,14 @@ class Client extends BaseController
     }
 
 
+    public function SessionExistante() {
+        return $this->session->has('id') && $this->session->get('id') != NULL;
+    }
+
+
     public function monCompte() {
         if ($this->session->get("email")) {
-            return view("compte");
+            return view("compte", array("compteAction" => "profil", "session" => $this->getDonneesSession()));
         }
 
         else {
@@ -140,6 +147,65 @@ class Client extends BaseController
     public function deconnexion() {
         $this->session->destroy();
 
-        return view('home', array("session" => $this->getDonneesSession()));       
+        return view('home', array("session" => array('id'  => NULL, 'prenom' => NULL, 'nom' => NULL, 'email' => NULL)));       
+    }
+
+
+    public function getAllFavorisClient() {
+        return $this->ClientModel->favorisClient($this->session->get('id'));
+    }
+
+
+    public function afficherFavoris() {
+
+        // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
+        if (!$this->SessionExistante()) {
+            return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
+        }
+
+        $favoris = $this->getAllFavorisClient();
+
+        $products = array();
+
+        foreach ($favoris as $favori) {
+            $idFavori = $favori->getId_produit();
+            
+            $product = $this->ProductModel->findById($idFavori);
+
+            $products[] = $product;
+        }
+
+        return view("compte", array("compteAction" => "favoris", "favoris" => $products, "session" => $this->getDonneesSession()));
+    }
+
+
+    public function ajouterFavori(int $idProduit) {
+
+        // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
+        if (!$this->SessionExistante()) {
+            return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
+        }
+        
+        $favoris = $this->getAllFavorisClient();
+
+        foreach ($favoris as $favori) {
+            $idFavori = $favori->getId_produit();
+
+            // si le produit que l'on veut ajouter aux favoris y est déjà, alors on le supprime
+            if ($idFavori == $idProduit) {
+                $this->supprimerFavori($idProduit);
+                
+                return view('product', array("product" => $this->ProductModel->findById($idProduit), "session" => $this->getDonneesSession()));
+            }
+        }
+
+        $this->ClientModel->ajouterFavori($this->session->get("id"), $idProduit);
+        
+        return view('product', array("product" => $this->ProductModel->findById($idProduit), "session" => $this->getDonneesSession()));
+    }
+
+
+    public function supprimerFavori(int $idProduit) {
+        $this->ClientModel->supprimerFavori($this->session->get("id"), $idProduit);
     }
 }

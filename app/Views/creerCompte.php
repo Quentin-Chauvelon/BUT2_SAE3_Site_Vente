@@ -79,7 +79,7 @@
 
 				<button type="submit">Je crée mon compte</button>
 
-				<h4>Vous avez déjà un compte ? Essayez de vous <a href="<?= url_to('Client::connexion') ?>">connecter</a> plutôt.</h4>
+				<h4 class="creer_compte">Vous avez déjà un compte ? Essayez de vous <a href="<?= url_to('Client::connexion') ?>">connecter</a> plutôt.</h4>
 
 				<!-- prenom trop long, nom trop long, adresse mail non valide (html) -->
 				<!-- mot de pase trop court, trop long, répéter deux fois les mêmes et s'assurer qu'ils sont égaux -->

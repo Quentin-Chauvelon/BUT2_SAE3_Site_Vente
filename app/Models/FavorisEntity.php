@@ -1,5 +1,10 @@
 <?php
-class Favori
+
+namespace App\Models;
+
+use CodeIgniter\Model;
+
+class FavorisEntity extends Model
 {
 
     /** @var int L'identifiant unique du client

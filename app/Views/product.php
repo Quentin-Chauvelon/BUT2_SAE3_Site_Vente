@@ -85,9 +85,12 @@
 			<div class="buttons_container">
 				<button class="add_to_cart">AJOUTER AU PANIER</button>
 
-				<button class="add_to_favorite">
-					<img src="<?= site_url() . "images/icons/favoris.png"?>">
-				</button>
+				<a href="<?= url_to('Client::ajouterFavori', $product->getId_produit()) ?>">
+					<button class="add_to_favorite">
+						<img src="<?= site_url() . "images/icons/favoris.png"?>">
+						<img class="hover_image" src="<?= site_url() . "images/icons/favoris_blanc.png"?>">
+					</button>
+				</a>
 			</div>
 		</div>
 

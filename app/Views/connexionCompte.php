@@ -53,7 +53,7 @@
 
 				<button type="submit">Je me connecte</button>
 
-				<h4>Vous n'avez pas encore de compte ? <a href="<?= url_to('Client::inscription') ?>">Inscrivez-vous</a> plutôt.</h4>
+				<h4 class="connexion_compte">Vous n'avez pas encore de compte ? <a href="<?= url_to('Client::inscription') ?>">Inscrivez-vous</a> plutôt.</h4>
 			</form>
 		</div>
 	</div>

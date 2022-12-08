@@ -10,7 +10,16 @@ a {
 }
 
 
-
+.loader {
+    width: 50px;
+    height: 50px;
+  }
+  
+  
+  #myDiv {
+    display: none;
+    text-align: center;
+  }
 
 
 /* CARROUSEL */

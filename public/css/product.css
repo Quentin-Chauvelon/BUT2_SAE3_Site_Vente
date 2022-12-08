@@ -240,10 +240,22 @@ body {
 	background-color: #2e2e2e;
 }
 
+.add_to_favorite:hover img:not(.hover_image) {
+	display: none;
+}
+
+.add_to_favorite:hover .hover_image {
+	display: inline;
+}
+
 .add_to_favorite img {
 	--size: 25px;
 	width: var(--size);
 	height: var(--size);
+}
+
+.add_to_favorite img.hover_image {
+	display: none;
 }
 
 

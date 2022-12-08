@@ -1,8 +1,8 @@
 // On inverse les deux headers
 function isStickyHeader(headerNotSticky, headerSticky) {
-  console.log("inverted");
   headerNotSticky.classList.toggle("isSticky");
   headerSticky.classList.toggle("isSticky");
+  console.log("inverted");
 }
 
 
@@ -21,12 +21,23 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   observer.observe(el);
 
-  isStickyHeader(headerNotSticky, headerSticky);
+  // isStickyHeader(headerNotSticky, headerSticky);
 
   // Si l'utilisateur n'est pas en haut de la page, on affiche le petit header (si on ne fait pas ça, les headers peuvent s'inverser)
-  if (window.scrollY > 75) {
-    headerNotSticky.classList.remove("isSticky");
-    headerSticky.classList.add("isSticky");
-    console.log("reset");
-  }
+  // if (window.scrollY > 75) {
+  //   headerNotSticky.classList.remove("isSticky");
+  //   headerSticky.classList.add("isSticky");
+  // }
+
+  setTimeout(() => {
+    console.log(window.scrollY);
+
+    if (window.scrollY > 65) {
+      headerNotSticky.classList.add("isSticky");
+      headerSticky.classList.remove("isSticky");
+    } else {
+      headerNotSticky.classList.remove("isSticky");
+      headerSticky.classList.add("isSticky");
+    }
+  }, 2000);
 });

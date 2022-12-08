@@ -75,7 +75,21 @@ header {
     background-color: #2e2e2e
 }
 
-.icon_logo {
+
+.icon_logo_background:hover .icon_logo {
+	display: none;
+}
+
+.icon_logo_background:hover .hover_image {
+	display: inline;
+}
+
+.icon_logo_background .hover_image {
+	display: none;
+}
+
+
+.icon_logo, .icon_logo_background .hover_image {
     --size : 25px;
     width: var(--size);
     height: var(--size);

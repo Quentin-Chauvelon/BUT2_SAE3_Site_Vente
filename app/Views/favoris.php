@@ -31,8 +31,16 @@
                     </div>
                 </a>
 
-                <h3><?= $favori->getNom()?></h3>
-                <h2><?= sprintf('%01.2f€', (float)$favori->getPrix() / 100); ?></h2>
+                <div>
+                    <div class="product_details_container">
+                        <h3><?= $favori->getNom()?></h3>
+                        <h2><?= sprintf('%01.2f€', (float)$favori->getPrix() / 100); ?></h2>
+                    </div>
+
+                    <a href="<?= url_to('Client::ajouterFavori', $favori->getId_produit(), 0) ?>">
+                        <img class="logo" src="<?= site_url() . "images/icons/bin.png"?>" alt="Logo">
+                    </a>
+                </div>
             </div>
         <?php endforeach; ?>
     </div>

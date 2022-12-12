@@ -64,7 +64,11 @@ $routes->get('inscription', 'Client::inscription');
 $routes->get('connexion', 'Client::connexion');
 $routes->get('deconnexion', 'Client::deconnexion');
 $routes->get('afficherFavoris', 'Client::afficherFavoris');
-$routes->get('ajouterFavori/(:num)', 'Client::ajouterFavori/$1');
+$routes->get('ajouterFavori/(:num)/(:any)', 'Client::ajouterFavori/$1/$2');
+$routes->get('afficherPanier', 'Client::afficherPanier');
+$routes->get('afficherHistorique', 'Client::afficherHistorique');
+
 
 $routes->post('creerCompte','Client::creerCompte');
 $routes->post('connexionCompte','Client::connexionCompte');
+$routes->post('modifierProfil','Client::modifierProfil');

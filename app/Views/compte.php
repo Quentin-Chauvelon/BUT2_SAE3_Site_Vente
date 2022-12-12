@@ -37,25 +37,25 @@
         <a href="<?= url_to('Client::afficherFavoris') ?>">
             <div class="nav_element <?= ($compteAction == "favoris" ? "selected" : "") ?>">
                 <img class="logo" src="<?= site_url() . "images/icons/compte/favoris_blanc_plein.png"?>" alt="Logo">
-                <img class="hover_logo" src="<?= site_url() . "images/icons/compte/favoris_blanc_plein.png"?>" alt="Logo">
+                <img class="hover_logo" src="<?= site_url() . "images/icons/compte/favoris_plein.png"?>" alt="Logo">
 
                 <h4>FAVORIS</h4>
             </div>
         </a>
 
-        <a href="<?= url_to('Client::') ?>">
+        <a href="<?= url_to('Client::afficherPanier') ?>">
             <div class="nav_element <?= ($compteAction == "panier" ? "selected" : "") ?>">
                 <img class="logo" src="<?= site_url() . "images/icons/compte/cart_blanc_plein.png"?>" alt="Logo">
-                <img class="hover_logo" src="<?= site_url() . "images/icons/compte/cart_blanc_plein.png"?>" alt="Logo">
+                <img class="hover_logo" src="<?= site_url() . "images/icons/compte/cart_plein.png"?>" alt="Logo">
 
                 <h4>PANIER</h4>
             </div>
         </a>
 
-        <a href="<?= url_to('Client::') ?>">
+        <a href="<?= url_to('Client::afficherHistorique') ?>">
             <div class="nav_element <?= ($compteAction == "historique" ? "selected" : "") ?>">
                 <img class="logo" src="<?= site_url() . "images/icons/compte/historique_blanc_plein.png"?>" alt="Logo">
-                <img class="hover_logo" src="<?= site_url() . "images/icons/compte/historique_blanc_plein.png"?>" alt="Logo">
+                <img class="hover_logo" src="<?= site_url() . "images/icons/compte/historique_plein.png"?>" alt="Logo">
 
                 <h4>HISTORIQUE</h4>
             </div>
@@ -64,7 +64,7 @@
         <a href="<?= url_to('Client::deconnexion') ?>">
             <div class="nav_element">
                 <img class="logo" src="<?= site_url() . "images/icons/compte/deconnexion_blanc_plein.png"?>" alt="Logo">
-                <img class="hover_logo" src="<?= site_url() . "images/icons/compte/deconnexion_blanc_plein.png"?>" alt="Logo">
+                <img class="hover_logo" src="<?= site_url() . "images/icons/compte/deconnexion_plein.png"?>" alt="Logo">
 
                 <h4>DECONNEXION</h4>
             </div>
@@ -76,6 +76,7 @@
     <?php
          switch ($compteAction) {
             case "profil":
+                include 'profil.php';
                 break;
 
             case "favoris":
@@ -95,5 +96,4 @@
 </html>
 
 <!-- logout button on account icon hover -->
-<!-- favorites add delete button on dashboard -->
-<!-- full heart icon when product is favorited -->
+<!-- favorites delete button second argument not really working (function called but doen't return the favoris view) -->

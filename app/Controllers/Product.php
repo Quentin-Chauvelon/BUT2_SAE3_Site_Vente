@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\ProductEntity;
 use App\Models\ProductModel;
+use App\Models\ClientModel;
 
 class Product extends BaseController
 {
@@ -15,12 +16,7 @@ class Product extends BaseController
     public function __construct()
     {
         $this->ProductModel = new ProductModel();
-    }
-
-
-    public function index()
-    {
-        return view('product');
+        $this->ClientModel = new ClientModel();
     }
 
 
@@ -33,10 +29,31 @@ class Product extends BaseController
     }
 
 
+    public function SessionExistante() {
+        return $this->session->has('id') && $this->session->get('id') != NULL;
+    }
+
+
     public function display($id)
     {
         $product =  $this->ProductModel->findById((int)$id);
-        return view('product', array("product" => $product, "session" => $this->getDonneesSession()));
+        
+        $produitFavori = false;
+
+        if ($this->SessionExistante()) {
+            $favoris = $this->ClientModel->favorisClient($this->session->get('id'));
+
+            // on regarde si le produit est en favori
+            foreach ($favoris as $favori) {
+                $idFavori = $favori->getId_produit();
+
+                if ($idFavori == $id) {
+                    $produitFavori = true;
+                }
+            }
+        }
+
+        return view('product', array("product" => $product, "produitFavori" => $produitFavori, "session" => $this->getDonneesSession()));
     }
 
 

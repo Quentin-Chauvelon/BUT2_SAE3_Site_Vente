@@ -53,7 +53,7 @@ class Client extends BaseController
 
     public function monCompte() {
         if ($this->session->get("email")) {
-            return view("compte", array("compteAction" => "profil", "session" => $this->getDonneesSession()));
+            return view("compte", array("compteAction" => "profil", "emailDejaUtilise" => false, "session" => $this->getDonneesSession()));
         }
 
         else {
@@ -79,7 +79,6 @@ class Client extends BaseController
 
             // si les deux mot de passe sont égaux, on crée le compte
             if ($password == $passwordRepetition) {
-                $id = $this->request->getPost('id_client');
                 $prenom = $this->request->getPost('prenom');
                 $nom = $this->request->getPost('nom');
                 $passwordEncrypte = password_hash($password, PASSWORD_DEFAULT);
@@ -91,8 +90,10 @@ class Client extends BaseController
                 $client->setPassword($passwordEncrypte);
     
                 $this->ClientModel->creerCompte($client);
+
+                $id_client = $this->ClientModel->clientAvecEmail($email)->getId_client();
     
-                $this->setDonneesSession($id, $prenom, $nom, $email);
+                $this->setDonneesSession($id_client, $prenom, $nom, $email);
     
                 return view("succesCreationCompteClient");
             }
@@ -179,7 +180,7 @@ class Client extends BaseController
     }
 
 
-    public function ajouterFavori(int $idProduit) {
+    public function ajouterFavori(int $idProduit, int $returnProduit) {
 
         // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
         if (!$this->SessionExistante()) {
@@ -195,17 +196,63 @@ class Client extends BaseController
             if ($idFavori == $idProduit) {
                 $this->supprimerFavori($idProduit);
                 
-                return view('product', array("product" => $this->ProductModel->findById($idProduit), "session" => $this->getDonneesSession()));
+                
+                if ($returnProduit == 1) {
+                    return view('product', array("product" => $this->ProductModel->findById($idProduit), "produitFavori" => false, "session" => $this->getDonneesSession()));
+                } else {
+                    return $this->afficherFavoris();
+                }
             }
         }
 
         $this->ClientModel->ajouterFavori($this->session->get("id"), $idProduit);
         
-        return view('product', array("product" => $this->ProductModel->findById($idProduit), "session" => $this->getDonneesSession()));
+        return view('product', array("product" => $this->ProductModel->findById($idProduit), "produitFavori" => true, "session" => $this->getDonneesSession()));
     }
 
 
     public function supprimerFavori(int $idProduit) {
         $this->ClientModel->supprimerFavori($this->session->get("id"), $idProduit);
+    }
+
+
+    public function afficherPanier() {
+        return view("compte", array("compteAction" => "panier", "session" => $this->getDonneesSession()));
+    }
+
+
+    public function afficherHistorique() {
+        return view("compte", array("compteAction" => "historique", "session" => $this->getDonneesSession()));
+    }
+
+
+    public function modifierProfil() {
+        $email = $this->request->getPost('email');
+        $result =  $this->ClientModel->clientAvecEmail($email);
+
+        if ($result == NULL && $this->SessionExistante()) {
+            $prenom = $this->request->getPost('prenom');
+            $nom = $this->request->getPost('nom');
+    
+            $clientAvant = $this->ClientModel->clientAvecEmail($this->session->get("email"));
+            $id = $clientAvant->getId_client();
+
+            $client = new ClientEntity();
+            $client->setId_client($id);
+            $client->setPrenom(($prenom != "") ? $prenom : $clientAvant->getPrenom());
+            $client->setNom(($nom != "") ? $nom : $clientAvant->getNom());
+            $client->setAdresse_email(($email != "") ? $email : $clientAvant->getAdresse_email());
+            $client->setPassword($clientAvant->getPassword());
+
+            $this->ClientModel->modifierCompteClient($client);
+
+            $this->setDonneesSession($id, $client->getPrenom(), $client->getNom(), $client->getAdresse_email());
+
+            return view("compte", array("compteAction" => "profil", "emailDejaUtilise" => false, "session" => $this->getDonneesSession()));
+        }
+
+        else {
+            return view("compte", array("compteAction" => "profil", "emailDejaUtilise" => true, "session" => $this->getDonneesSession()));
+        }
     }
 }

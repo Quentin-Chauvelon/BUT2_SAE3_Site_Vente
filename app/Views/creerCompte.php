@@ -13,7 +13,7 @@
 	$erreurTexte = "";
 
 	if ($compteDejaExistant) {
-		$erreurTexte = "Un compte semble déjà exister avec cette adresse mail. Essayez de vous connecter plutôt.";
+		$erreurTexte = "Un compte semble déjà exister avec cette adresse mail. Essayez de vous <a href=".url_to('Client::connexion').">connecter</a> plutôt.";
 	}
 
 	if ($passwordsDifferents) {

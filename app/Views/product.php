@@ -85,10 +85,10 @@
 			<div class="buttons_container">
 				<button class="add_to_cart">AJOUTER AU PANIER</button>
 
-				<a href="<?= url_to('Client::ajouterFavori', $product->getId_produit()) ?>">
-					<button class="add_to_favorite">
-						<img src="<?= site_url() . "images/icons/favoris.png"?>">
-						<img class="hover_image" src="<?= site_url() . "images/icons/favoris_blanc.png"?>">
+				<a href="<?= url_to('Client::ajouterFavori', $product->getId_produit(), 1) ?>">
+					<button class="add_to_favorite">					
+						<img src="<?= ($produitFavori) ? site_url() . "images/icons/compte/favoris_plein.png" : site_url() . "images/icons/favoris.png" ?>">
+						<img class="hover_image" src="<?= ($produitFavori) ? site_url() . "images/icons/compte/favoris_blanc_plein.png" : site_url() . "images/icons/favoris_blanc.png" ?>">
 					</button>
 				</a>
 			</div>

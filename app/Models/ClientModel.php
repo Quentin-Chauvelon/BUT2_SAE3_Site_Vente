@@ -18,9 +18,13 @@ class ClientModel extends Model
     public function clientAvecEmail(string $email) {
         $sql = "CALL GetClientParEmail(?)";
 		$query = $this->db->query($sql, [$email]);
-        $result = $query->getCustomRowObject(0, 'App\Models\ClientEntity');
+        return $query->getCustomRowObject(0, 'App\Models\ClientEntity');
+    }
 
-        return $result;
+
+    public function modifierCompteClient(ClientEntity $client) {
+        $sql = "CALL ModifierClient(?, ?, ?, ?, ?, ?)";
+		$this->db->query($sql, [$client->getId_client(), $client->getAdresse_email(), $client->getNom(), $client->getPrenom(), $client->getPassword(), false]);
     }
 
 

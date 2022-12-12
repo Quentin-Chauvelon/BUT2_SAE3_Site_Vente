@@ -87,7 +87,7 @@
       <div class="navigation">
         <nav>
           <div class="shop_dropdown">
-          <a class="underline_animation" href="<?= url_to('Product::displayAll') ?>">SHOP ˅</a>
+            <a class="underline_animation" href="<?= url_to('Product::displayAll') ?>">SHOP ˅</a>
 
             <div class="dropdown_content">
             <a href="<?= url_to('Product::trouverToutDeCategorie', 'sweat') ?>"><div><h3>Sweats</h3></div></a>
@@ -108,14 +108,14 @@
 
       <div class="icons_container">
         <div class="icon_logo_background">
-        <img class="icon_logo" src="<?= site_url() . "images/icons/cart.png"?>">
-        <img class="hover_image" src="<?= site_url() . "images/icons/cart_blanc.png"?>">
+          <img class="icon_logo" src="<?= site_url() . "images/icons/cart.png"?>">
+          <img class="hover_image" src="<?= site_url() . "images/icons/cart_blanc.png"?>">
         </div>
         
         <a href="<?= url_to('Client::afficherFavoris') ?>">
           <div class="icon_logo_background">
-          <img class="icon_logo" src="<?= site_url() . "images/icons/favoris.png"?>">
-          <img class="hover_image" src="<?= site_url() . "images/icons/favoris_blanc.png"?>">
+            <img class="icon_logo" src="<?= site_url() . "images/icons/favoris.png"?>">
+            <img class="hover_image" src="<?= site_url() . "images/icons/favoris_blanc.png"?>">
           </div>
         </a>
 

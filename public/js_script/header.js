@@ -2,7 +2,6 @@
 function isStickyHeader(headerNotSticky, headerSticky) {
   headerNotSticky.classList.toggle("isSticky");
   headerSticky.classList.toggle("isSticky");
-  console.log("inverted");
 }
 
 
@@ -30,8 +29,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
   // }
 
   setTimeout(() => {
-    console.log(window.scrollY);
-
     if (window.scrollY > 65) {
       headerNotSticky.classList.add("isSticky");
       headerSticky.classList.remove("isSticky");

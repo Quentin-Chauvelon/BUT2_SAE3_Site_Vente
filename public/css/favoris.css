@@ -24,7 +24,7 @@ body {
     margin-bottom: 50px;
 }
 
-.product a {
+.product > a {
     width: 100%;
 }
 
@@ -50,8 +50,17 @@ body {
     transition: scale 0.4s
 }
 
+.product > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: calc(100% - 50px);
+    margin-top: 20px;
+}
+
 .product h3 {
-    margin: 20px 0 10px 0;
+    margin: 0 0 10px 0;
     font-size: 18px;
     font-weight: 500;
 }
@@ -60,4 +69,11 @@ body {
     margin: 0;
     font-size: 25px;
     font-weight: bold;
+}
+
+.product > div img {
+    --size: 40px;
+    width: var(--size);
+    /* height: var(--size); */
+    height: calc(var(--size) - 5px);
 }

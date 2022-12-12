@@ -95,8 +95,9 @@ header .deconnexion:hover {
     height: 85px;
 
     background-color: #2e2e2e;
-    /* border-top: solid 3px #2e2e2e; */
-    /* border-bottom: solid 3px #2e2e2e; */
+    /* border-top: solid 3px #2e2e2e;
+    border-bottom: solid 3px #2e2e2e; */
+    border: solid 3px #2e2e2e;
 
     transition: background-color 0.2s;
 }
@@ -132,9 +133,11 @@ header .deconnexion:hover {
 }
 
 .nav_element.selected {
-    background-color: black;
     width: 198px;
     height: 94px;
+    background-color: black;
+    border: solid 3px black;
+    border-radius: 8px;
 }
 
 .nav_element:hover {

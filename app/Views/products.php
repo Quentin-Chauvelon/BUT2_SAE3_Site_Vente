@@ -1,20 +1,11 @@
 <!DOCTYPE html>
 <html>
 
-<!-- - GetAllPantalons()
-- GetAllSweats()
-- GetAllTshirts()
-- GetAllVetements()
-- GetAllPosters()
-- GetAllAccessoires() -->
-
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href=<?= site_url() . "css/products.css"?>>
-    <link rel="stylesheet" href=<?= site_url() . "css/header.css"?>>
-    <link rel="stylesheet" href=<?= site_url() . "css/footer.css"?>>
 	<title>Hot genre</title>
 </head>
 
@@ -27,7 +18,18 @@
             <div class="product">
                 <a href="<?= url_to('Product::display', $product->getId_produit()) ?>">
                     <div class="image_container">
-                        <img src=<?= "images/produits" . DIRECTORY_SEPARATOR . $product->getId_produit() . DIRECTORY_SEPARATOR . "images/image_1.png"?>>
+                        <?php 
+                            $imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $product->getId_produit() . DIRECTORY_SEPARATOR . "images/image_1.png";
+
+                            $headers = @get_headers($imageURL);
+
+                            // On vérifie si l'url existe
+                            if(!$headers  || strpos($headers[0], '404')) {
+                                $imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $product->getId_produit() . DIRECTORY_SEPARATOR . "images/image_1.jpg";
+                            }
+                        ?>
+
+                        <img src=<?= $imageURL ?>>
                     </div>
                 </a>
 

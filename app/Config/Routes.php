@@ -59,5 +59,16 @@ $routes->get('product', 'Product::display');
 $routes->get('products', 'Product::displayAll');
 $routes->get('products/categories/(:any)', 'Product::trouverToutDeCategorie/$1');
 
-// $routes->group('home', function ($routes) {
-// });
+$routes->get('monCompte', 'Client::monCompte');
+$routes->get('inscription', 'Client::inscription');
+$routes->get('connexion', 'Client::connexion');
+$routes->get('deconnexion', 'Client::deconnexion');
+$routes->get('afficherFavoris', 'Client::afficherFavoris');
+$routes->get('ajouterFavori/(:num)/(:any)', 'Client::ajouterFavori/$1/$2');
+$routes->get('afficherPanier', 'Client::afficherPanier');
+$routes->get('afficherHistorique', 'Client::afficherHistorique');
+
+
+$routes->post('creerCompte','Client::creerCompte');
+$routes->post('connexionCompte','Client::connexionCompte');
+$routes->post('modifierProfil','Client::modifierProfil');

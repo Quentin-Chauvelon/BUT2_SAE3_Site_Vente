@@ -1,9 +1,14 @@
 /* FOOTER */
+footer {
+    width: 100%;
+}
+
 .footer {
     display: flex;
     justify-content: space-between;
 
     width: 100%;
+    margin-top: 100px;
     padding: 20px 0;
 
     background-color: #e6e6e6;

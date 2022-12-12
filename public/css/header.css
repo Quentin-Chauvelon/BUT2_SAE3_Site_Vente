@@ -75,11 +75,32 @@ header {
     background-color: #2e2e2e
 }
 
-.icon_logo {
+
+.icon_logo_background:hover .icon_logo {
+	display: none;
+}
+
+.icon_logo_background:hover .hover_image {
+	display: inline;
+}
+
+.icon_logo_background .hover_image {
+	display: none;
+}
+
+
+.icon_logo, .icon_logo_background .hover_image {
     --size : 25px;
     width: var(--size);
     height: var(--size);
 }
+
+.icon_container a {
+    text-decoration: none;
+    font-size: 18px;
+    color: #2e2e2e;
+}
+
 
 nav {
     border-bottom: 1px solid black;
@@ -182,6 +203,8 @@ nav a {
 }
 
 .sticky_detection {
+    width: 100%;
+
     visibility: hidden;
     position: sticky;
     top: -1px;

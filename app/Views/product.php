@@ -8,7 +8,7 @@
 	foreach(new DirectoryIterator(dirname("images/produits" . DIRECTORY_SEPARATOR . $product->getId_produit() . DIRECTORY_SEPARATOR . "images/.")) as $file)
 	{
 		if(!$file->isDot()) {
-			$productImages[] = $file->getPath() . DIRECTORY_SEPARATOR . $file->getFileName();
+			$productImages[] = site_url() . $file->getPath() . DIRECTORY_SEPARATOR . $file->getFileName();
 		}
 	}
 
@@ -32,10 +32,8 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<!-- <script src=<?= site_url() . "js_script/product.js"?>></script> -->
+	<script src=<?= site_url() . "js_script/product.js"?>></script>
 	<link rel="stylesheet" href=<?= site_url() . "css/product.css"?>>
-	<link rel="stylesheet" href=<?= site_url() . "css/header.css"?>>
-    <link rel="stylesheet" href=<?= site_url() . "css/footer.css"?>>
 	<title>Hot genre</title>
 </head>
 
@@ -48,7 +46,8 @@
 		<div id="product_images_container" class="product_images_container">
 			
 			<div class="arrow_background up_arrow">
-				<img class="arrow_image" src="images/icons/account.png">
+			
+				<img class="arrow_image" src="<?= site_url() . "images/icons/account.png"?>">
 			</div>
 
 			<?php foreach($productImages as $key=>$imageSrc) : ?>
@@ -58,7 +57,7 @@
 			<?php endforeach; ?>
 
 			<div class="arrow_background down_arrow">
-				<img class="arrow_image" src="images/icons/account.png">
+				<img class="arrow_image" src="<?= site_url() . "images/icons/account.png"?>">
 			</div>
 		</div>
 
@@ -86,14 +85,18 @@
 			<div class="buttons_container">
 				<button class="add_to_cart">AJOUTER AU PANIER</button>
 
-				<button class="add_to_favorite">
-					<img src="images/icons/favoris.png">
-				</button>
+				<a href="<?= url_to('Client::ajouterFavori', $product->getId_produit(), 1) ?>">
+					<button class="add_to_favorite">					
+						<img src="<?= ($produitFavori) ? site_url() . "images/icons/compte/favoris_plein.png" : site_url() . "images/icons/favoris.png" ?>">
+						<img class="hover_image" src="<?= ($produitFavori) ? site_url() . "images/icons/compte/favoris_blanc_plein.png" : site_url() . "images/icons/favoris_blanc.png" ?>">
+					</button>
+				</a>
 			</div>
 		</div>
 
 	</div>
 
 	<?php include 'footer.php';?>
+	
 </body>
 </html>

@@ -42,20 +42,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	}
 
 
-	var coloursContainer = document.getElementById("colours_container");
-	var selectedColour = coloursContainer.getElementsByClassName("selected")[0];
+	// var coloursContainer = document.getElementById("colours_container");
+	// var selectedColour = coloursContainer.getElementsByClassName("selected")[0];
 
-	for (const e of coloursContainer.childNodes) {
-		if (e.nodeType == 1) {
+	// for (const e of coloursContainer.childNodes) {
+	// 	if (e.nodeType == 1) {
 
-			e.getElementsByClassName("colour_image_container")[0].addEventListener('click', function(){
-				var eImage = e.getElementsByClassName("colour_image_container")[0];
+	// 		e.getElementsByClassName("colour_image_container")[0].addEventListener('click', function(){
+	// 			var eImage = e.getElementsByClassName("colour_image_container")[0];
 
-				selectColour(selectedColour, eImage);
-				selectedColour = eImage;				
-			});
-		}
-	}
+	// 			selectColour(selectedColour, eImage);
+	// 			selectedColour = eImage;				
+	// 		});
+	// 	}
+	// }
 
 
 	var sizesContainer = document.getElementById("sizes_container");

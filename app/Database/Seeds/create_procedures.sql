@@ -74,8 +74,8 @@
 - `CalculerMontant(id_commande)`
 
 ### Table Adresse
-- `CreerAdresse(code_postal, rue)`
-- `ModifierAdresse(id_adresse, code_postal, rue)`
+- `CreerAdresse(code_postal, ville, rue)`
+- `ModifierAdresse(id_adresse, ville, code_postal, rue)`
 - `SupprimerAdresse(id_adresse)`
 - `GetAllAdresses()`
 - `GetAdressesParCodePostal(code_postal)`
@@ -436,14 +436,14 @@ BEGIN
     UPDATE Commande SET montant=montant WHERE id_commande=_id_commande;
 END;
 
-CREATE OR REPLACE PROCEDURE CreerAdresse(IN _code_postal INT, IN _rue VARCHAR(100))
+CREATE OR REPLACE PROCEDURE CreerAdresse(IN _code_postal INT, IN _ville VARCHAR(100), IN _rue VARCHAR(100))
 BEGIN
-    INSERT INTO Adresse(code_postal, rue) VALUES (_code_postal, _rue);
+    INSERT INTO Adresse(code_postal, ville, rue) VALUES (_code_postal, _ville, _rue);
 END;
 
-CREATE OR REPLACE PROCEDURE ModifierAdresse(IN _id_adresse INT, IN _code_postal INT, IN _rue VARCHAR(100))
+CREATE OR REPLACE PROCEDURE ModifierAdresse(IN _id_adresse INT, IN _ville VARCHAR(100), IN _code_postal INT, IN _rue VARCHAR(100))
 BEGIN
-    UPDATE Adresse SET code_postal=_code_postal, rue=_rue WHERE id_adresse=_id_adresse;
+    UPDATE Adresse SET code_postal=_code_postal, rue=_rue, ville=_ville WHERE id_adresse=_id_adresse;
 END;
 
 CREATE OR REPLACE PROCEDURE SupprimerAdresse(IN _id_adresse INT)

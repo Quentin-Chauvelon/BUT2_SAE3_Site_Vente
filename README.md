@@ -285,8 +285,8 @@ Produit  -->  Collection : id_collection
 - `CalculerMontant(id_commande)`
 
 ### Table Adresse
-- `CreerAdresse(code_postal, rue)`
-- `ModifierAdresse(id_adresse, code_postal, rue)`
+- `CreerAdresse(code_postal, ville, rue)`
+- `ModifierAdresse(id_adresse, ville, code_postal, rue)`
 - `SupprimerAdresse(id_adresse)`
 - `GetAllAdresses()`
 - `GetAdressesParCodePostal(code_postal)`

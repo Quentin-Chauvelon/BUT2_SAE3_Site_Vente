@@ -2,40 +2,29 @@
 
 namespace App\Models;
 
+use App\Entities\Collection;
 use CodeIgniter\Model;
 
 class ModeleCollection extends Model
 {
-    protected $table            = 'Client';
-    protected $primaryKey       = 'id_client';
-    protected $useAutoIncrement = true;
-    protected $insertID         = 0;
-    protected $returnType       = 'array';
-    protected $useSoftDeletes   = false;
-    protected $protectFields    = true;
-    protected $allowedFields    = [];
 
-    // Dates
-    protected $useTimestamps = false;
-    protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
-    protected $deletedField  = 'deleted_at';
+    private static ModeleCollection $instance;
 
-    // Validation
-    protected $validationRules      = [];
-    protected $validationMessages   = [];
-    protected $skipValidation       = false;
-    protected $cleanValidationRules = true;
+    protected $table            = 'Collection';
+    protected $primaryKey       = 'id_collection';
+    protected $returnType       = Collection::class;
+    protected $allowedFields    = ['id_collection', 'nom', 'parution', 'date_limite'];
 
-    // Callbacks
-    protected $allowCallbacks = true;
-    protected $beforeInsert   = [];
-    protected $afterInsert    = [];
-    protected $beforeUpdate   = [];
-    protected $afterUpdate    = [];
-    protected $beforeFind     = [];
-    protected $afterFind      = [];
-    protected $beforeDelete   = [];
-    protected $afterDelete    = [];
+    private function __construct()
+    {
+        parent::__construct();
+    }
+
+    public static function getInstance(): ModeleCollection
+    {
+        if (!isset(self::$instance)) {
+            self::$instance = new ModeleCollection();
+        }
+        return self::$instance;
+    }
 }

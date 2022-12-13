@@ -11,6 +11,7 @@ classDiagram
 direction BT
 class Adresse {
    int(11) code_postal
+   varchar(100) ville
    varchar(100) rue
    int(11) id_adresse
 }
@@ -189,6 +190,7 @@ Exemplaire  -->  Taille : taille
 Favori  -->  Client : id_client
 Favori  -->  Produit : id_produit
 Produit  -->  Collection : id_collection
+
 ```
 
 ## Triggers SQL
@@ -292,3 +294,10 @@ Produit  -->  Collection : id_collection
 - `GetAdressesParCodePostal(code_postal)`
 - `GetAdresseParId(id_adresse)`
 - `GetAdressesParClient(id_client)`
+
+### Table Taille
+- `GetAllTailles()`
+- `GetCategorieParTaille(taille)`
+- `GetTaillesParCategorie(categorie)`
+- `GetTaillesPoster()`
+- `GetTaillesVetement()`

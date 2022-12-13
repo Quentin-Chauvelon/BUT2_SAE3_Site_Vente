@@ -2,41 +2,29 @@
 
 namespace App\Models;
 
+use App\Entities\Commande;
 use CodeIgniter\Model;
 
 class ModeleCommande extends Model
 {
-    protected $DBGroup          = 'default';
-    protected $table            = 'modelecommandes';
-    protected $primaryKey       = 'id';
-    protected $useAutoIncrement = true;
-    protected $insertID         = 0;
-    protected $returnType       = 'array';
-    protected $useSoftDeletes   = false;
-    protected $protectFields    = true;
-    protected $allowedFields    = [];
+    private static ModeleCommande $instance;
 
-    // Dates
-    protected $useTimestamps = false;
-    protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
-    protected $deletedField  = 'deleted_at';
+    protected $table            = 'Commande';
+    protected $primaryKey       = 'id_commande';
+    protected $returnType       = Commande::class;
+    protected $allowedFields    = ['id_commande', 'id_client', 'id_adresse', 'date_commande', 'date_livraison_estimee', 'date_livraison',
+    'id_coupon', 'est_validee', 'montant'];
 
-    // Validation
-    protected $validationRules      = [];
-    protected $validationMessages   = [];
-    protected $skipValidation       = false;
-    protected $cleanValidationRules = true;
+    private function __construct()
+    {
+        parent::__construct();
+    }
 
-    // Callbacks
-    protected $allowCallbacks = true;
-    protected $beforeInsert   = [];
-    protected $afterInsert    = [];
-    protected $beforeUpdate   = [];
-    protected $afterUpdate    = [];
-    protected $beforeFind     = [];
-    protected $afterFind      = [];
-    protected $beforeDelete   = [];
-    protected $afterDelete    = [];
+    public static function getInstance(): ModeleCommande
+    {
+        if (!isset(self::$instance)) {
+            self::$instance = new ModeleCommande();
+        }
+        return self::$instance;
+    }
 }

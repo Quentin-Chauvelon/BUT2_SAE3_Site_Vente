@@ -9,8 +9,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
   // la div sticky detection est positionné juste en dessous le header et permet quand elle touche le haut de la page, de modifier le header à afficher
   const el = document.querySelector(".sticky_detection")
 
-  var headerNotSticky = document.getElementById("header_not_sticky");
-  var headerSticky = document.getElementById("header_sticky");
+  let headerNotSticky = document.getElementById("header_not_sticky");
+  let headerSticky = document.getElementById("header_sticky");
 
   // Quand l'élément sticky_detection touche le haut de la page, on inverse le header a afficher
   const observer = new IntersectionObserver( 

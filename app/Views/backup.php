@@ -15,6 +15,29 @@
     <?php endforeach; ?>
 </div>
 
+
+CREATE OR REPLACE TRIGGER exemplaire_pas_dispo_commande BEFORE
+UPDATE ON Exemplaire FOR EACH ROW BEGIN
+   IF NEW.id_commande IS NOT NULL THEN
+      UPDATE Exemplaire SET est_disponible=false WHERE id_exemplaire=NEW.id_exemplaire;
+END IF;
+END;
+
+
+<?php foreach($productColors as $key=>$imageSrc) : ?>
+  <div class="colour_container">
+  <div class="colour_image_container <?php echo ($key == 0) ? 'selected' : '' ?>" data-couleur="<?= $couleur ?>">
+  <img class="arrow_image" src= <?= $imageSrc ?>>
+  </div>
+  
+  <!-- <div class="colour_name_container">
+  <div class="colour" style="background-color: red"></div>
+  
+  <h3 class="colour_name">Rouge</h3>
+  </div> -->
+  </div>
+<?php endforeach; ?>
+
 <!-- product.php line 61 -->
 <img id="product_image" src=<?= "images/produits/" . $product->getId_produit() . "/images/image_1.jpg" ?>>
 

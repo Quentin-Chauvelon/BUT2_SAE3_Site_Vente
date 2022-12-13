@@ -71,10 +71,18 @@ header {
     transition: background-color 0.2s;
 }
 
-.icon_logo_background:hover {
-    background-color: #2e2e2e
+
+.icon_container:hover .icon_logo_background {
+    background-color: #2e2e2e;
 }
 
+.icon_container:hover .icon_logo {
+    display: none;
+}
+
+.icon_container:hover .hover_image {
+    display: inline;
+}
 
 .icon_logo_background:hover .icon_logo {
 	display: none;
@@ -86,6 +94,10 @@ header {
 
 .icon_logo_background .hover_image {
 	display: none;
+}
+
+.icon_logo_background:hover {
+    background-color: #2e2e2e;
 }
 
 
@@ -112,6 +124,7 @@ nav {
 }
 
 nav a {
+    text-decoration: none;
     color: black;
     font-size: 40px;
 }
@@ -133,6 +146,11 @@ nav a {
   background-color: #2e2e2e;
   transform-origin: bottom right;
   transition: transform 0.2s ease-out;
+}
+
+.icon_container:hover .underline_animation::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
 }
 
 .underline_animation:hover::after {

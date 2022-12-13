@@ -16,6 +16,7 @@
 * `update_commande_validee`
 * `commande_validee_mauvaise`
 */
+
 CREATE OR REPLACE TRIGGER coupon_trop_utilise_insert
 BEFORE INSERT ON Commande FOR EACH ROW BEGIN
 DECLARE use_max INT;
@@ -82,9 +83,9 @@ END;
 
 CREATE OR REPLACE TRIGGER exemplaire_pas_dispo_commande BEFORE
 UPDATE ON Exemplaire FOR EACH ROW BEGIN
-   IF NEW.id_commande IS NOT NULL THEN
-      UPDATE Exemplaire SET est_disponible=false WHERE id_exemplaire=NEW.id_exemplaire;
-END IF;
+    IF NEW.id_commande IS NOT NULL AND OLD.id_exemplaire = NEW.id_exemplaire THEN
+        SET NEW.est_disponible=false;
+    END IF;
 END;
 
 CREATE OR REPLACE TRIGGER suppression_commande_liberer_exemplaire BEFORE

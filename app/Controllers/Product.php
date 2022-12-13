@@ -5,6 +5,8 @@ namespace App\Controllers;
 use App\Models\ProductEntity;
 use App\Models\ProductModel;
 use App\Models\ClientModel;
+use App\Models\FavorisModel;
+use App\Models\ExemplaireModel;
 
 class Product extends BaseController
 {
@@ -17,6 +19,8 @@ class Product extends BaseController
     {
         $this->ProductModel = new ProductModel();
         $this->ClientModel = new ClientModel();
+        $this->FavorisModel = new FavorisModel();
+        $this->ExemplaireModel = new ExemplaireModel();
     }
 
 
@@ -41,7 +45,7 @@ class Product extends BaseController
         $produitFavori = false;
 
         if ($this->SessionExistante()) {
-            $favoris = $this->ClientModel->favorisClient($this->session->get('id'));
+            $favoris = $this->FavorisModel->favorisClient($this->session->get('id'));
 
             // on regarde si le produit est en favori
             foreach ($favoris as $favori) {
@@ -53,7 +57,7 @@ class Product extends BaseController
             }
         }
 
-        return view('product', array("product" => $product, "produitFavori" => $produitFavori, "session" => $this->getDonneesSession()));
+        return view('product', array("product" => $product, "exemplaires" => $this->ExemplaireModel->getExemplairesDispoParProduit($id), "ajouteAuPanier" => true, "produitFavori" => $produitFavori, "session" => $this->getDonneesSession()));
     }
 
 

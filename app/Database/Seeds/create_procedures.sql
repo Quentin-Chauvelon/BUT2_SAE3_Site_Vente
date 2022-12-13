@@ -81,6 +81,14 @@
 - `GetAdressesParCodePostal(code_postal)`
 - `GetAdresseParId(id_adresse)`
 - `GetAdressesParClient(id_client)`
+
+### Table Taille
+- `GetAllTailles()`
+- `GetCategorieParTaille(taille)`
+- `GetTaillesParCategorie(categorie)`
+- `GetTaillesPoster()`
+- `GetTaillesVetement()`
+
 */
 
 CREATE OR REPLACE PROCEDURE GetAllClients()
@@ -426,11 +434,11 @@ BEGIN
     SELECT SUM(prix) INTO montant FROM Produit AS p INNER JOIN Exemplaire AS e ON p.id_produit = e.id_produit
                     WHERE id_commande=_id_commande;
     IF coupon IS NOT NULL THEN
-        IF EXISTS(SELECT * FROM Coupon WHERE id_coupon=coupon AND est_pourcentage=false) THEN
-            SET montant = montant - (SELECT montant FROM Coupon WHERE id_coupon=coupon);
+        IF EXISTS(SELECT * FROM Coupon AS c WHERE c.id_coupon=coupon AND c.est_pourcentage=false) THEN
+            SET montant = montant - (SELECT montant FROM Coupon AS c WHERE c.id_coupon=coupon);
             IF montant < 0 THEN SET montant = 0; END IF;
         ELSE
-            SET montant = montant * (100 - (SELECT montant FROM Coupon WHERE id_coupon=coupon)) / 100;
+            SET montant = montant * (100 - (SELECT montant FROM Coupon AS c WHERE c.id_coupon=coupon)) / 100;
         END IF;
     END IF;
     UPDATE Commande SET montant=montant WHERE id_commande=_id_commande;
@@ -469,4 +477,24 @@ END;
 CREATE OR REPLACE PROCEDURE GetAdressesParClient(IN _id_client INT)
 BEGIN
     SELECT * FROM Adresse WHERE id_adresse IN (SELECT id_adresse FROM Client NATURAL JOIN Commande WHERE id_client=_id_client);
+END;
+
+CREATE OR REPLACE PROCEDURE GetAllTailles()
+BEGIN
+    SELECT * FROM Taille;
+END;
+
+CREATE OR REPLACE PROCEDURE GetCategorieParTaille(IN _taille VARCHAR(3))
+BEGIN
+    SELECT * FROM Taille WHERE taille=_taille;
+END;
+
+CREATE OR REPLACE PROCEDURE GetTaillesParCategorie(IN _categorie VARCHAR(10))
+BEGIN
+    SELECT * FROM Taille WHERE categorie=_categorie;
+END;
+
+CREATE OR REPLACE PROCEDURE GetTaillesPoster()
+BEGIN
+    SELECT * FROM Taille WHERE categorie='poster';
 END;

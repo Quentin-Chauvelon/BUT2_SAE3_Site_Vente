@@ -83,7 +83,7 @@ END;
 CREATE OR REPLACE TRIGGER exemplaire_pas_dispo_commande BEFORE
 UPDATE ON Exemplaire FOR EACH ROW BEGIN
    IF NEW.id_commande IS NOT NULL THEN
-      UPDATE Exemplaire SET est_disponible=false WHERE id_exemplaire=NEW.id_exemplaire;
+      SET NEW.est_disponible=false;
 END IF;
 END;
 

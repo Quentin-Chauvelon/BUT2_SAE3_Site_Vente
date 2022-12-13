@@ -2,41 +2,29 @@
 
 namespace App\Models;
 
+use App\Entities\Exemplaire;
 use CodeIgniter\Model;
 
 class ModeleExemplaire extends Model
 {
-    protected $DBGroup          = 'default';
-    protected $table            = 'modeleexemplaires';
-    protected $primaryKey       = 'id';
-    protected $useAutoIncrement = true;
-    protected $insertID         = 0;
-    protected $returnType       = 'array';
-    protected $useSoftDeletes   = false;
-    protected $protectFields    = true;
-    protected $allowedFields    = [];
+    private static ModeleExemplaire $instance;
 
-    // Dates
-    protected $useTimestamps = false;
-    protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
-    protected $deletedField  = 'deleted_at';
+    protected $table            = 'Exemplaire';
+    protected $primaryKey       = 'id_exemplaire';
+    protected $returnType       = Exemplaire::class;
+    protected $allowedFields    = ['id_exemplaire', 'id_produit', 'id_commande', 'date_obtention', 'est_disponible', 'taille', 'couleur'];
 
-    // Validation
-    protected $validationRules      = [];
-    protected $validationMessages   = [];
-    protected $skipValidation       = false;
-    protected $cleanValidationRules = true;
+    private function __construct()
+    {
+        parent::__construct();
+    }
 
-    // Callbacks
-    protected $allowCallbacks = true;
-    protected $beforeInsert   = [];
-    protected $afterInsert    = [];
-    protected $beforeUpdate   = [];
-    protected $afterUpdate    = [];
-    protected $beforeFind     = [];
-    protected $afterFind      = [];
-    protected $beforeDelete   = [];
-    protected $afterDelete    = [];
+    private static function getInstance(): ModeleExemplaire
+    {
+        if (!isset(self::$instance)) {
+            self::$instance = new ModeleExemplaire();
+        }
+        return self::$instance;
+    }
+
 }

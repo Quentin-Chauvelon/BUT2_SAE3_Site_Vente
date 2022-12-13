@@ -72,3 +72,4 @@ $routes->get('afficherHistorique', 'Client::afficherHistorique');
 $routes->post('creerCompte','Client::creerCompte');
 $routes->post('connexionCompte','Client::connexionCompte');
 $routes->post('modifierProfil','Client::modifierProfil');
+$routes->post('ajouterAuPanier', 'Client::ajouterAuPanier');

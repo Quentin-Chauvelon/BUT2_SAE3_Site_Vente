@@ -5,6 +5,9 @@ namespace App\Controllers;
 use App\Models\ClientModel;
 use App\Models\ClientEntity;
 use App\Models\ProductModel;
+use App\Models\FavorisModel;
+use App\Models\CommandeModel;
+use App\Models\ExemplaireModel;
 
 class Client extends BaseController
 {
@@ -14,6 +17,9 @@ class Client extends BaseController
     {
         $this->ClientModel = new ClientModel();
         $this->ProductModel = new ProductModel();
+        $this->FavorisModel = new FavorisModel();
+        $this->CommandeModel = new CommandeModel();
+        $this->ExemplaireModel = new ExemplaireModel();
 
         // $this->session = \Config\Services::session();
         // $this->session->start();
@@ -153,7 +159,7 @@ class Client extends BaseController
 
 
     public function getAllFavorisClient() {
-        return $this->ClientModel->favorisClient($this->session->get('id'));
+        return $this->FavorisModel->favorisClient($this->session->get('id'));
     }
 
 
@@ -205,14 +211,14 @@ class Client extends BaseController
             }
         }
 
-        $this->ClientModel->ajouterFavori($this->session->get("id"), $idProduit);
+        $this->FavorisModel->ajouterFavori($this->session->get("id"), $idProduit);
         
         return view('product', array("product" => $this->ProductModel->findById($idProduit), "produitFavori" => true, "session" => $this->getDonneesSession()));
     }
 
 
     public function supprimerFavori(int $idProduit) {
-        $this->ClientModel->supprimerFavori($this->session->get("id"), $idProduit);
+        $this->FavorisModel->supprimerFavori($this->session->get("id"), $idProduit);
     }
 
 
@@ -255,4 +261,78 @@ class Client extends BaseController
             return view("compte", array("compteAction" => "profil", "emailDejaUtilise" => true, "session" => $this->getDonneesSession()));
         }
     }
+
+
+    public function ajouterAuPanier() {
+        $idProduit = $this->request->getPost('idProduit');
+
+        if (!$this->SessionExistante()) {
+            return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
+        }
+        
+        $commandes = $this->CommandeModel->getCommandes();
+        $idCommandeClient = NULL;
+
+        $idClient = $this->session->get("id");
+
+        foreach($commandes as $commande) {
+            $idCommande = $commande->getId_client();
+
+            if ($idCommande == $idClient) {
+                $idCommandeClient = $idCommande;
+            }
+        }
+
+        // s'il n'existe pas de commande pour l'utilisateur, on en crée une
+        if (!$idCommandeClient) {
+            $commandes = $this->CommandeModel->creerCommande($idClient);
+        }
+
+        $quantite = $this->request->getPost('quantite');
+        $couleur = $this->request->getPost('couleur');
+        $taille = $this->request->getPost('taille');
+
+        $exemplaires = $this->ExemplaireModel->getExemplairesDispoParProduitCouleurTaille($idProduit, $couleur, $taille);
+
+        // on s'assure qu'il y assez d'exemplaires pour la couleur et la taille donnée
+        if (count($exemplaires) < $quantite) {
+            echo "Erreur : Il n'y a pas assez d'exemplaires avec la quantité, couleur ou taille donnée (maximum : " . count($exemplaires) . ").";
+        }
+
+        foreach ($exemplaires as $exemplaire) {
+            $idExemplaire = $exemplaire->getId_exemplaire();
+            $estDisponible = $exemplaire->getEst_disponible();
+            $dateObtention = $exemplaire->getDate_obtention();
+
+            if ($estDisponible) {
+                $this->ExemplaireModel->modifierExemplaire($idExemplaire, $idProduit, $couleur, $taille, $estDisponible, $dateObtention, $idCommandeClient);
+
+                $quantite -= 1;
+
+                if ($quantite == 0) {
+                    break;
+                }
+            }
+        }
+
+        // si certains exemplaires n'étaient pas disponibles et que l'on a pas réussi à 
+        if ($quantite != 0) {
+            echo "Erreur : Il n'y a pas eu assez d'exemplaires avec la quantité, couleur ou taille donnée.";
+        }
+
+        $result = $this->CommandeModel->getContenuCommande($idCommandeClient);
+
+        var_dump($result);
+
+        foreach ($result as $exemplaire) {
+            var_dump($exemplaire);
+        }
+    }
 }
+
+// taille, couleurs, quantite dispo
+// sauvegarder les adresses (idclient dans la table adresse)
+// activation compte par email (rajouter base de données -> bool estVerifie et code activation surement)
+// modifier mot de passe (envoie email) dans infos personnelles
+// marquer les produits en rupture de stock dans SHOP
+// faire une erreur plus propre pour un manque d'exemplaire (revenir sur la page produit avec un message en rouge)

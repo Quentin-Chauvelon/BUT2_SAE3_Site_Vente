@@ -89,7 +89,7 @@ body {
 
 .product_images_container > div:not(.selected):not(.arrow_background):hover,
 .colour_image_container:not(.selected):hover,
-.sizes_container > button:not(.selected):hover {
+.sizes_container > div:not(.selected):hover {
 	border: solid 2px #999999;
 }
 
@@ -130,8 +130,8 @@ body {
 	justify-content: center;
 	align-items: center;
 
-	width: 200px;
-	height: 225px;
+	width: 150px;
+	height: 175px;
 
 	padding: 10px;
 
@@ -139,6 +139,11 @@ body {
 	border-radius: 10px;
 	border: solid 2px transparent;
 	transition: border 0.2s;
+}
+
+.colour_image_container img {
+	max-width: 100%;
+	max-height: 100%;
 }
 
 .colour_image {
@@ -175,7 +180,7 @@ body {
 	gap: 20px;
 }
 
-.sizes_container > button {
+.sizes_container > div {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -192,6 +197,25 @@ body {
 	font-weight: bold;
 }
 
+
+.quantity_container {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+
+	margin-top: 50px;
+}
+
+.quantity_input {
+	height: 20px;
+}
+
+.quantity_max {
+	font-size: 17px;
+	font-weight: 100;
+}
+
+
 .buttons_container {
 	display: flex;
 	gap: 10px;
@@ -199,7 +223,7 @@ body {
 
 	width: 100%;
 
-	margin-top: 50px;
+	margin-top: 10px;
 }
 
 .add_to_cart {
@@ -255,6 +279,84 @@ body {
 }
 
 .add_to_favorite img.hover_image {
+	display: none;
+}
+
+
+.article_ajoute {
+	position: absolute;
+
+	--margin: 20px;
+	top: var(--margin);
+	right: var(--margin);
+
+	max-width: 300px;
+
+	background-color: white;
+	box-shadow: 0 0 30px 0 rgba(0,0,0,1);
+	border-radius: 5px;
+
+	z-index: 10;
+}
+
+.article_ajoute h3 {
+	margin: 20px 20px 0 20px;
+
+	font-size: 22px;
+	font-weight: 900;
+	text-align: center; 
+}
+
+.article_ajoute a {
+	text-decoration: none;
+}
+
+.article_ajoute .valider_panier {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	margin: 20px;
+
+	background-color: #2e2e2e;
+	color: white;
+	border: solid 3px #2e2e2e;
+	height: 50px;
+	border-radius: 20px;
+
+	font-weight: 600;
+	font-size: 30px;
+
+	transition: background-color 0.2s, color 0.2s;
+}
+
+.article_ajoute .valider_panier:hover {
+	background-color: white;
+	color: #2e2e2e;
+}
+
+
+.article_ajoute .timer_animation {
+	width: 100%;
+	height: 10px;
+	
+	background-color: #02c4de;
+	border-radius: 0 0 4px 0;
+}
+
+@keyframes roundtime {
+	to {
+		transform: scaleX(0);
+	}
+}
+
+
+.article_ajoute .timer_animation_start {
+	animation: roundtime calc(8 * 1s) linear forwards;
+	transform-origin: right center;
+}
+
+.article_ajoute_hidden {
 	display: none;
 }
 

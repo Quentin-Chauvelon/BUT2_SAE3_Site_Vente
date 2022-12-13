@@ -1,20 +1,20 @@
 // function moveToSelected(element) {
 
 //   if (element == "next")
-//     var selected = document.getElementsByClassName(".next")
+//     let selected = document.getElementsByClassName(".next")
   
 //   else if (element == "prev")
-//     var selected = document.getElementsByClassName(".prev")
+//     let selected = document.getElementsByClassName(".prev")
 //   // } else {
-//   //   var selected = element;
+//   //   let selected = element;
 
 //   console.log(element)
 //   console.log(selected)
 
-//   var next = $(selected).next();
-//   var prev = $(selected).prev();
-//   var prevSecond = $(prev).prev();
-//   var nextSecond = $(next).next();
+//   let next = $(selected).next();
+//   let prev = $(selected).prev();
+//   let prevSecond = $(prev).prev();
+//   let nextSecond = $(next).next();
 
 //   $(selected).removeClass().addClass("selected");
 

@@ -12,7 +12,7 @@
 
 
 
-<body onload="myFunction()" style="margin:0;">
+<body >
 
 <div id="loader">
 
@@ -24,16 +24,10 @@
 ]]></script>
 </svg>
 
-<div class="blackribbonbot"> </div>
+  <div class="blackribbonbot"> </div>
 </div>
+
 <script>
-
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-document.getElementById("loader").setAttribute("style","width: 30%","position: absolute","top: 50%", "left: 50%");
 
   document.onreadystatechange = function showPage() {
   if(document.readyState !== "complete"){

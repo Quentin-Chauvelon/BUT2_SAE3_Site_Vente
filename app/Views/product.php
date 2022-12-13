@@ -2,7 +2,42 @@
 <html>
 
 
+<script>
+	function ProduitAjoutePanier() {
+		setTimeout(() => {
+			AfficherProduitAjoutePanier();
+		}, 1000)
+	}
+</script>
+
+
 <?php
+	$tailleParCouleurs = [];
+	$couleurs = [];
+	$tailles = [];
+
+	// on compte le nombre de tailles par couleurs
+	foreach ($exemplaires as $exemplaire) {
+		$couleur = $exemplaire->getCouleur();
+		$taille = $exemplaire->getTaille();
+
+		if (!array_key_exists($couleur, $tailleParCouleurs)) {
+			$tailleParCouleurs[$couleur] = array();
+			$couleurs[] = $couleur;
+		}
+
+		if (array_key_exists($taille, $tailleParCouleurs[$couleur])) {
+			$tailleParCouleurs[$couleur][$taille] += 1;
+		} else {
+			$tailleParCouleurs[$couleur][$taille] = 1;
+		}
+
+		if (!in_array($taille, $tailles)) {
+			$tailles[] = $taille;
+		}
+	}
+
+
 	$productImages = [];
 
 	foreach(new DirectoryIterator(dirname("images/produits" . DIRECTORY_SEPARATOR . $product->getId_produit() . DIRECTORY_SEPARATOR . "images/.")) as $file)
@@ -15,16 +50,36 @@
 	sort($productImages);
 
 
+	$imageURLParCouleurs = [];
+
+	foreach ($couleurs as $couleur) {
+		$imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $product->getId_produit() . DIRECTORY_SEPARATOR . "couleurs/" . $couleur . ".png";
+		
+		$headers = @get_headers($imageURL);
+		
+		// On vérifie si l'url existe
+		if(!$headers  || strpos($headers[0], '404')) {
+			$imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $product->getId_produit() . DIRECTORY_SEPARATOR . "couleurs/" . $couleur . ".jpg";
+		}
+
+		$imageURLParCouleurs[$couleur] = $imageURL;
+	}
+
 	// $productColors = [];
 
 	// foreach(new DirectoryIterator(dirname("images/produits" . DIRECTORY_SEPARATOR . $product->getId_produit() . DIRECTORY_SEPARATOR . "couleurs/.")) as $file)
 	// {
 	// 	if(!$file->isDot()) {
-	// 		$productColors[] = $file->getPath() . DIRECTORY_SEPARATOR . $file->getFileName();
+	// 		$productColors[] = site_url() . $file->getPath() . DIRECTORY_SEPARATOR . $file->getFileName();
 	// 	}
 	// }
 
 	// sort($productColors);
+
+
+	if ($ajouteAuPanier) {
+		echo "<script>ProduitAjoutePanier();</script>";
+	}
 ?>
 
 
@@ -72,28 +127,64 @@
 
 			<p class="product_description"><?= $product->getDescription() ?></p>
 
-			<!-- COLOR HERE + UNCOMMENT LINES 18-27 -->
+			<div id="colours_container" class="colours_container">
+
+				<?php foreach($imageURLParCouleurs as $couleur=>$imageSrc) : ?>
+					<div class="colour_container" data-couleur="<?= $couleur ?>">
+						<div class="colour_image_container <?php echo ($couleur == $couleurs[0]) ? 'selected' : '' ?>">
+							<img class="arrow_image" src= <?= $imageSrc ?>>
+						</div>
+
+						<div class="colour_name_container">
+							<!-- <div class="colour" style="background-color: red"></div> -->
+
+							<h3 class="colour_name"><?= ucfirst($couleur) ?></h3>
+						</div>
+					</div>
+				<?php endforeach; ?>
+			</div>
 
 			<div id="sizes_container" class="sizes_container">
-				<button class="selected">S</button>
-				<button>M</button>
-				<button>L</button>
-				<button>XL</button>
-				<button>XXL</button>
+				<?php foreach($tailles as $key=>$taille) : ?>
+					<div class="<?php echo ($key == 0) ? 'selected' : '' ?>" data-taille="<?= $taille ?>"><?= $taille ?></div>
+				<?php endforeach; ?>
 			</div>
 
-			<div class="buttons_container">
-				<button class="add_to_cart">AJOUTER AU PANIER</button>
+			<form action=<?= url_to('Client::ajouterAuPanier') ?> method="post">
+				<div class="quantity_container">
+				<h3>Quantité :</h3>
+					<!-- <button class="increase_quantity"></button> -->
+					<input id="quantity_input" class="quantity_input" name="quantite" type="number" value="1" min="0" max="20">
+					<!-- <button class="decrease_quantity"></button> -->
+					<h3 class="quantity_max">Maximum : 20</h3>
+				</div>
+				
+				<input type="hidden" name="idProduit" value="<?= $product->getId_produit() ?>" readonly>
+				<input id="couleur_input" type="hidden" name="couleur" value="<?= $couleurs[0] ?>" readonly>
+				<input id="taille_input" type="hidden" name="taille" value="<?= $tailles[0] ?>" readonly>
+				
+				<div class="buttons_container">
+					<button type="submit" class="add_to_cart">AJOUTER AU PANIER</button>
 
-				<a href="<?= url_to('Client::ajouterFavori', $product->getId_produit(), 1) ?>">
-					<button class="add_to_favorite">					
-						<img src="<?= ($produitFavori) ? site_url() . "images/icons/compte/favoris_plein.png" : site_url() . "images/icons/favoris.png" ?>">
-						<img class="hover_image" src="<?= ($produitFavori) ? site_url() . "images/icons/compte/favoris_blanc_plein.png" : site_url() . "images/icons/favoris_blanc.png" ?>">
-					</button>
-				</a>
-			</div>
+					<a href="<?= url_to('Client::ajouterFavori', $product->getId_produit(), 1) ?>">
+						<div class="add_to_favorite">					
+							<img src="<?= ($produitFavori) ? site_url() . "images/icons/compte/favoris_plein.png" : site_url() . "images/icons/favoris.png" ?>">
+							<img class="hover_image" src="<?= ($produitFavori) ? site_url() . "images/icons/compte/favoris_blanc_plein.png" : site_url() . "images/icons/favoris_blanc.png" ?>">
+						</div>
+					</a>
+				</div>
+			</form>
 		</div>
+	</div>
 
+	<div id="article_ajoute" class="article_ajoute article_ajoute_hidden">
+		<h3>Votre article a bien été ajouté au panier !</h3>
+		
+		<a href="<?= url_to('Client::ajouterAuPanier') ?>">
+			<div class="valider_panier">Valider et payer</div>
+		</a>
+
+		<div id="timer_animation" class="timer_animation"></div>
 	</div>
 
 	<?php include 'footer.php';?>

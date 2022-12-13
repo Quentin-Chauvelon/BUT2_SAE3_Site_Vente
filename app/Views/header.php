@@ -20,12 +20,16 @@
 
         <div class="icons_container">
           <div class="icon_container">
+          <a href="<?= url_to('Client::afficherPanier') ?>">
             <div class="icon_logo_background">
               <img class="icon_logo" src="<?= site_url() . "images/icons/cart.png"?>">
               <img class="hover_image" src="<?= site_url() . "images/icons/cart_blanc.png"?>">
             </div>
+          </a>
 
+          <a href="<?= url_to('Client::afficherPanier') ?>">
             <h3 class="underline_animation">Mon panier</h3>
+          </a>
           </div>
 
           <div class="icon_container">
@@ -107,10 +111,12 @@
       </div>
 
       <div class="icons_container">
-        <div class="icon_logo_background">
-          <img class="icon_logo" src="<?= site_url() . "images/icons/cart.png"?>">
-          <img class="hover_image" src="<?= site_url() . "images/icons/cart_blanc.png"?>">
-        </div>
+        <a href="<?= url_to('Client::afficherPanier') ?>">
+          <div class="icon_logo_background">
+            <img class="icon_logo" src="<?= site_url() . "images/icons/cart.png"?>">
+            <img class="hover_image" src="<?= site_url() . "images/icons/cart_blanc.png"?>">
+          </div>
+        </a>
         
         <a href="<?= url_to('Client::afficherFavoris') ?>">
           <div class="icon_logo_background">

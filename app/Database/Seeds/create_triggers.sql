@@ -83,9 +83,9 @@ END;
 
 CREATE OR REPLACE TRIGGER exemplaire_pas_dispo_commande BEFORE
 UPDATE ON Exemplaire FOR EACH ROW BEGIN
-    IF NEW.id_commande IS NOT NULL AND OLD.id_exemplaire = NEW.id_exemplaire THEN
-        SET NEW.est_disponible=false;
-    END IF;
+   IF NEW.id_commande IS NOT NULL THEN
+      SET NEW.est_disponible=false;
+END IF;
 END;
 
 CREATE OR REPLACE TRIGGER suppression_commande_liberer_exemplaire BEFORE

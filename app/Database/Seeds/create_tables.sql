@@ -39,8 +39,9 @@ SELECT * FROM Coupon WHERE est_valable = true;
 CREATE OR REPLACE TABLE Adresse(
     id_adresse INT PRIMARY KEY AUTO_INCREMENT,
     code_postal INT NOT NULL,
+    ville VARCHAR(100) NOT NULL,
     rue VARCHAR(100) NOT NULL,
-    CONSTRAINT adresse_unique UNIQUE(code_postal, rue)
+    CONSTRAINT adresse_unique UNIQUE(code_postal, rue, ville)
 );
 
 CREATE

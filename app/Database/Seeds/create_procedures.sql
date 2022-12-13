@@ -74,13 +74,21 @@
 - `CalculerMontant(id_commande)`
 
 ### Table Adresse
-- `CreerAdresse(code_postal, rue)`
-- `ModifierAdresse(id_adresse, code_postal, rue)`
+- `CreerAdresse(code_postal, ville, rue)`
+- `ModifierAdresse(id_adresse, ville, code_postal, rue)`
 - `SupprimerAdresse(id_adresse)`
 - `GetAllAdresses()`
 - `GetAdressesParCodePostal(code_postal)`
 - `GetAdresseParId(id_adresse)`
 - `GetAdressesParClient(id_client)`
+
+### Table Taille
+- `GetAllTailles()`
+- `GetCategorieParTaille(taille)`
+- `GetTaillesParCategorie(categorie)`
+- `GetTaillesPoster()`
+- `GetTaillesVetement()`
+
 */
 
 CREATE OR REPLACE PROCEDURE GetAllClients()
@@ -426,24 +434,24 @@ BEGIN
     SELECT SUM(prix) INTO montant FROM Produit AS p INNER JOIN Exemplaire AS e ON p.id_produit = e.id_produit
                     WHERE id_commande=_id_commande;
     IF coupon IS NOT NULL THEN
-        IF EXISTS(SELECT * FROM Coupon WHERE id_coupon=coupon AND est_pourcentage=false) THEN
-            SET montant = montant - (SELECT montant FROM Coupon WHERE id_coupon=coupon);
+        IF EXISTS(SELECT * FROM Coupon AS c WHERE c.id_coupon=coupon AND c.est_pourcentage=false) THEN
+            SET montant = montant - (SELECT montant FROM Coupon AS c WHERE c.id_coupon=coupon);
             IF montant < 0 THEN SET montant = 0; END IF;
         ELSE
-            SET montant = montant * (100 - (SELECT montant FROM Coupon WHERE id_coupon=coupon)) / 100;
+            SET montant = montant * (100 - (SELECT montant FROM Coupon AS c WHERE c.id_coupon=coupon)) / 100;
         END IF;
     END IF;
     UPDATE Commande SET montant=montant WHERE id_commande=_id_commande;
 END;
 
-CREATE OR REPLACE PROCEDURE CreerAdresse(IN _code_postal INT, IN _rue VARCHAR(100))
+CREATE OR REPLACE PROCEDURE CreerAdresse(IN _code_postal INT, IN _ville VARCHAR(100), IN _rue VARCHAR(100))
 BEGIN
-    INSERT INTO Adresse(code_postal, rue) VALUES (_code_postal, _rue);
+    INSERT INTO Adresse(code_postal, ville, rue) VALUES (_code_postal, _ville, _rue);
 END;
 
-CREATE OR REPLACE PROCEDURE ModifierAdresse(IN _id_adresse INT, IN _code_postal INT, IN _rue VARCHAR(100))
+CREATE OR REPLACE PROCEDURE ModifierAdresse(IN _id_adresse INT, IN _ville VARCHAR(100), IN _code_postal INT, IN _rue VARCHAR(100))
 BEGIN
-    UPDATE Adresse SET code_postal=_code_postal, rue=_rue WHERE id_adresse=_id_adresse;
+    UPDATE Adresse SET code_postal=_code_postal, rue=_rue, ville=_ville WHERE id_adresse=_id_adresse;
 END;
 
 CREATE OR REPLACE PROCEDURE SupprimerAdresse(IN _id_adresse INT)
@@ -469,4 +477,24 @@ END;
 CREATE OR REPLACE PROCEDURE GetAdressesParClient(IN _id_client INT)
 BEGIN
     SELECT * FROM Adresse WHERE id_adresse IN (SELECT id_adresse FROM Client NATURAL JOIN Commande WHERE id_client=_id_client);
+END;
+
+CREATE OR REPLACE PROCEDURE GetAllTailles()
+BEGIN
+    SELECT * FROM Taille;
+END;
+
+CREATE OR REPLACE PROCEDURE GetCategorieParTaille(IN _taille VARCHAR(3))
+BEGIN
+    SELECT * FROM Taille WHERE taille=_taille;
+END;
+
+CREATE OR REPLACE PROCEDURE GetTaillesParCategorie(IN _categorie VARCHAR(10))
+BEGIN
+    SELECT * FROM Taille WHERE categorie=_categorie;
+END;
+
+CREATE OR REPLACE PROCEDURE GetTaillesPoster()
+BEGIN
+    SELECT * FROM Taille WHERE categorie='poster';
 END;

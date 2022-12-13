@@ -2,41 +2,28 @@
 
 namespace App\Models;
 
+use App\Entities\Produit;
 use CodeIgniter\Model;
 
 class ModeleProduit extends Model
 {
-    protected $DBGroup          = 'default';
-    protected $table            = 'modeleproduits';
-    protected $primaryKey       = 'id';
-    protected $useAutoIncrement = true;
-    protected $insertID         = 0;
-    protected $returnType       = 'array';
-    protected $useSoftDeletes   = false;
-    protected $protectFields    = true;
-    protected $allowedFields    = [];
+    private static ModeleProduit $instance;
 
-    // Dates
-    protected $useTimestamps = false;
-    protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
-    protected $deletedField  = 'deleted_at';
+    protected $table            = 'Produit';
+    protected $primaryKey       = 'id_produit';
+    protected $returnType       = Produit::class;
+    protected $allowedFields    = ['id_produit', 'id_collection', 'nom', 'prix', 'reduction', 'description', 'categorie', 'parution'];
 
-    // Validation
-    protected $validationRules      = [];
-    protected $validationMessages   = [];
-    protected $skipValidation       = false;
-    protected $cleanValidationRules = true;
+    private function __construct()
+    {
+        parent::__construct();
+    }
 
-    // Callbacks
-    protected $allowCallbacks = true;
-    protected $beforeInsert   = [];
-    protected $afterInsert    = [];
-    protected $beforeUpdate   = [];
-    protected $afterUpdate    = [];
-    protected $beforeFind     = [];
-    protected $afterFind      = [];
-    protected $beforeDelete   = [];
-    protected $afterDelete    = [];
+    public static function getInstance(): ModeleProduit
+    {
+        if (!isset(self::$instance)) {
+            self::$instance = new ModeleProduit();
+        }
+        return self::$instance;
+    }
 }

@@ -16,16 +16,16 @@
     <div class="products_container">
         <?php foreach($products as $product) : ?>
             <div class="product">
-                <a href="<?= url_to('Product::display', $product->getId_produit()) ?>">
+                <a href="<?= url_to('Product::display', $product->id_produit) ?>">
                     <div class="image_container">
                         <?php 
-                            $imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $product->getId_produit() . DIRECTORY_SEPARATOR . "images/image_1.png";
+                            $imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $product->id_produit . DIRECTORY_SEPARATOR . "images/image_1.png";
 
                             $headers = @get_headers($imageURL);
 
                             // On vérifie si l'url existe
                             if(!$headers  || strpos($headers[0], '404')) {
-                                $imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $product->getId_produit() . DIRECTORY_SEPARATOR . "images/image_1.jpg";
+                                $imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $product->id_produit . DIRECTORY_SEPARATOR . "images/image_1.jpg";
                             }
                         ?>
 
@@ -33,8 +33,8 @@
                     </div>
                 </a>
 
-                <h3><?= $product->getNom()?></h3>
-                <h2><?= sprintf('%01.2f€', (float)$product->getPrix() / 100); ?></h2>
+                <h3><?= $product->nom?></h3>
+                <h2><?= sprintf('%01.2f€', (float)$product->prix / 100); ?></h2>
             </div>
         <?php endforeach; ?>
     </div>

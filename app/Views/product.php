@@ -18,8 +18,8 @@
 
 	// on compte le nombre de tailles par couleurs
 	foreach ($exemplaires as $exemplaire) {
-		$couleur = $exemplaire->getCouleur();
-		$taille = $exemplaire->getTaille();
+		$couleur = $exemplaire->couleur;
+		$taille = $exemplaire->taille;
 
 		if (!array_key_exists($couleur, $tailleParCouleurs)) {
 			$tailleParCouleurs[$couleur] = array();
@@ -40,7 +40,7 @@
 
 	$productImages = [];
 
-	foreach(new DirectoryIterator(dirname("images/produits" . DIRECTORY_SEPARATOR . $product->getId_produit() . DIRECTORY_SEPARATOR . "images/.")) as $file)
+	foreach(new DirectoryIterator(dirname("images/produits" . DIRECTORY_SEPARATOR . $product->id_produit . DIRECTORY_SEPARATOR . "images/.")) as $file)
 	{
 		if(!$file->isDot()) {
 			$productImages[] = site_url() . $file->getPath() . DIRECTORY_SEPARATOR . $file->getFileName();
@@ -53,13 +53,13 @@
 	$imageURLParCouleurs = [];
 
 	foreach ($couleurs as $couleur) {
-		$imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $product->getId_produit() . DIRECTORY_SEPARATOR . "couleurs/" . $couleur . ".png";
+		$imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $product->id_produit . DIRECTORY_SEPARATOR . "couleurs/" . $couleur . ".png";
 		
 		$headers = @get_headers($imageURL);
 		
 		// On vérifie si l'url existe
 		if(!$headers  || strpos($headers[0], '404')) {
-			$imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $product->getId_produit() . DIRECTORY_SEPARATOR . "couleurs/" . $couleur . ".jpg";
+			$imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $product->id_produit . DIRECTORY_SEPARATOR . "couleurs/" . $couleur . ".jpg";
 		}
 
 		$imageURLParCouleurs[$couleur] = $imageURL;
@@ -117,21 +117,21 @@
 		</div>
 
 		<div class="product_image">
-			<img id="product_image" src=<?= $productImages[0] ?>>
+			<img id="product_image" src=<?= (count($productImages) > 0) ? $productImages[0] : "" ?>>
 		</div>
 
 		<div class="product_details">
-			<h3 class="product_name"><?= $product->getNom() ?></h2>
+			<h3 class="product_name"><?= $product->nom ?></h2>
 
-			<h2 class="product_price"><?= sprintf('%01.2f€', (float)$product->getPrix() / 100); ?></h2>
+			<h2 class="product_price"><?= sprintf('%01.2f€', (float)$product->prix / 100); ?></h2>
 
-			<p class="product_description"><?= $product->getDescription() ?></p>
+			<p class="product_description"><?= $product->description ?></p>
 
 			<div id="colours_container" class="colours_container">
 
 				<?php foreach($imageURLParCouleurs as $couleur=>$imageSrc) : ?>
 					<div class="colour_container" data-couleur="<?= $couleur ?>">
-						<div class="colour_image_container <?php echo ($couleur == $couleurs[0]) ? 'selected' : '' ?>">
+						<div class="colour_image_container <?php echo ($couleur == ((count($couleurs) > 0) ? $couleurs[0] : "")) ? 'selected' : '' ?>">
 							<img class="arrow_image" src= <?= $imageSrc ?>>
 						</div>
 
@@ -150,7 +150,7 @@
 				<?php endforeach; ?>
 			</div>
 
-			<form action=<?= url_to('Client::ajouterAuPanier') ?> method="post">
+			<form action=<?= url_to('ClientController::ajouterAuPanier') ?> method="post">
 				<div class="quantity_container">
 				<h3>Quantité :</h3>
 					<!-- <button class="increase_quantity"></button> -->
@@ -159,14 +159,16 @@
 					<h3 class="quantity_max">Maximum : 20</h3>
 				</div>
 				
-				<input type="hidden" name="idProduit" value="<?= $product->getId_produit() ?>" readonly>
-				<input id="couleur_input" type="hidden" name="couleur" value="<?= $couleurs[0] ?>" readonly>
-				<input id="taille_input" type="hidden" name="taille" value="<?= $tailles[0] ?>" readonly>
+				<input type="hidden" name="idProduit" value="<?= $product->id_produit ?>" readonly>
+				<input id="couleur_input" type="hidden" name="couleur" value="<?= (count($couleurs) > 0) ? $couleurs[0] : "" ?>" readonly>
+				<input id="taille_input" type="hidden" name="taille" value="<?= (count($tailles) > 0) ? $tailles[0] : "" ?>" readonly>
+
+				<h5 class="manque_exemplaire"><?= ($manqueExemplaire != "") ? "Erreur : Il n'y a pas assez d'exemplaires avec la quantité, couleur ou taille donnée." : "" ?></h5>
 				
 				<div class="buttons_container">
 					<button type="submit" class="add_to_cart">AJOUTER AU PANIER</button>
 
-					<a href="<?= url_to('Client::ajouterFavori', $product->getId_produit(), 1) ?>">
+					<a href="<?= url_to('ClientController::ajouterFavori', $product->id_produit, 1) ?>">
 						<div class="add_to_favorite">					
 							<img src="<?= ($produitFavori) ? site_url() . "images/icons/compte/favoris_plein.png" : site_url() . "images/icons/favoris.png" ?>">
 							<img class="hover_image" src="<?= ($produitFavori) ? site_url() . "images/icons/compte/favoris_blanc_plein.png" : site_url() . "images/icons/favoris_blanc.png" ?>">
@@ -180,7 +182,7 @@
 	<div id="article_ajoute" class="article_ajoute article_ajoute_hidden">
 		<h3>Votre article a bien été ajouté au panier !</h3>
 		
-		<a href="<?= url_to('Client::ajouterAuPanier') ?>">
+		<a href="<?= url_to('ClientController::afficherPanier') ?>">
 			<div class="valider_panier">Valider et payer</div>
 		</a>
 

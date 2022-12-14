@@ -18,14 +18,14 @@
         <h3 class="underline_animation"><?= "Bonjour, " . $session["prenom"] . "!" ?></h3>
 
         <div>
-            <a href="<?= url_to('Client::deconnexion') ?>">
+            <a href="<?= url_to('ClientController::deconnexion') ?>">
                 <button class="deconnexion" type="submit">Déconnexion</button>
             </a>
         </div>
     </header>
 
     <div class="nav_container">
-        <a href="<?= url_to('Client::') ?>">
+        <a href="<?= url_to('ClientController::') ?>">
             <div class="nav_element <?= ($compteAction == "profil" ? "selected" : "") ?>">
                 <img class="logo" src="<?= site_url() . "images/icons/compte/profil_blanc_plein.png"?>" alt="Logo">
                 <img class="hover_logo" src="<?= site_url() . "images/icons/compte/profil_plein.png"?>" alt="Logo">
@@ -34,7 +34,7 @@
             </div>
         </a>
 
-        <a href="<?= url_to('Client::afficherFavoris') ?>">
+        <a href="<?= url_to('ClientController::afficherFavoris') ?>">
             <div class="nav_element <?= ($compteAction == "favoris" ? "selected" : "") ?>">
                 <img class="logo" src="<?= site_url() . "images/icons/compte/favoris_blanc_plein.png"?>" alt="Logo">
                 <img class="hover_logo" src="<?= site_url() . "images/icons/compte/favoris_plein.png"?>" alt="Logo">
@@ -43,7 +43,7 @@
             </div>
         </a>
 
-        <a href="<?= url_to('Client::afficherPanier') ?>">
+        <a href="<?= url_to('ClientController::afficherPanier') ?>">
             <div class="nav_element <?= ($compteAction == "panier" ? "selected" : "") ?>">
                 <img class="logo" src="<?= site_url() . "images/icons/compte/cart_blanc_plein.png"?>" alt="Logo">
                 <img class="hover_logo" src="<?= site_url() . "images/icons/compte/cart_plein.png"?>" alt="Logo">
@@ -52,7 +52,7 @@
             </div>
         </a>
 
-        <a href="<?= url_to('Client::afficherHistorique') ?>">
+        <a href="<?= url_to('ClientController::afficherHistorique') ?>">
             <div class="nav_element <?= ($compteAction == "historique" ? "selected" : "") ?>">
                 <img class="logo" src="<?= site_url() . "images/icons/compte/historique_blanc_plein.png"?>" alt="Logo">
                 <img class="hover_logo" src="<?= site_url() . "images/icons/compte/historique_plein.png"?>" alt="Logo">
@@ -61,7 +61,7 @@
             </div>
         </a>
         
-        <a href="<?= url_to('Client::deconnexion') ?>">
+        <a href="<?= url_to('ClientController::deconnexion') ?>">
             <div class="nav_element">
                 <img class="logo" src="<?= site_url() . "images/icons/compte/deconnexion_blanc_plein.png"?>" alt="Logo">
                 <img class="hover_logo" src="<?= site_url() . "images/icons/compte/deconnexion_plein.png"?>" alt="Logo">
@@ -84,6 +84,7 @@
                 break;
 
             case "panier":
+                include 'panier.php';
                 break;
 
             case "historique":
@@ -94,6 +95,3 @@
     </section>
 </body>
 </html>
-
-<!-- logout button on account icon hover -->
-<!-- favorites delete button second argument not really working (function called but doen't return the favoris view) -->

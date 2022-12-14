@@ -38,7 +38,7 @@
 
 			<h5 class="erreur_texte"><?= ($erreurTexte != "") ? $erreurTexte : "" ?></h5>
 
-			<form action=<?= url_to('Client::connexionCompte') ?> method="post">
+			<form action=<?= url_to('ClientController::connexionCompte') ?> method="post">
 				<div>
 					<label for="email">Adresse email *</label>
 					<input type="email" name="email" id="email" placeholder=" " maxlength="255" required/>
@@ -53,25 +53,10 @@
 
 				<button type="submit">Je me connecte</button>
 
-				<h4 class="connexion_compte">Vous n'avez pas encore de compte ? <a href="<?= url_to('Client::inscription') ?>">Inscrivez-vous</a> plutôt.</h4>
+				<h4 class="connexion_compte">Vous n'avez pas encore de compte ? <a href="<?= url_to('ClientController::inscription') ?>">Inscrivez-vous</a> plutôt.</h4>
 			</form>
 		</div>
 	</div>
 </div>
 </body>
 </html>
-
-
-
-
-<form action=<?= url_to('Client::connexionCompte') ?> method="post">
-  <label for="email">Email :</label>
-  <input type="email" id="email" placeholder="adresse mail" name="email" maxlength="255">
-
-  <label for="password">Mot de passe :</label>
-  <input type="password" id="password" name="password" maxlength="64">
-
-  <input type="submit">
-</form>
-
-<a href="<?= url_to('Client::inscription') ?>">Inscription</a>

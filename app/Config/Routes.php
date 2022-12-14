@@ -59,17 +59,18 @@ $routes->get('product', 'Product::display');
 $routes->get('products', 'Product::displayAll');
 $routes->get('products/categories/(:any)', 'Product::trouverToutDeCategorie/$1');
 
-$routes->get('monCompte', 'Client::monCompte');
-$routes->get('inscription', 'Client::inscription');
-$routes->get('connexion', 'Client::connexion');
-$routes->get('deconnexion', 'Client::deconnexion');
-$routes->get('afficherFavoris', 'Client::afficherFavoris');
-$routes->get('ajouterFavori/(:num)/(:any)', 'Client::ajouterFavori/$1/$2');
-$routes->get('afficherPanier', 'Client::afficherPanier');
-$routes->get('afficherHistorique', 'Client::afficherHistorique');
+$routes->get('monCompte', 'ClientController::monCompte');
+$routes->get('inscription', 'ClientController::inscription');
+$routes->get('connexion', 'ClientController::connexion');
+$routes->get('deconnexion', 'ClientController::deconnexion');
+$routes->get('afficherFavoris', 'ClientController::afficherFavoris');
+$routes->get('ajouterFavori/(:num)/(:any)', 'ClientController::ajouterFavori/$1/$2');
+$routes->get('afficherPanier', 'ClientController::afficherPanier');
+$routes->get('afficherHistorique', 'ClientController::afficherHistorique');
+$routes->get('supprimerDuPanier/(:num)/(:any)/(:any)', 'ClientController::supprimerDuPanier/$1/$2/$3');
 
 
-$routes->post('creerCompte','Client::creerCompte');
-$routes->post('connexionCompte','Client::connexionCompte');
-$routes->post('modifierProfil','Client::modifierProfil');
-$routes->post('ajouterAuPanier', 'Client::ajouterAuPanier');
+$routes->post('creerCompte','ClientController::creerCompte');
+$routes->post('connexionCompte','ClientController::connexionCompte');
+$routes->post('modifierProfil','ClientController::modifierProfil');
+$routes->post('ajouterAuPanier', 'ClientController::ajouterAuPanier');

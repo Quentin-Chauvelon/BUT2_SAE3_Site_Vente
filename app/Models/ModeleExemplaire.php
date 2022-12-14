@@ -19,7 +19,7 @@ class ModeleExemplaire extends Model
         parent::__construct();
     }
 
-    private static function getInstance(): ModeleExemplaire
+    public static function getInstance(): ModeleExemplaire
     {
         if (!isset(self::$instance)) {
             self::$instance = new ModeleExemplaire();

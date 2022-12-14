@@ -30,7 +30,7 @@
 <script>
 
   document.onreadystatechange = function showPage() {
-  if(document.readyState !== "complete"){
+  if(document.readyState == "loading"){
     document.getElementById("loader").style.display = "block";
     document.getElementById("myDiv").style.display = "none";
   }else{
@@ -44,7 +44,7 @@
 </script>
 
 
-<div style="display:none;" id="myDiv" class="animate-bottom">
+<div style="display:none;" id="myDiv">
 
 <?php include 'header.php';?>
 

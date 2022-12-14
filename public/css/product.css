@@ -216,6 +216,13 @@ body {
 }
 
 
+.manque_exemplaire {
+	margin: 20px 0;
+	font-size: 17px;
+	color: red;
+}
+
+
 .buttons_container {
 	display: flex;
 	gap: 10px;
@@ -250,7 +257,7 @@ body {
 	justify-content: center;
 	align-items: center;
 
-	--size: 45px;
+	--size: 41px;
 	width: var(--size);
 	height: var(--size);
 
@@ -340,7 +347,7 @@ body {
 	width: 100%;
 	height: 10px;
 	
-	background-color: #02c4de;
+	background-color: #2e2e2e;
 	border-radius: 0 0 4px 0;
 }
 

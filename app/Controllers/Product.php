@@ -2,34 +2,36 @@
 
 namespace App\Controllers;
 
-use App\Models\ProductEntity;
-use App\Models\ProductModel;
-use App\Models\ClientModel;
-use App\Models\FavorisModel;
-use App\Models\ExemplaireModel;
+use App\Models\ModeleProduit;
+use App\Models\ModeleClient;
+use App\Models\ModeleFavori;
+use App\Models\ModeleExemplaire;
 
 class Product extends BaseController
 {
-    // public function __construct() {        
-    // 	parent::__construct();
-	// 	$this->load->helper('url');
-	// }
 
     public function __construct()
     {
-        $this->ProductModel = new ProductModel();
-        $this->ClientModel = new ClientModel();
-        $this->FavorisModel = new FavorisModel();
-        $this->ExemplaireModel = new ExemplaireModel();
+        $this->ModeleProduit = ModeleProduit::getInstance();
+        $this->ModeleClient = ModeleClient::getInstance();
+        $this->ModeleFavori = ModeleFavori::getInstance();
+        $this->ModeleExemplaire = ModeleExemplaire::getInstance();
     }
 
 
     public function getDonneesSession() {
         return array (
+            'panier'  => $this->session->get("panier"),
+            'id'  => $this->session->get("id"),
             "prenom" => $this->session->get("prenom"),
             "nom" => $this->session->get("nom"),
             "email" => $this->session->get("email")
         );
+    }
+
+
+    public function getSessionId() {
+        return $this->session->get('id');
     }
 
 
@@ -38,38 +40,38 @@ class Product extends BaseController
     }
 
 
-    public function display($id)
+    public function display($idProduit)
     {
-        $product =  $this->ProductModel->findById((int)$id);
+        $product =  $this->ModeleProduit->find((int)$idProduit);
         
         $produitFavori = false;
 
         if ($this->SessionExistante()) {
-            $favoris = $this->FavorisModel->favorisClient($this->session->get('id'));
+            $favoris = $this->ModeleFavori->where('id_client', $this->getSessionId())->findAll();
 
             // on regarde si le produit est en favori
             foreach ($favoris as $favori) {
-                $idFavori = $favori->getId_produit();
+                $idFavori = $favori->id_produit;
 
-                if ($idFavori == $id) {
+                if ($idFavori == $idProduit) {
                     $produitFavori = true;
                 }
             }
         }
 
-        return view('product', array("product" => $product, "exemplaires" => $this->ExemplaireModel->getExemplairesDispoParProduit($id), "ajouteAuPanier" => true, "produitFavori" => $produitFavori, "session" => $this->getDonneesSession()));
+        return view('product', array("product" => $product, "exemplaires" => $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll(), "ajouteAuPanier" => false, "produitFavori" => $produitFavori, "manqueExemplaire" => false, "session" => $this->getDonneesSession()));
     }
 
 
     public function displayAll()
     {
-        $products =  $this->ProductModel->chercherTout();
+        $products =  $this->ModeleProduit->findAll();
         return view('products', array("products" => $products, "session" => $this->getDonneesSession()));
     }
 
     public function trouverToutDeCategorie($categorie)
     {
-        $products =  $this->ProductModel->trouverToutDeCategorie($categorie);
+        $products =  $this->ModeleProduit->where('categorie', $categorie)->findAll();
         return view('products', array("products" => $products, "session" => $this->getDonneesSession()));
     }
 }

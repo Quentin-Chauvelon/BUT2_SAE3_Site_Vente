@@ -13,7 +13,7 @@
 	$erreurTexte = "";
 
 	if ($compteDejaExistant) {
-		$erreurTexte = "Un compte semble déjà exister avec cette adresse mail. Essayez de vous <a href=".url_to('Client::connexion').">connecter</a> plutôt.";
+		$erreurTexte = "Un compte semble déjà exister avec cette adresse mail. Essayez de vous <a href=".url_to('ClientController::connexion').">connecter</a> plutôt.";
 	}
 
 	if ($passwordsDifferents) {
@@ -38,7 +38,7 @@
 
 			<h5 class="erreur_texte"><?= ($erreurTexte != "") ? $erreurTexte : "" ?></h5>
 
-			<form action=<?= url_to('Client::creerCompte') ?> method="post">
+			<form action=<?= url_to('ClientController::creerCompte') ?> method="post">
 				<div>
 					<label for="prenom">Prénom *</label>
 					<input type="text" name="prenom" id="prenom" placeholder=" " maxlength="64" required/>
@@ -79,7 +79,7 @@
 
 				<button type="submit">Je crée mon compte</button>
 
-				<h4 class="creer_compte">Vous avez déjà un compte ? Essayez de vous <a href="<?= url_to('Client::connexion') ?>">connecter</a> plutôt.</h4>
+				<h4 class="creer_compte">Vous avez déjà un compte ? Essayez de vous <a href="<?= url_to('ClientController::connexion') ?>">connecter</a> plutôt.</h4>
 
 				<!-- prenom trop long, nom trop long, adresse mail non valide (html) -->
 				<!-- mot de pase trop court, trop long, répéter deux fois les mêmes et s'assurer qu'ils sont égaux -->

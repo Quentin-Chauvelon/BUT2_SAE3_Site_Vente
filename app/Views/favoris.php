@@ -14,16 +14,16 @@
     <div class="products_container">
         <?php foreach($favoris as $favori) : ?>
             <div class="product">
-                <a href="<?= url_to('Product::display', $favori->getId_produit()) ?>">
+                <a href="<?= url_to('Product::display', $favori->id_produit) ?>">
                     <div class="image_container">
                         <?php 
-                            $imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $favori->getId_produit() . DIRECTORY_SEPARATOR . "images/image_1.png";
+                            $imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $favori->id_produit . DIRECTORY_SEPARATOR . "images/image_1.png";
 
                             $headers = @get_headers($imageURL);
 
                             // On vérifie si l'url existe
                             if(!$headers  || strpos($headers[0], '404')) {
-                                $imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $favori->getId_produit() . DIRECTORY_SEPARATOR . "images/image_1.jpg";
+                                $imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $favori->id_produit . DIRECTORY_SEPARATOR . "images/image_1.jpg";
                             }
                         ?>
 
@@ -33,11 +33,11 @@
 
                 <div>
                     <div class="product_details_container">
-                        <h3><?= $favori->getNom()?></h3>
-                        <h2><?= sprintf('%01.2f€', (float)$favori->getPrix() / 100); ?></h2>
+                        <h3><?= $favori->nom?></h3>
+                        <h2><?= sprintf('%01.2f€', (float)$favori->prix / 100); ?></h2>
                     </div>
 
-                    <a href="<?= url_to('Client::ajouterFavori', $favori->getId_produit(), 0) ?>">
+                    <a href="<?= url_to('ClientController::ajouterFavori', $favori->id_produit, 0) ?>">
                         <img class="logo" src="<?= site_url() . "images/icons/bin.png"?>" alt="Logo">
                     </a>
                 </div>

@@ -51,21 +51,21 @@
         
         <h5 class="erreur_texte"><?= ($erreurTexte != "") ? $erreurTexte : "" ?></h5>
 
-        <form action=<?= url_to('Client::modifierProfil') ?> method="post">
+        <form action=<?= url_to('ClientController::modifierProfil') ?> method="post">
 				<div>
-					<label for="prenom">Prénom *</label>
+					<label for="prenom">Prénom</label>
 					<input type="text" name="prenom" id="prenom" placeholder="<?= $session["prenom"] ?>" maxlength="64"/>
 					<h5>Votre prénom n'est pas valide</h5>
 				</div>
 
 				<div>
-					<label for="nom">Nom *</label>
+					<label for="nom">Nom</label>
 					<input type="text" name="nom" id="nom" placeholder="<?= $session["nom"] ?>" maxlength="255"/>
 					<h5>Votre nom n'est pas valide</h5>
 				</div>
 
 				<div>
-					<label for="email">Adresse email *</label>
+					<label for="email">Adresse email</label>
 					<input type="email" name="email" id="email" placeholder="<?= $session["email"] ?>" maxlength="255"/>
 					<h5>Votre adresse email n'est pas valide</h5>
 				</div>

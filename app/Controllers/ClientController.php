@@ -8,6 +8,7 @@ use App\Models\ModeleProduit;
 use App\Models\ModeleFavori;
 use App\Models\ModeleExemplaire;
 use App\Models\ModeleCommande;
+use App\Models\ModeleAdresse;
 
 class ClientController extends BaseController
 {
@@ -20,6 +21,7 @@ class ClientController extends BaseController
         $this->ModeleFavori = ModeleFavori::getInstance();
         $this->ModeleExemplaire = ModeleExemplaire::getInstance();
         $this->ModeleCommande = ModeleCommande::getInstance();
+        $this->ModeleAdresse = ModeleAdresse::getInstance();
 
         // $this->session = \Config\Services::session();
         // $this->session->start();
@@ -419,17 +421,110 @@ class ClientController extends BaseController
 
     public function supprimerDuPanier(int $idProduit, string $couleur, string $taille) {
         $panier = $this->session->get("panier");
+        $cleARetire = array();
         
-        // foreach ($panier as $key=>$exemplaire) {
-        //     if ()
-        //     var_dump($exemplaire->taille);
-        // }
+        foreach ($panier as $key=>$exemplaire) {
+            if ($exemplaire->id_produit == $idProduit && $exemplaire->couleur == $couleur && $exemplaire->taille == $taille) {
+                $cleARetire[$key] = true;
+            }
+        }
+
+        $panier = array_diff_key($panier, $cleARetire);
+        $this->session->set("panier", $panier);
+
+        return $this->afficherPanier();
+    }
+
+
+    public function validerPanier() {
+
+        $idClient = $this->getSessionId();
+        $panier = $this->session->get("panier");
+        $nombreArticles = count($panier);
+
+        $commande = array(
+            'id_client' => $idClient,
+            'date_commande' => date("Ymd"),
+            'date_livraison_estimee' => date("Ymd", mktime(0, 0, 0, date("m"), date("d")+15, date("Y"))),
+            'date_livraison' => NULL,
+            'id_coupon' => NULL,
+            'est_validee' => false,
+            'montant' => 0,
+            'id_adresse' => NULL
+        );
+
+        // on crée la commande pour l'utilisateur
+        $this->ModeleCommande->insert($commande);
+
+        // on récupère l'id de la commande qui vient d'être crée
+        $idCommande = $this->ModeleCommande->getInsertID();
+
+        $exemplaireModifiee = array(
+            'id_commande' => $idCommande,
+            'est_disponible' => false
+        );
+
+        // on ajoute tous les articles à la commande
+        foreach ($panier as $exemplaire) {
+            $this->ModeleExemplaire->update($exemplaire->id_exemplaire, $exemplaireModifiee);
+        }
+
+        // on calcule le montant de l'id
+        $this->ModeleCommande->CalculerMontant($idCommande);
+
+        $montant = $this->ModeleCommande
+            ->where('id_commande', $idCommande)
+            ->where('est_validee', false)
+            ->first()
+            ->montant;
+
+        return view("compte", array("compteAction" => "validerCommandeAdresse", "montant" => $montant, "nombreArticles" => $nombreArticles, "idCommande" => $idCommande, "session" => $this->getDonneesSession()));
+    }
+
+
+    public function adresseCommande() {
+        $idClient = $this->getSessionId();
+        $idCommande = $this->request->getPost('idCommande');
+
+        $adresse = array(
+            'id_adresse' => 0,
+            'code_postal' => (int)$this->request->getPost('codePostal'),
+            'ville' => $this->request->getPost('ville'),
+            'rue' => $this->request->getPost('rue')
+        );
+
+        // on ajoute l'adresse dans la table
+        $this->ModeleAdresse->insert($adresse);
+
+        // on récupère l'id de l'adresse qui vient d'être crée
+        $idAdresse = $this->ModeleAdresse->getInsertID();
+
+        // on modifie l'adresse de la commande et on la valide
+        $commandeModifiee = array(
+            'id_adresse' => $idAdresse,
+            'est_validee' => true
+        );
+
+        $this->ModeleCommande->update((int)$idCommande, $commandeModifiee);
+
+        // on vide le panier
+        $this->session->set("panier", array());
+
+        return view("commandeValidee");
     }
 }
 
+
+// en cas de déconnexion pendant la validation de la commande, quand clique sur valider et payer : retour sur la commande précédente
+// faire en sorte qu'il soit impossible de créer une commande tant que la précédente n'est pas validée
+// find_column pour les requêtes sur autre que primary key mais pas besoin de find all (email ?) ? + pour avoir les id return qui permet d'avoir la primary key (getInsertId)
+// utiliser les méthodes verifypassword et checkpassword du model
+// first au lieu de [0]
 // mettre les fonctions communes aux controlleurs dans baseController (getsession, session existante, get id session, est en favori...)
+// + - pour les quantités du panier (caché quand min et max)
+// view admin
 // taille, couleurs, quantite dispo
-// sauvegarder les adresses (idclient dans la table adresse)
+// sauvegarder les adresses (adresses déjà utilisés + les proposer dans la commande)
 // activation compte par email (rajouter base de données -> bool estVerifie et code activation surement)
-// modifier mot de passe (envoie email) dans infos personnelles
+// rester connecté
 // marquer les produits en rupture de stock dans SHOP

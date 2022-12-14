@@ -68,9 +68,11 @@ $routes->get('ajouterFavori/(:num)/(:any)', 'ClientController::ajouterFavori/$1/
 $routes->get('afficherPanier', 'ClientController::afficherPanier');
 $routes->get('afficherHistorique', 'ClientController::afficherHistorique');
 $routes->get('supprimerDuPanier/(:num)/(:any)/(:any)', 'ClientController::supprimerDuPanier/$1/$2/$3');
+$routes->get('validerPanier', 'ClientController::validerPanier');
 
 
 $routes->post('creerCompte','ClientController::creerCompte');
 $routes->post('connexionCompte','ClientController::connexionCompte');
 $routes->post('modifierProfil','ClientController::modifierProfil');
 $routes->post('ajouterAuPanier', 'ClientController::ajouterAuPanier');
+$routes->post('adresseCommande', 'ClientController::adresseCommande');

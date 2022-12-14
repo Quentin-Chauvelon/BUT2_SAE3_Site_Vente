@@ -31,7 +31,7 @@
             <h2 class="nombre_produits">Nombre de produits : <?= $nombreProduits ?></h2>
         </div>
 
-        <a  href="<?= url_to('ClientController::afficherPanier') ?>">
+        <a  href="<?= url_to('ClientController::validerPanier') ?>">
             <div class="valider_panier">Valider et payer</div>
         </a>
     </div>

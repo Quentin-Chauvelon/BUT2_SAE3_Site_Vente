@@ -27,4 +27,9 @@ class ModeleCommande extends Model
         }
         return self::$instance;
     }
+
+    public function CalculerMontant(int $idCommande) {
+        $sql = "CALL CalculerMontant(?)";
+        $query = $this->db->query($sql, [$idCommande]);
+    }
 }

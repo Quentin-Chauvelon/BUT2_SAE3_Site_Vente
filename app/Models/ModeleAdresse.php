@@ -25,7 +25,7 @@ class ModeleAdresse extends Model
         parent::__construct();
     }
 
-    private static function getInstance(): ModeleAdresse
+    public static function getInstance(): ModeleAdresse
     {
         if (!isset(self::$instance)) {
             self::$instance = new ModeleAdresse();

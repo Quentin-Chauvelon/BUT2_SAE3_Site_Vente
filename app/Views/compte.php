@@ -87,6 +87,10 @@
                 include 'panier.php';
                 break;
 
+            case "validerCommandeAdresse":
+                include 'validerCommandeAdresse.php';
+                break;
+
             case "historique":
                 break;
         }

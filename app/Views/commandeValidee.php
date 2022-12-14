@@ -1,0 +1,1 @@
+<h1>Votre commande est validée !</h1>

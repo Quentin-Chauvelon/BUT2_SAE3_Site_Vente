@@ -260,6 +260,7 @@ class ClientController extends BaseController
         $quantitesExemplaires = array();
         $produits = array();
 
+        if($panier != null){
         // on compte la quantite de chaque exemplaire en fonction du produit, de la couleur et de la taille
         foreach ($panier as $exemplaire) {
             $exemplaireCle = (string)$exemplaire->id_produit . $exemplaire->couleur . $exemplaire->taille;
@@ -290,13 +291,29 @@ class ClientController extends BaseController
                 }
             }
         }
+    }
+
+
 
         return view("compte", array("compteAction" => "panier", "panier" => $exemplairesUnique, "quantitesExemplaires" => $quantitesExemplaires, "produits" => $produits, "session" => $this->getDonneesSession()));
     }
 
 
     public function afficherHistorique() {
-        return view("compte", array("compteAction" => "historique", "session" => $this->getDonneesSession()));
+        $commandes = $this->ModeleCommande->findAll();
+
+        $commandesClient = array();
+        $idClient = $this->getSessionId();
+
+        foreach($commandes as $commande) {
+            $idCommande = $commande->id_client;
+
+            if ($idCommande == $idClient) {
+                $commandesClient[] = $commande;
+            }
+        }
+
+        return view("compte", array("compteAction" => "historique", "commandes" => $commandesClient, "exemplaires" => $this->ModeleExemplaire->findAll(), "session" => $this->getDonneesSession()));
     }
 
 
@@ -442,34 +459,64 @@ class ClientController extends BaseController
         $panier = $this->session->get("panier");
         $nombreArticles = count($panier);
 
-        $commande = array(
-            'id_client' => $idClient,
-            'date_commande' => date("Ymd"),
-            'date_livraison_estimee' => date("Ymd", mktime(0, 0, 0, date("m"), date("d")+15, date("Y"))),
-            'date_livraison' => NULL,
-            'id_coupon' => NULL,
-            'est_validee' => false,
-            'montant' => 0,
-            'id_adresse' => NULL
-        );
+        $commandes = $this->ModeleCommande->findAll();
+        $idClient = $this->getSessionId();
+        $idCommande = NULL;
 
-        // on crée la commande pour l'utilisateur
-        $this->ModeleCommande->insert($commande);
+        // on regarde si l'utiliateur n'a pas déjà une commande en cours, sinon en crée une
+        foreach($commandes as $commande) {
+            if ($commande->id_client == $idClient && $commande->id_adresse == NULL && $commande->est_validee == false) {
+                $idCommande = $commande->id_commande;
+            }
+        }
 
-        // on récupère l'id de la commande qui vient d'être crée
-        $idCommande = $this->ModeleCommande->getInsertID();
+        // si l'utilisateur n'a pas de commande en cours, on en crée une
+        if ($idCommande == NULL) {
+            $commande = array(
+                'id_client' => $idClient,
+                'date_commande' => date("Ymd"),
+                'date_livraison_estimee' => date("Ymd", mktime(0, 0, 0, date("m"), date("d")+15, date("Y"))),
+                'date_livraison' => NULL,
+                'id_coupon' => NULL,
+                'est_validee' => false,
+                'montant' => 0,
+                'id_adresse' => NULL
+            );
 
+            $this->ModeleCommande->insert($commande);
+
+            // on récupère l'id de la commande qui vient d'être crée
+            $idCommande = $this->ModeleCommande->getInsertID();
+        }
+
+        // on enlève tous les exemplaires de la commande au cas où la commande aurait été annulée et certains articles enlevés ou ajoutés
+        foreach ($panier as $exemplaire) {
+            $this->ModeleExemplaire
+                ->where('id_commande', $idCommande)
+                ->set(['id_commande' => NULL, "est_disponible" => true])
+                ->update();
+        }
+
+        // on ajoute tous les articles à la commande
         $exemplaireModifiee = array(
             'id_commande' => $idCommande,
             'est_disponible' => false
         );
 
-        // on ajoute tous les articles à la commande
+        // on trouve un exemplaire disponible correspondant à l'exemplaire et on modifie id_commande et est_disponible
         foreach ($panier as $exemplaire) {
-            $this->ModeleExemplaire->update($exemplaire->id_exemplaire, $exemplaireModifiee);
+            $idExemplaire = $this->ModeleExemplaire
+                ->where('est_disponible', true)
+                ->where('id_produit', $exemplaire->id_produit)
+                ->where('couleur', $exemplaire->couleur)
+                ->where('taille', $exemplaire->taille)
+                ->first()
+                ->id_exemplaire;
+
+            $this->ModeleExemplaire->update($idExemplaire, $exemplaireModifiee);
         }
 
-        // on calcule le montant de l'id
+        // on calcule le montant de la commande
         $this->ModeleCommande->CalculerMontant($idCommande);
 
         $montant = $this->ModeleCommande
@@ -514,8 +561,8 @@ class ClientController extends BaseController
     }
 }
 
-
-// en cas de déconnexion pendant la validation de la commande, quand clique sur valider et payer : retour sur la commande précédente
+// commande sans article doit ne rien faire
+// tick.png -> retirer contour pour vraiment qu'il soit en png
 // faire en sorte qu'il soit impossible de créer une commande tant que la précédente n'est pas validée
 // find_column pour les requêtes sur autre que primary key mais pas besoin de find all (email ?) ? + pour avoir les id return qui permet d'avoir la primary key (getInsertId)
 // utiliser les méthodes verifypassword et checkpassword du model
@@ -527,4 +574,4 @@ class ClientController extends BaseController
 // sauvegarder les adresses (adresses déjà utilisés + les proposer dans la commande)
 // activation compte par email (rajouter base de données -> bool estVerifie et code activation surement)
 // rester connecté
-// marquer les produits en rupture de stock dans SHOP
+// marquer les produits en rupture de stock dans SHOP (en fonction du nombre d'exemplaires)

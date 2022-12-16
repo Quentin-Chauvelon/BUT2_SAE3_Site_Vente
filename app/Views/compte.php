@@ -92,6 +92,7 @@
                 break;
 
             case "historique":
+                include 'historique.php';
                 break;
         }
     ?>

@@ -19,7 +19,7 @@
     </div>
 
     <div class="bottom_container" >
-        <a href="<?= url_to('ClientController::afficherHistorique') ?>">
+        <a href="<?= url_to('ClientController::detailCommande', $commande->id_commande) ?>">
             <div class="voir_detail">Voir le détail</div>
         </a>
 

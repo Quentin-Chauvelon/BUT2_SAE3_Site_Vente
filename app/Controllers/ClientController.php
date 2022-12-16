@@ -261,39 +261,38 @@ class ClientController extends BaseController
         $produits = array();
 
         if($panier != null){
-        // on compte la quantite de chaque exemplaire en fonction du produit, de la couleur et de la taille
-        foreach ($panier as $exemplaire) {
-            $exemplaireCle = (string)$exemplaire->id_produit . $exemplaire->couleur . $exemplaire->taille;
 
-            if (array_key_exists($exemplaireCle, $quantitesExemplaires)) {
-                $quantitesExemplaires[$exemplaireCle] += 1;
-            } else {
-                $quantitesExemplaires[$exemplaireCle] = 1;
-                $exemplairesUnique[$exemplaireCle] = array(
-                    "id_produit" => $exemplaire->id_produit,
-                    "couleur" => $exemplaire->couleur,
-                    "taille" => $exemplaire->taille
-                );
-            }
-        }
+            // on compte la quantite de chaque exemplaire en fonction du produit, de la couleur et de la taille
+            foreach ($panier as $exemplaire) {
+                $exemplaireCle = (string)$exemplaire->id_produit . $exemplaire->couleur . $exemplaire->taille;
 
-        foreach ($panier as $exemplaire) {
-            $idProduit = $exemplaire->id_produit;
-            $produit = $this->ModeleProduit->where('id_produit', $idProduit)->findAll();
-
-            if (count($produit) > 0) {
-                if (!array_key_exists($idProduit, $produits)) {
-
-                    $produits[$idProduit] = array(
-                        "nom" => $produit[0]->nom,
-                        "prix" => $produit[0]->prix
+                if (array_key_exists($exemplaireCle, $quantitesExemplaires)) {
+                    $quantitesExemplaires[$exemplaireCle] += 1;
+                } else {
+                    $quantitesExemplaires[$exemplaireCle] = 1;
+                    $exemplairesUnique[$exemplaireCle] = array(
+                        "id_produit" => $exemplaire->id_produit,
+                        "couleur" => $exemplaire->couleur,
+                        "taille" => $exemplaire->taille
                     );
                 }
             }
+
+            foreach ($panier as $exemplaire) {
+                $idProduit = $exemplaire->id_produit;
+                $produit = $this->ModeleProduit->where('id_produit', $idProduit)->findAll();
+
+                if (count($produit) > 0) {
+                    if (!array_key_exists($idProduit, $produits)) {
+
+                        $produits[$idProduit] = array(
+                            "nom" => $produit[0]->nom,
+                            "prix" => $produit[0]->prix
+                        );
+                    }
+                }
+            }
         }
-    }
-
-
 
         return view("compte", array("compteAction" => "panier", "panier" => $exemplairesUnique, "quantitesExemplaires" => $quantitesExemplaires, "produits" => $produits, "session" => $this->getDonneesSession()));
     }
@@ -459,6 +458,10 @@ class ClientController extends BaseController
         $panier = $this->session->get("panier");
         $nombreArticles = count($panier);
 
+        if ($nombreArticles == 0) {
+            return $this->afficherPanier();
+        }
+
         $commandes = $this->ModeleCommande->findAll();
         $idClient = $this->getSessionId();
         $idCommande = NULL;
@@ -557,15 +560,76 @@ class ClientController extends BaseController
         // on vide le panier
         $this->session->set("panier", array());
 
-        return view("commandeValidee");
+        return view("commandeValidee", array("commande" => $this->ModeleCommande->where('id_commande', $idCommande)->first()));
+    }
+
+
+    public function detailCommande($idCommande) {
+        $commande = $this->ModeleCommande
+            ->where('id_commande', $idCommande)
+            ->first();
+
+        // si la commande n'a pas été trouvée, on renvoie sur la page d'accueil
+        if ($commande == NULL) {
+            return view("home");
+        }
+
+        $exemplaires = array();
+
+        // on récupère tous les exemplaires de la commande
+        foreach ($this->ModeleExemplaire->findAll() as $exemplaire) {
+            if ($exemplaire->id_commande == $idCommande) {
+                $exemplaires[] = $exemplaire;
+            }
+        }
+
+        // si aucun exemplaire n'a été trouvé, on renvoie sur la page d'accueil
+        if (count($exemplaires) == 0) {
+            return view("home");
+        }
+
+
+        $exemplairesUnique = array();
+        $quantitesExemplaires = array();
+        $produits = array();
+
+        // on compte la quantite de chaque exemplaire en fonction du produit, de la couleur et de la taille
+        foreach ($exemplaires as $exemplaire) {
+            $exemplaireCle = (string)$exemplaire->id_produit . $exemplaire->couleur . $exemplaire->taille;
+
+            if (array_key_exists($exemplaireCle, $quantitesExemplaires)) {
+                $quantitesExemplaires[$exemplaireCle] += 1;
+            } else {
+                $quantitesExemplaires[$exemplaireCle] = 1;
+                $exemplairesUnique[$exemplaireCle] = array(
+                    "id_produit" => $exemplaire->id_produit,
+                    "couleur" => $exemplaire->couleur,
+                    "taille" => $exemplaire->taille
+                );
+            }
+        }
+
+        foreach ($exemplaires as $exemplaire) {
+            $idProduit = $exemplaire->id_produit;
+            $produit = $this->ModeleProduit->where('id_produit', $idProduit)->findAll();
+
+            if (count($produit) > 0) {
+                if (!array_key_exists($idProduit, $produits)) {
+
+                    $produits[$idProduit] = array(
+                        "nom" => $produit[0]->nom,
+                        "prix" => $produit[0]->prix
+                    );
+                }
+            }
+        }
+
+        return view("compte", array("compteAction" => "detailCommande", "commande" => $commande, "exemplaires" => $exemplairesUnique, "quantitesExemplaires" => $quantitesExemplaires, "produits" => $produits, "session" => $this->getDonneesSession()));
     }
 }
 
-// commande sans article doit ne rien faire
 // tick.png -> retirer contour pour vraiment qu'il soit en png
-// faire en sorte qu'il soit impossible de créer une commande tant que la précédente n'est pas validée
 // find_column pour les requêtes sur autre que primary key mais pas besoin de find all (email ?) ? + pour avoir les id return qui permet d'avoir la primary key (getInsertId)
-// utiliser les méthodes verifypassword et checkpassword du model
 // first au lieu de [0]
 // mettre les fonctions communes aux controlleurs dans baseController (getsession, session existante, get id session, est en favori...)
 // + - pour les quantités du panier (caché quand min et max)

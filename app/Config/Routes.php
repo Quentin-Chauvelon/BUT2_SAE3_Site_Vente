@@ -69,6 +69,7 @@ $routes->get('afficherPanier', 'ClientController::afficherPanier');
 $routes->get('afficherHistorique', 'ClientController::afficherHistorique');
 $routes->get('supprimerDuPanier/(:num)/(:any)/(:any)', 'ClientController::supprimerDuPanier/$1/$2/$3');
 $routes->get('validerPanier', 'ClientController::validerPanier');
+$routes->get('detailCommande/(:num)', 'ClientController::detailCommande/$1');
 
 
 $routes->post('creerCompte','ClientController::creerCompte');

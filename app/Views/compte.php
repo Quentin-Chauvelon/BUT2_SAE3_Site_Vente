@@ -94,6 +94,10 @@
             case "historique":
                 include 'historique.php';
                 break;
+
+            case "detailCommande":
+                include 'detailCommande.php';
+                break;
         }
     ?>
 

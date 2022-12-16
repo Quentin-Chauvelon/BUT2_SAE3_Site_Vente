@@ -48,7 +48,7 @@
 
                         // si la commande a une date de livraison fixée mais n'est pas encore arrivée
                         if ($commande->date_livraison > date("Y-m-d")) {
-                            $etatCommande = "Cette commande est prête, elle devrait le " . $commande->date_livraison . ".";
+                            $etatCommande = "Cette commande est prête, elle devrait arriver le " . $commande->date_livraison . ".";
                             $etatCommandeCouleur = "orange";
                         }
 
@@ -66,13 +66,13 @@
                 <div class="commande_details_container">
                     <h1 class="numero_commande">Commande N°<?= $idCommande ?> du <?= $commande->date_commande ?></h1>
 
-                    <h2 class="commande_details"> Total : <?= $commande->montant ?>€ <strong>·</strong> Nombre d'articles : <?= $nombreArticles ?></h2>
+                    <h2 class="commande_details"> Total : <?= $commande->montant / 100 ?>€ <strong>·</strong> Nombre d'articles : <?= $nombreArticles ?></h2>
                 </div>
 
                 <p class="etat_commande <?= $etatCommandeCouleur ?>"><?= $etatCommande ?></p>
             </div>
 
-            <a>
+            <a class="voir_detail" href="<?= url_to('ClientController::detailCommande', $commande->id_commande) ?>">
                 <div class="voir_detail">Voir le détail</div>
             </a>
             </div>

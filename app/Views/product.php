@@ -156,7 +156,7 @@
 					<!-- <button class="increase_quantity"></button> -->
 					<input id="quantity_input" class="quantity_input" name="quantite" type="number" value="1" min="0" max="20">
 					<!-- <button class="decrease_quantity"></button> -->
-					<h3 class="quantity_max">Maximum : 20</h3>
+					<!-- <h3 class="quantity_max">Maximum : 20</h3> -->
 				</div>
 				
 				<input type="hidden" name="idProduit" value="<?= $product->id_produit ?>" readonly>

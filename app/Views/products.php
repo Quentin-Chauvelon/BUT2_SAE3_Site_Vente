@@ -18,6 +18,9 @@
             <div class="product">
                 <a href="<?= url_to('Product::display', $product->id_produit) ?>">
                     <div class="image_container">
+                        <!-- <div class="rupture_stock <?= (array_search($product->id_produit, $produitsRuptureStock) !== false) ? "en_rupture" : "" ?>">RUPTURE DE STOCK</div> -->
+                        <div class="rupture_stock2 <?= (array_search($product->id_produit, $produitsRuptureStock) !== false) ? "en_rupture" : "" ?>">RUPTURE DE STOCK</div>
+
                         <?php 
                             $imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $product->id_produit . DIRECTORY_SEPARATOR . "images/image_1.png";
 
@@ -33,7 +36,7 @@
                     </div>
                 </a>
 
-                <h3><?= $product->nom?></h3>
+                <h3><?= $product->nom ?></h3>
                 <h2><?= sprintf('%01.2f€', (float)$product->prix / 100); ?></h2>
             </div>
         <?php endforeach; ?>

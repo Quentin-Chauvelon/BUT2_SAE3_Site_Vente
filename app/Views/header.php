@@ -19,17 +19,31 @@
         </a>
 
         <div class="icons_container">
-          <div class="icon_container">
-          <a href="<?= url_to('ClientController::afficherPanier') ?>">
-            <div class="icon_logo_background">
-              <img class="icon_logo" src="<?= site_url() . "images/icons/cart.png"?>">
-              <img class="hover_image" src="<?= site_url() . "images/icons/cart_blanc.png"?>">
-            </div>
-          </a>
 
-          <a href="<?= url_to('ClientController::afficherPanier') ?>">
-            <h3 class="underline_animation">Mon panier</h3>
-          </a>
+          <div class="icon_container <?= ($estAdmin) ? "" : "not_admin" ?>">
+            <a href="<?= url_to('ClientController::afficherPanier') ?>">
+              <div class="icon_logo_background">
+                <img class="icon_logo" src="https://icons.veryicon.com/png/o/miscellaneous/yuanql/icon-admin.png">
+                <img class="hover_image" src="https://icons.veryicon.com/png/o/miscellaneous/yuanql/icon-admin.png">
+              </div>
+            </a>
+
+            <a href="<?= url_to('ClientController::afficherPanier') ?>">
+              <h3 class="underline_animation">Admin</h3>
+            </a>
+          </div>
+
+          <div class="icon_container">
+            <a href="<?= url_to('ClientController::afficherPanier') ?>">
+              <div class="icon_logo_background">
+                <img class="icon_logo" src="<?= site_url() . "images/icons/cart.png"?>">
+                <img class="hover_image" src="<?= site_url() . "images/icons/cart_blanc.png"?>">
+              </div>
+            </a>
+
+            <a href="<?= url_to('ClientController::afficherPanier') ?>">
+              <h3 class="underline_animation">Mon panier</h3>
+            </a>
           </div>
 
           <div class="icon_container">
@@ -111,6 +125,15 @@
       </div>
 
       <div class="icons_container">
+
+        <a class="<?= ($estAdmin) ? "" : "not_admin" ?>" >
+          <div class="icon_logo_background">
+            <input class="admin_password" type="button" name="admin_password" onclick="console.log('clicked');">
+            <img class="icon_logo" src="https://icons.veryicon.com/png/o/miscellaneous/yuanql/icon-admin.png">
+            <img class="hover_image" src="https://icons.veryicon.com/png/o/miscellaneous/yuanql/icon-admin.png">
+          </div>
+        <!-- </a> -->
+
         <a href="<?= url_to('ClientController::afficherPanier') ?>">
           <div class="icon_logo_background">
             <img class="icon_logo" src="<?= site_url() . "images/icons/cart.png"?>">

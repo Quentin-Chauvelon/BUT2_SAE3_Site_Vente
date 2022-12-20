@@ -59,6 +59,10 @@ body {
 	color: red;
 }
 
+.erreur_texte a {
+	color: red;
+}
+
 
 form {
 	width: 100%;
@@ -182,4 +186,33 @@ form input:invalid:not(:focus):not(:placeholder-shown) ~ h5 {
 form h5 {
 	margin: 10px 0 0 0;
 	opacity: 0;
+}
+
+.password_container {
+	display: flex;
+	flex-direction: row;
+}
+
+.password_container input {
+	padding-right: 35px;
+}
+
+.toggle_password_visibility {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	width: 35px;
+	height: 22px;
+	margin-left: -35px;
+
+	/* background-color: #e6e6e6; */
+	border-radius: 3px;
+}
+
+.toggle_password_visibility img {
+	width: 80%;
+	height: 80%;
+	
+	margin: 0 0 0 0;
 }

@@ -66,7 +66,7 @@ body {
 }
 
 .etat_commande {
-    margin: 30px 0 60px 0;
+    margin: 30px 0 30px 0;
 
     font-size: 25px;
     font-weight: 600;
@@ -86,6 +86,15 @@ body {
 }
 
 
+.adresse {
+    margin: 0;
+
+    font-size: 23px;
+    font-weight: 100;
+    text-align: center;
+}
+
+
 .products_container {
     display: flex;
     justify-content: center;
@@ -93,7 +102,7 @@ body {
     gap: 40px;
 
     max-width: 100%;
-    margin: 30px;
+    margin: 90px 30px 30px 30px;
 }
 
 .product {

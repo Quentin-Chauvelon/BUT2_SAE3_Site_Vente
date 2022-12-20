@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href=<?= site_url() . "css/creerCompte.css"?>>
+	<script src=<?= site_url() . "js_script/creerCompte.js"?>></script>
     <title>Hot genre</title>
 </head>
 
@@ -59,13 +60,29 @@
 
 				<div>
 					<label for="password">Mot de passe *</label>
-					<input type="password" name="password" id="password" placeholder=" " minlength="8" maxlength="64" required/>
+
+					<div class="password_container">
+						<input type="password" name="password" id="password" placeholder=" " minlength="8" maxlength="64" required/>
+
+						<div class="toggle_password_visibility" onclick="togglePasswordVisibilty()">
+								<img src="https://cdn-icons-png.flaticon.com/512/65/65000.png" alt="Logo">
+						</div>
+					</div>
+
 					<h5>Votre mot de passe doit faire entre 8 et 64 caractères</h5>
 				</div>
 
 				<div>
 					<label for="passwordRepetition">Répétez votre mot de passe *</label>
-					<input type="password" name="passwordRepetition" id="passwordRepetition" placeholder=" " minlength="8" maxlength="64" required/>
+
+					<div class="password_container">
+						<input type="password" name="passwordRepetition" id="passwordRepetition" placeholder=" " minlength="8" maxlength="64" required/>
+
+						<div class="toggle_password_visibility" onclick="togglePasswordVisibilty()">
+							<img src="https://cdn-icons-png.flaticon.com/512/65/65000.png" alt="Logo">
+						</div>
+					</div>
+
 					<h5>Votre mot de passe doit faire entre 8 et 64 caractères</h5>
 				</div>
 
@@ -80,32 +97,9 @@
 				<button type="submit">Je crée mon compte</button>
 
 				<h4 class="creer_compte">Vous avez déjà un compte ? Essayez de vous <a href="<?= url_to('ClientController::connexion') ?>">connecter</a> plutôt.</h4>
-
-				<!-- prenom trop long, nom trop long, adresse mail non valide (html) -->
-				<!-- mot de pase trop court, trop long, répéter deux fois les mêmes et s'assurer qu'ils sont égaux -->
-				<!-- adresse (adresse, code postal, ville, pays => liste) s'assurer qu'ils sont bons -->
-
 			</form>
 		</div>
 	</div>
 </div>
-
-
-
-    <!-- <label for="prenom">Prénom :</label>
-    <input type="text" id="prenom" placeholder="Prénom" name="prenom" maxlength="64" required>
-
-    <label for="nom">Nom :</label>
-    <input type="text" id="nom" placeholder="Nom" name="nom" maxlength="255" required>
-    
-    <label for="email">Email :</label>
-    <input type="email" id="email" placeholder="adresse mail" name="email" maxlength="255" required>
-
-    <label for="password">Mot de passe :</label>
-    <input type="password" id="password" name="password" maxlength="64" required>
-
-    <input type="submit"> -->
-
-    
 </body>
 </html>

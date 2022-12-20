@@ -8,6 +8,7 @@ use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use App\Models\ModeleClient;
 
 /**
  * Class BaseController
@@ -50,5 +51,42 @@ abstract class BaseController extends Controller
         // Preload any models, libraries, etc, here.
         $this->session = \Config\Services::session();
         $this->session->start();
+
+        $this->ModeleClient = ModeleClient::getInstance();
+    }
+
+
+    public function getDonneesSession() {
+        return array(
+            'panier'  => $this->session->get("panier"),
+            'id'  => $this->session->get("id"),
+            'prenom' => $this->session->get("prenom"),
+            'nom' => $this->session->get("nom"),
+            'email' => $this->session->get("email")
+        );
+    }
+
+    public function getSessionId() {
+        return $this->session->get('id');
+    }
+
+    public function SessionExistante() {
+        return $this->session->has('id') && $this->session->get('id') != NULL;
+    }
+
+
+    public function estAdmin() {
+        $estAdmin = false;
+
+        if ($this->SessionExistante()) {
+            $email = $this->session->get("email");
+
+            $estAdmin = $this->ModeleClient
+                ->where('adresse_email', $email)
+                ->first()
+                ->est_admin;
+        }
+
+        return $estAdmin;
     }
 }

@@ -66,7 +66,11 @@
         <h1 class="numero_commande">Commande N°<?= $commande->id_commande ?></h1>
     </div>
 
-    <p class="etat_commande <?= $etatCommandeCouleur ?>"><?= $etatCommande ?></p>    
+    <p class="etat_commande <?= $etatCommandeCouleur ?>"><?= $etatCommande ?></p>
+
+    <?php if ($adresse != NULL) : ?>
+        <p class="adresse"> Livré au : <?= $adresse->rue ?>, <?= $adresse->code_postal ?> <?= $adresse->ville ?></p>
+    <?php endif; ?>
 
     <div class="products_container">
         <?php foreach($exemplaires as $exemplaire) : ?>

@@ -23,13 +23,13 @@ header {
     width: 100%;
     justify-content: space-between;
 
-    margin-top: 20px;
+    margin: 10px 0;
 }
 
 
 .header_not_sticky .logo {
     width: 70px;
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
 }
 
 /* Mettre l'élément de gauche et de droite du footer de la même taille, de sorte à ce que le contact soit bien centré */
@@ -41,7 +41,7 @@ header {
 .icons_container {
     display: flex;
     justify-content: flex-end;
-    align-items: flex-start;
+    align-items: center;
 
     margin-right: 30px;
     gap: 40px;
@@ -261,4 +261,29 @@ nav a {
 
 .shop_dropdown:hover .dropdown_content {
   display: block;
+}
+
+
+.not_admin {
+    display: none;
+}
+
+.admin_password {
+    display: inline;
+    float: left;
+    position: absolute;
+    /* top: 0; */
+    /* left: 0; */
+
+    --size: 40px;
+    width: var(--size);
+    height: var(--size);
+
+    background-color: transparent;
+    border: none;
+    border-radius: 100%;
+}
+
+.icons_container {
+    position: relative;
 }

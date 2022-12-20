@@ -6,14 +6,8 @@ class Home extends BaseController
 
 {
 
-    public function index(): string
+    public function index() : string
     {
-        $session = array (
-            "prenom" => $this->session->get("prenom"),
-            "nom" => $this->session->get("nom"),
-            "email" => $this->session->get("email")
-        );
-
-        return view('home', array("session"=>$session));
+        return view('home', array("estAdmin" => $this->estAdmin(), "session"=>$this->getDonneesSession()));
     }
 }

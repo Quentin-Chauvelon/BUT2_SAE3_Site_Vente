@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href=<?= site_url() . "css/connexionCompte.css"?>>
+	<script src=<?= site_url() . "js_script/connexionCompte.js"?>></script>
     <title>Hot genre</title>
 </head>
 
@@ -13,7 +14,7 @@
 	$erreurTexte = "";
 
 	if ($compteNonExistant) {
-		$erreurTexte = "Il ne semble pas d'y avoir de compte correspondant à cette adresse mail. Essayez de vous inscrire plutôt.";
+		$erreurTexte = "Il ne semble pas d'y avoir de compte correspondant à cette adresse mail. Essayez de vous <a href=".url_to('ClientController::inscription').">inscrire</a> plutôt.";
 	}
 
 	if ($passwordFaux) {
@@ -47,7 +48,15 @@
 
 				<div>
 					<label for="password">Mot de passe *</label>
-					<input type="password" name="password" id="password" placeholder=" " minlength="8" maxlength="64" required/>
+					
+					<div class="password_container">
+						<input type="password" name="password" id="password" placeholder=" " minlength="8" maxlength="64" required/>
+
+						<div class="toggle_password_visibility" onclick="togglePasswordVisibilty()">
+								<img src="https://cdn-icons-png.flaticon.com/512/65/65000.png" alt="Logo">
+						</div>
+					</div>
+
 					<h5>Votre mot de passe doit faire entre 8 et 64 caractères</h5>
 				</div>
 

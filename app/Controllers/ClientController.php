@@ -42,27 +42,6 @@ class ClientController extends BaseController
         $this->session->set($donneesClient);
     }
 
-    
-    public function getDonneesSession() {
-        return array(
-            'panier'  => $this->session->get("panier"),
-            'id'  => $this->session->get("id"),
-            'prenom' => $this->session->get("prenom"),
-            'nom' => $this->session->get("nom"),
-            'email' => $this->session->get("email")
-        );
-    }
-
-
-    public function getSessionId() {
-        return $this->session->get('id');
-    }
-
-
-    public function SessionExistante() {
-        return $this->session->has('id') && $this->session->get('id') != NULL;
-    }
-
 
     public function estEnFavori(int $idProduit) {
         $produitFavori = true;
@@ -86,7 +65,6 @@ class ClientController extends BaseController
         if ($this->SessionExistante()) {
             return view("compte", array("compteAction" => "profil", "emailDejaUtilise" => false, "session" => $this->getDonneesSession()));
         }
-
         else {
             return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
         }
@@ -101,45 +79,45 @@ class ClientController extends BaseController
     public function creerCompte()
     {
         $email = $this->request->getPost('email');
-        $result =  $this->ModeleClient->where('adresse_email', $email)->findAll();
+        $result =  $this->ModeleClient->where('adresse_email', $email)->first();
         
-        // s'il n'existe pas de compte avec cette adresse mail, on en crée un
-        if (count($result) == 0) {
-            $password = $this->request->getPost('password');
-            $passwordRepetition = $this->request->getPost('passwordRepetition');
-
-            // si les deux mot de passe sont égaux, on crée le compte
-            if ($password == $passwordRepetition) {
-                $prenom = $this->request->getPost('prenom');
-                $nom = $this->request->getPost('nom');
-                $passwordEncrypte = password_hash($password, PASSWORD_DEFAULT);
-    
-                $client = array(
-                    'adresse_email' => $email,
-                    'prenom' => $prenom,
-                    'nom' => $nom,
-                    'password' => $passwordEncrypte
-                );
-    
-                $this->ModeleClient->insert($client);
-
-                $id_client = $this->ModeleClient->where('adresse_email', $email)->findAll()[0]->id_client;
-    
-                $this->setDonneesSession($id_client, $prenom, $nom, $email);
-    
-                return view("succesCreationCompteClient");
-            }
-
-            // si les deux mot de passe sont différents, on return une erreur
-            else {
-                return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => true, "session" => $this->getDonneesSession()));
-            }
-        }
-
-        // sinon, on suggère à l'utilisateur de se connecter
-        else {
+        // si l'utilisateur a déjà un compte, on lui suggère de se connecter plutôt
+        if ($result != NULL) {
             return view("creerCompte", array("compteDejaExistant" => true, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
         }
+
+        // on récupère les deux mots de passe pour s'assurer qu'ils sont égaux
+        $password = $this->request->getPost('password');
+        $passwordRepetition = $this->request->getPost('passwordRepetition');
+
+        // si les deux mot de passe sont différents, on retourne une erreur
+        if ($password != $passwordRepetition) {        
+            return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => true, "session" => $this->getDonneesSession()));
+        }
+
+        // si les deux mot de passe sont égaux, on crée le compte
+        $prenom = $this->request->getPost('prenom');
+        $nom = $this->request->getPost('nom');
+        $passwordEncrypte = password_hash($password, PASSWORD_DEFAULT);
+        
+        $client = array(
+            'adresse_email' => $email,
+            'prenom' => $prenom,
+            'nom' => $nom,
+            'password' => $passwordEncrypte
+        );
+        
+        // on ajoute le client à la base de donnée
+        $this->ModeleClient->insert($client);
+        
+        // on récupère l'id du client qui vient d'être créé
+        $idClient = $this->ModeleClient->getInsertID();
+        // $idClient = $this->ModeleClient->where('adresse_email', $email)->first()->id_client;
+        
+        // on sauvegarde certaines données dans la session
+        $this->setDonneesSession($idClient, $prenom, $nom, $email);
+        
+        return view("succesCreationCompteClient");
     }
 
 
@@ -151,36 +129,35 @@ class ClientController extends BaseController
     public function connexionCompte() {
         $email = $this->request->getPost('email');
         $password = $this->request->getPost('password');
-        $result =  $this->ModeleClient->where('adresse_email', $email)->findAll();
+        $result =  $this->ModeleClient->where('adresse_email', $email)->first();
 
-        if (count($result) > 0) {
-            $hashedPassword = $result[0]->password;
-
-            if (password_verify($password, $hashedPassword)) {
-                $id = $result[0]->id_client;
-                $prenom = $result[0]->prenom;
-                $nom = $result[0]->nom;
-
-                $this->setDonneesSession($id, $prenom, $nom, $email);
-
-                return view('home', array("session" => $this->getDonneesSession()));
-            }
-
-            else {
-                return view("connexionCompte", array("compteNonExistant" => false, "passwordFaux" => true, "session" => $this->getDonneesSession()));
-            }
-        }
-
-        else {
+        // si l'utilisateur n'a pas encore de compte, on lui suggère d'en créer un
+        if ($result == NULL) {
             return view("connexionCompte", array("compteNonExistant" => true, "passwordFaux" => false, "session" => $this->getDonneesSession()));
         }
+
+        $hashedPassword = $result->password;
+
+        // si les mots de passe sont différents, alors on retourne une erreur
+        if (!password_verify($password, $hashedPassword)) {
+            return view("connexionCompte", array("compteNonExistant" => false, "passwordFaux" => true, "session" => $this->getDonneesSession()));
+        }
+
+
+        $id = $result->id_client;
+        $prenom = $result->prenom;
+        $nom = $result->nom;
+        
+        $this->setDonneesSession($id, $prenom, $nom, $email);
+        
+        return view('home', array("estAdmin" => $this->estAdmin(), "session" => $this->getDonneesSession()));
     }
 
 
     public function deconnexion() {
         $this->session->destroy();
 
-        return view('home', array("session" => array('id'  => NULL, 'prenom' => NULL, 'nom' => NULL, 'email' => NULL)));       
+        return view('home', array("estAdmin" => $this->estAdmin(), "session" => array('panier' => array(), 'id'  => NULL, 'prenom' => NULL, 'nom' => NULL, 'email' => NULL)));       
     }
 
 
@@ -228,7 +205,6 @@ class ClientController extends BaseController
             if ($idFavori == $idProduit) {
                 $this->supprimerFavori($idProduit);
                 
-                
                 if ($returnProduit == 1) {
                     return view('product', array("product" => $this->ModeleProduit->find($idProduit), "exemplaires" => $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll(), "ajouteAuPanier" => false, "produitFavori" => false, "session" => $this->getDonneesSession()));
                 } else {
@@ -254,6 +230,12 @@ class ClientController extends BaseController
 
 
     public function afficherPanier() {
+
+        // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
+        if (!$this->SessionExistante()) {
+            return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
+        }
+
         $panier = $this->session->get("panier");
 
         $exemplairesUnique = array();
@@ -280,16 +262,19 @@ class ClientController extends BaseController
 
             foreach ($panier as $exemplaire) {
                 $idProduit = $exemplaire->id_produit;
-                $produit = $this->ModeleProduit->where('id_produit', $idProduit)->findAll();
+                $produit = $this->ModeleProduit->where('id_produit', $idProduit)->first();
 
-                if (count($produit) > 0) {
-                    if (!array_key_exists($idProduit, $produits)) {
+                // si le produit n'a pas été trouvée, on renvoie sur la page d'accueil
+                if ($produit == NULL) {
+                    return view('home', array("estAdmin" => $this->estAdmin(), "session" => $this->getDonneesSession()));
+                }
 
-                        $produits[$idProduit] = array(
-                            "nom" => $produit[0]->nom,
-                            "prix" => $produit[0]->prix
-                        );
-                    }
+                if (!array_key_exists($idProduit, $produits)) {
+
+                    $produits[$idProduit] = array(
+                        "nom" => $produit->nom,
+                        "prix" => $produit->prix
+                    );
                 }
             }
         }
@@ -318,36 +303,40 @@ class ClientController extends BaseController
 
     public function modifierProfil() {
         $email = $this->request->getPost('email');
-        $result =  $this->ModeleClient->where('adresse_email', $email)->findAll();
 
-        if (count($result) == 0 && $this->SessionExistante()) {
-            $prenom = $this->request->getPost('prenom');
-            $nom = $this->request->getPost('nom');
-    
-            $clientAvant = $this->ModeleClient->where('adresse_email', $this->session->get("email"))->findAll();
-
-            if (count($clientAvant) > 0) {
-                $clientAvant = $clientAvant[0];
-                $idClientAvant = $clientAvant->id_client;
-
-                $client = array(
-                    'adresse_email' => ($email != "") ? $email : $clientAvant->adresse_email,
-                    'prenom' => ($prenom != "") ? $prenom : $clientAvant->prenom,
-                    'nom' => ($nom != "") ? $nom : $clientAvant->nom
-                    // 'password' => $clientAvant->password
-                );
-
-                $this->ModeleClient->update($idClientAvant, $client);
-
-                $this->setDonneesSession($idClientAvant, $client['prenom'], $client['nom'], $client['adresse_email']);
-            }
-
-            return view("compte", array("compteAction" => "profil", "emailDejaUtilise" => false, "session" => $this->getDonneesSession()));
+        // si l'adresse mail indiquée est la même que celle déjà utilisée pour le compte, alors on l'enlève pour ne pas trouver de compte dans le select suivant
+        if ($this->SessionExistante() && $this->session->get('email') == $email) {
+            $email = "";
         }
 
-        else {
+        $result =  $this->ModeleClient->where('adresse_email', $email)->first();
+
+        // s'il existe déjà un autre compte avec l'adresse mail indiquée ou que la variable de session n'est pas définie, on renvoie une erreur
+        if ($result != NULL || !$this->SessionExistante()) {
             return view("compte", array("compteAction" => "profil", "emailDejaUtilise" => true, "session" => $this->getDonneesSession()));
         }
+
+        $prenom = $this->request->getPost('prenom');
+        $nom = $this->request->getPost('nom');
+
+        $clientAvant = $this->ModeleClient->where('adresse_email', $this->session->get("email"))->first();
+
+        if ($clientAvant != NULL) {
+            $idClientAvant = $clientAvant->id_client;
+
+            $client = array(
+                'adresse_email' => ($email != "") ? $email : $clientAvant->adresse_email,
+                'prenom' => ($prenom != "") ? $prenom : $clientAvant->prenom,
+                'nom' => ($nom != "") ? $nom : $clientAvant->nom
+                // 'password' => $clientAvant->password
+            );
+
+            $this->ModeleClient->update($idClientAvant, $client);
+
+            $this->setDonneesSession($idClientAvant, $client['prenom'], $client['nom'], $client['adresse_email']);
+        }
+
+        return view("compte", array("compteAction" => "profil", "emailDejaUtilise" => false, "session" => $this->getDonneesSession()));
     }
 
 
@@ -425,17 +414,22 @@ class ClientController extends BaseController
         // on sauvegarde le panier dans la session
         $this->session->set("panier", $panier);
 
-        // si certains exemplaires n'étaient pas disponibles et que l'on a pas réussi à 
+        // si certains exemplaires n'étaient pas disponibles
         if ($quantite != 0) {
-            return view('product', array("product" => $this->ModeleProduit->find($idProduit), "exemplaires" => $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll(), "ajouteAuPanier" => false, "produitFavori" => $this->estEnFavori($idProduit), "manqueExemplaire" => false, "session" => $this->getDonneesSession()));
+            return view('product', array("product" => $this->ModeleProduit->find($idProduit), "exemplaires" => $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll(), "ajouteAuPanier" => false, "produitFavori" => $this->estEnFavori($idProduit), "manqueExemplaire" => true, "session" => $this->getDonneesSession()));
         }
-
 
         return view('product', array("product" => $this->ModeleProduit->find($idProduit), "exemplaires" => $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll(), "ajouteAuPanier" => true, "produitFavori" => $this->estEnFavori($idProduit), "manqueExemplaire" => false, "session" => $this->getDonneesSession()));
     }
 
 
     public function supprimerDuPanier(int $idProduit, string $couleur, string $taille) {
+
+        // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
+        if (!$this->SessionExistante()) {
+            return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
+        }
+
         $panier = $this->session->get("panier");
         $cleARetire = array();
         
@@ -453,6 +447,11 @@ class ClientController extends BaseController
 
 
     public function validerPanier() {
+
+        // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
+        if (!$this->SessionExistante()) {
+            return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
+        }
 
         $idClient = $this->getSessionId();
         $panier = $this->session->get("panier");
@@ -528,7 +527,17 @@ class ClientController extends BaseController
             ->first()
             ->montant;
 
-        return view("compte", array("compteAction" => "validerCommandeAdresse", "montant" => $montant, "nombreArticles" => $nombreArticles, "idCommande" => $idCommande, "session" => $this->getDonneesSession()));
+
+        $adressesPrecendentes = array();
+
+        // on récupère les adresses déjà utilisées par le client
+        foreach ($commandes as $commande) {
+            if ($commande->id_client == $idClient && $commande->id_adresse != NULL) {
+                $adressesPrecendentes[] = $this->ModeleAdresse->find($commande->id_adresse);
+            }
+        }
+
+        return view("compte", array("compteAction" => "validerCommandeAdresse", "montant" => $montant, "nombreArticles" => $nombreArticles, "idCommande" => $idCommande, "adressesPrecendentes" => $adressesPrecendentes, "session" => $this->getDonneesSession()));
     }
 
 
@@ -536,18 +545,34 @@ class ClientController extends BaseController
         $idClient = $this->getSessionId();
         $idCommande = $this->request->getPost('idCommande');
 
-        $adresse = array(
-            'id_adresse' => 0,
-            'code_postal' => (int)$this->request->getPost('codePostal'),
-            'ville' => $this->request->getPost('ville'),
-            'rue' => $this->request->getPost('rue')
-        );
 
-        // on ajoute l'adresse dans la table
-        $this->ModeleAdresse->insert($adresse);
+        // on regarde si le client a réutilisé une adresse
+        $idAdresse = $this->ModeleAdresse
+            ->where('rue', $this->request->getPost('rue'))
+            ->where('code_postal', (int)$this->request->getPost('codePostal'))
+            ->where('ville', $this->request->getPost('ville'))
+            ->first();
 
-        // on récupère l'id de l'adresse qui vient d'être crée
-        $idAdresse = $this->ModeleAdresse->getInsertID();
+
+        if ($idAdresse != NULL) {
+            $idAdresse = $idAdresse->id_adresse;
+        }
+
+        // si le client utilise une nouvelle adresse, on en crée une
+        else {
+            $adresse = array(
+                'id_adresse' => 0,
+                'code_postal' => (int)$this->request->getPost('codePostal'),
+                'ville' => $this->request->getPost('ville'),
+                'rue' => $this->request->getPost('rue')
+            );
+
+            // on ajoute l'adresse dans la table
+            $this->ModeleAdresse->insert($adresse);
+
+            // on récupère l'id de l'adresse qui vient d'être crée
+            $idAdresse = $this->ModeleAdresse->getInsertID();
+        }
 
         // on modifie l'adresse de la commande et on la valide
         $commandeModifiee = array(
@@ -571,8 +596,17 @@ class ClientController extends BaseController
 
         // si la commande n'a pas été trouvée, on renvoie sur la page d'accueil
         if ($commande == NULL) {
-            return view("home");
+            return view('home', array("estAdmin" => $this->estAdmin(), "session" => $this->getDonneesSession()));
         }
+
+        
+        $adresse = NULL;
+
+        // on récupère l'adresse de la commande s'il y en a une
+        if ($commande->id_adresse != NULL) {
+            $adresse = $this->ModeleAdresse->find($commande->id_adresse);
+        }
+
 
         $exemplaires = array();
 
@@ -585,7 +619,7 @@ class ClientController extends BaseController
 
         // si aucun exemplaire n'a été trouvé, on renvoie sur la page d'accueil
         if (count($exemplaires) == 0) {
-            return view("home");
+            return view('home', array("estAdmin" => $this->estAdmin(), "session" => $this->getDonneesSession()));
         }
 
 
@@ -611,31 +645,34 @@ class ClientController extends BaseController
 
         foreach ($exemplaires as $exemplaire) {
             $idProduit = $exemplaire->id_produit;
-            $produit = $this->ModeleProduit->where('id_produit', $idProduit)->findAll();
+            $produit = $this->ModeleProduit->where('id_produit', $idProduit)->first();
 
-            if (count($produit) > 0) {
-                if (!array_key_exists($idProduit, $produits)) {
+            // si le produit n'a pas été trouvée, on renvoie sur la page d'accueil
+            if ($produit == NULL) {
+                return view('home', array("estAdmin" => $this->estAdmin(), "session" => $this->getDonneesSession()));
+            }
 
-                    $produits[$idProduit] = array(
-                        "nom" => $produit[0]->nom,
-                        "prix" => $produit[0]->prix
-                    );
-                }
+            if (!array_key_exists($idProduit, $produits)) {
+                
+                $produits[$idProduit] = array(
+                    "nom" => $produit->nom,
+                    "prix" => $produit->prix
+                );
             }
         }
 
-        return view("compte", array("compteAction" => "detailCommande", "commande" => $commande, "exemplaires" => $exemplairesUnique, "quantitesExemplaires" => $quantitesExemplaires, "produits" => $produits, "session" => $this->getDonneesSession()));
+        return view("compte", array("compteAction" => "detailCommande", "commande" => $commande, "adresse" => $adresse, "exemplaires" => $exemplairesUnique, "quantitesExemplaires" => $quantitesExemplaires, "produits" => $produits, "session" => $this->getDonneesSession()));
     }
 }
 
+
+// rupture de stock lequel est le mieux ?
+
+// admin icon + blanc
+// flèche haut/bas pour voir les différentes images des produits
 // tick.png -> retirer contour pour vraiment qu'il soit en png
-// find_column pour les requêtes sur autre que primary key mais pas besoin de find all (email ?) ? + pour avoir les id return qui permet d'avoir la primary key (getInsertId)
-// first au lieu de [0]
-// mettre les fonctions communes aux controlleurs dans baseController (getsession, session existante, get id session, est en favori...)
-// + - pour les quantités du panier (caché quand min et max)
 // view admin
-// taille, couleurs, quantite dispo
-// sauvegarder les adresses (adresses déjà utilisés + les proposer dans la commande)
-// activation compte par email (rajouter base de données -> bool estVerifie et code activation surement)
+// quantite dispo quand on change de taille et de couleur
 // rester connecté
-// marquer les produits en rupture de stock dans SHOP (en fonction du nombre d'exemplaires)
+// activation compte par email (rajouter base de données -> bool estVerifie et code activation surement)
+// + - pour les quantités du panier (caché quand min et max)

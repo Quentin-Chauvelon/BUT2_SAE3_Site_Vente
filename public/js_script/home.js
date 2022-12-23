@@ -1,3 +1,8 @@
+function passwordPrompt() {
+    let prompt = window.prompt("Veuillez vérifier votre mot de passe :", "");
+    location.href = '/adminView/' + prompt;
+}
+
 // function moveToSelected(element) {
 
 //   if (element == "next")

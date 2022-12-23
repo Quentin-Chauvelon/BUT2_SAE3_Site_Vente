@@ -16,12 +16,38 @@
 </div>
 
 
-CREATE OR REPLACE TRIGGER exemplaire_pas_dispo_commande BEFORE
-UPDATE ON Exemplaire FOR EACH ROW BEGIN
-   IF NEW.id_commande IS NOT NULL THEN
-      UPDATE Exemplaire SET est_disponible=false WHERE id_exemplaire=NEW.id_exemplaire;
-END IF;
-END;
+<table>
+  <tr>
+      <th><?= $produit->id_produit ?></th>
+      <th><?= $produit->id_collection ?></th>
+      <th><?= $produit->nom ?></th>
+      <th><?= $produit->prix ?></th>
+      <th><?= $produit->reduction ?></th>
+      <th><?= $produit->description ?></th>
+      <th><?= $produit->categorie ?></th>
+      <th><?= $produit->parution ?></th>
+      <th style="width: 280px;">Supprimer exemplaire</th>
+  </tr>
+
+  <?php foreach($produits as $produit) : ?>
+      <tr>
+          <td><?= $produit->id_produit ?></td>
+          <td><?= $produit->id_collection ?></td>
+          <td><?= $produit->nom ?></td>
+          <td><?= $produit->prix ?></td>
+          <td><?= $produit->reduction ?></td>
+          <td><?= $produit->description ?></td>
+          <td><?= $produit->categorie ?></td>
+          <td><?= $produit->parution ?></td>
+
+          <td>
+              <a href="<?= url_to('AdminController::supprimerExemplaire', $produit->id_exemplaire) ?>">
+                  <div class="bouton">Supprimer produit</div>
+              </a>
+          </td>
+      </tr>
+  <?php endforeach; ?>
+</table>
 
 
 <?php foreach($productColors as $key=>$imageSrc) : ?>

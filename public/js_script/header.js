@@ -5,6 +5,12 @@ function isStickyHeader(headerNotSticky, headerSticky) {
 }
 
 
+// function passwordPrompt() {
+//   let prompt = window.prompt("Veuillez vérifier votre mot de passe :", "");
+//   location.href = '/adminView/' + prompt;
+// }
+
+
 document.addEventListener("DOMContentLoaded", function(event) { 
   // la div sticky detection est positionné juste en dessous le header et permet quand elle touche le haut de la page, de modifier le header à afficher
   const el = document.querySelector(".sticky_detection")

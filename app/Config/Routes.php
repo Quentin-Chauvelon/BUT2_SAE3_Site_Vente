@@ -71,9 +71,19 @@ $routes->get('supprimerDuPanier/(:num)/(:any)/(:any)', 'ClientController::suppri
 $routes->get('validerPanier', 'ClientController::validerPanier');
 $routes->get('detailCommande/(:num)', 'ClientController::detailCommande/$1');
 
+$routes->get('adminView/(:any)', 'AdminController::adminView/$1');
+$routes->get('mettreAdmin/(:any)', 'AdminController::mettreAdmin/$1');
+$routes->get('supprimerUtilisateur/(:any)', 'AdminController::supprimerUtilisateur/$1');
+$routes->get('modifierProduitVue/(:any)', 'AdminController::modifierProduitVue/$1');
+// $routes->get('modifierProduit', 'AdminController::modifierProduit');
+$routes->get('supprimerProduit/(:any)', 'AdminController::supprimerProduit/$1');
+
 
 $routes->post('creerCompte','ClientController::creerCompte');
 $routes->post('connexionCompte','ClientController::connexionCompte');
 $routes->post('modifierProfil','ClientController::modifierProfil');
 $routes->post('ajouterAuPanier', 'ClientController::ajouterAuPanier');
 $routes->post('adresseCommande', 'ClientController::adresseCommande');
+
+$routes->post('creerProduit', 'AdminController::creerProduit');
+$routes->post('modifierProduit', 'AdminController::modifierProduit');

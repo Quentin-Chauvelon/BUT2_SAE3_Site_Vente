@@ -79,14 +79,6 @@ form label {
 	text-align: left;
 }
 
-.right_side_container .cgu_checkbox {
-	display: flex;
-	flex-direction: row;
-	justify-content: left;
-	align-items: center;
-	gap: 6px;
-}
-
 form > div:last-of-type {
 	margin-top: -10px;
 }
@@ -151,6 +143,8 @@ select:focus ~ label, input:focus ~ label, textarea:focus  {
 
 
 form input {
+	border: none;
+	border-bottom: solid 2px #e2e2e2;
     transition: border-bottom 0.2s;
 }
 

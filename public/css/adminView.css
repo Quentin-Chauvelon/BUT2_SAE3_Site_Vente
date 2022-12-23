@@ -1,0 +1,269 @@
+body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	font-family: Arial, Helvetica, sans-serif;
+
+    background-color: #f5f5f5;
+}
+
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 100%;
+    height: 60px;
+
+    background-color: #e6e6e6;
+    box-shadow: 0 5px 10px 0 rgba(0,0,0,0.2);
+}
+
+header > div {
+    width: 500px;
+    margin: 0 20px;
+}
+
+header > div:last-child {
+    display: flex;
+    justify-content: flex-end;
+}
+
+header .logo {
+    width: 40px;
+}
+
+header h3 {
+    margin: 0 20px 0 0;
+
+    color: #2e2e2e;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.nav_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3px;
+
+    margin-top: 80px;
+}
+
+.nav_container > a:first-child .nav_element {
+    border-radius: 15px 0 0 15px;
+    /* border-left: solid 3px #2e2e2e; */
+}
+
+.nav_container > a:last-child .nav_element {
+    border-radius: 0 15px 15px 0;
+    /* border-right: solid 3px #2e2e2e; */
+}
+
+.nav_container a {
+    text-decoration: none;
+}
+
+.nav_element {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+
+    width: 180px;
+    height: 85px;
+
+    background-color: #2e2e2e;
+    /* border-top: solid 3px #2e2e2e;
+    border-bottom: solid 3px #2e2e2e; */
+    border: solid 3px #2e2e2e;
+
+    transition: background-color 0.2s;
+}
+
+.nav_element h4 {
+    margin: 0;
+
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+
+    transition: color 0.2s;
+}
+
+
+.compte_action {
+    width: 80%;
+    margin: 100px auto;
+    padding: 50px;
+
+    background-color: white;
+    box-shadow: 0 0 15px 0 rgba(0,0,0,0.3);
+}
+
+.nav_element.selected {
+    width: 198px;
+    height: 94px;
+    background-color: black;
+    border: solid 3px black;
+    border-radius: 8px;
+}
+
+.nav_element:hover {
+    background-color: white;
+}
+
+.nav_element:hover h4 {
+    color: #2e2e2e;
+}
+
+.hidden {
+    display: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+.bouton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 250px;
+    height: 40px;
+
+    font-size: 24px;
+    font-weight: bold;
+    background-color: #2e2e2e;
+    color: white;
+    border: solid 2px #2e2e2e;
+    border-radius: 30px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.bouton:hover {
+    background-color: white;
+    color: #2e2e2e;   
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
+}
+
+th, td {
+    /* display: flex;
+    justify-content: center;
+    align-items: center; */
+
+    border: 1px solid #e6e6e6;
+    padding: 8px;
+    overflow: auto;
+    text-align: center;
+}
+
+table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+table tr:hover {
+    background-color: #e6e6e6;
+}
+
+.creer_produit_bouton {
+    margin-bottom: 50px;
+}
+
+
+.creer_produit_form {
+    margin-top: 50px;
+}
+
+form div {
+    display: flex;
+    flex-direction: column;
+}
+
+form {
+	width: 400px;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	margin-top: 40px;
+}
+
+form label {
+	font-size: 18px;
+	text-align: left;
+}
+
+form input {
+    border: none;
+	border-bottom: solid 2px #e2e2e2;
+    transition: border-bottom 0.2s;
+}
+
+form input:hover {
+	border: none;
+	border-bottom: solid 2px #b0b0b0;
+}
+
+form input:focus {
+	border: none;
+	border-bottom: solid 2px #808080;
+    outline: none;
+}
+
+form input:valid {
+	border: none;
+	border-bottom: solid 2px green;
+}
+
+form input:invalid:not(:placeholder-shown) {
+	border: none;
+	border-bottom: solid 2px red;
+}
+
+
+.exemplaires_produits_container h1 {
+    margin: 0;
+    margin-top: 50px;
+    font-size: 30px;
+    font-weight: 900;
+}
+
+.exemplaires_tailles_container {
+    margin-left: 50px;
+
+}
+
+.exemplaires_tailles_container h3 {
+    margin: 0;
+    margin-top: 15px;
+    font-size: 25px;
+    font-weight: 400;
+}
+
+.exemplaires_couleurs_container {
+    margin-left: 50px;
+}
+
+.exemplaires_couleurs_container h5 {
+    margin: 0;
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: 100;
+}
+
+.green {
+    color: green;
+}
+
+.red {
+    color: red;
+}

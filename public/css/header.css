@@ -264,7 +264,7 @@ nav a {
 }
 
 
-.not_admin {
+/* .not_admin {
     display: none;
 }
 
@@ -272,8 +272,6 @@ nav a {
     display: inline;
     float: left;
     position: absolute;
-    /* top: 0; */
-    /* left: 0; */
 
     --size: 40px;
     width: var(--size);
@@ -286,4 +284,4 @@ nav a {
 
 .icons_container {
     position: relative;
-}
+} */

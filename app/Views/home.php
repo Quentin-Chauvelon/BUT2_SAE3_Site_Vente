@@ -111,6 +111,23 @@
    </div>
  -->
 
+  <div class="icon_container admin <?= ($estAdmin == true) ? "" : "not_admin" ?>">
+    <a>
+      <div class="icon_logo_background">
+        <form action="" >
+          <input class="admin_password" type="button" name="admin_password" onclick="passwordPrompt()">
+        </form>
+
+        <img class="icon_logo" src="https://icons.veryicon.com/png/o/miscellaneous/yuanql/icon-admin.png">
+        <img class="hover_image" src="https://icons.veryicon.com/png/o/miscellaneous/yuanql/icon-admin.png">
+      </div>
+    </a>
+
+    <a>
+      <h3 class="underline_animation">Admin</h3>
+    </a>
+  </div>
+
 
  <div class="carrousel">
   <button class="carrousel_prev carrousel_button"><</button>

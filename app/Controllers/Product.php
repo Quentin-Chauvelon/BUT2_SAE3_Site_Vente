@@ -25,19 +25,16 @@ class Product extends BaseController
         
         $produitFavori = false;
 
-        // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
-        if (!$this->SessionExistante()) {
-            return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
-        }
+        if ($this->SessionExistante()) {
+            $favoris = $this->ModeleFavori->where('id_client', $this->getSessionId())->findAll();
 
-        $favoris = $this->ModeleFavori->where('id_client', $this->getSessionId())->findAll();
+            // on regarde si le produit est en favori
+            foreach ($favoris as $favori) {
+                $idFavori = $favori->id_produit;
 
-        // on regarde si le produit est en favori
-        foreach ($favoris as $favori) {
-            $idFavori = $favori->id_produit;
-
-            if ($idFavori == $idProduit) {
-                $produitFavori = true;
+                if ($idFavori == $idProduit) {
+                    $produitFavori = true;
+                }
             }
         }
 

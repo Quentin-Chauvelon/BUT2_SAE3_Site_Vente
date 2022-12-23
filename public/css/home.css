@@ -230,6 +230,39 @@ svg {
 }
 
 
+.icon_container.admin {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 80px;
+    gap: 10px;
+}
+
+.admin .icon_logo_background {
+    position: relative;
+}
+
+.admin_password {
+    display: inline;
+    float: left;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    --size: 50px;
+    width: var(--size);
+    height: var(--size);
+
+    background-color: transparent;
+    border: none;
+    border-radius: 100%;
+}
+
+.not_admin {
+    display: none !important;
+}
+
+
 /*#carrousel {
     display: none;
     position: relative;

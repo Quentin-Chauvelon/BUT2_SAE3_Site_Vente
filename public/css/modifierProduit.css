@@ -35,33 +35,12 @@ header .logo {
 }
 
 header h3 {
-    margin: 0;
-    margin-right: 20px;
+    margin: 0 20px 0 0;
 
     color: #2e2e2e;
     font-size: 30px;
     font-weight: bold;
 }
-
-header .deconnexion {
-    width: 200px;
-    height: 40px;
-
-    font-size: 24px;
-    font-weight: bold;
-    background-color: #2e2e2e;
-    color: white;
-    border: none;
-    border-radius: 30px;
-    border: solid 2px #2e2e2e;
-    transition: background-color 0.2s, color 0.2s;
-}
-
-header .deconnexion:hover {
-    background-color: white;
-    color: #2e2e2e;   
-}
-
 
 .nav_container {
     display: flex;
@@ -104,16 +83,6 @@ header .deconnexion:hover {
     transition: background-color 0.2s;
 }
 
-.nav_element .logo, .nav_element .hover_logo {
-    --size: 35px;
-    width: var(--size);
-    height: var(--size);
-}
-
-.nav_element .hover_logo {
-    display: none;
-}
-
 .nav_element h4 {
     margin: 0;
 
@@ -146,14 +115,83 @@ header .deconnexion:hover {
     background-color: white;
 }
 
-.nav_element:hover .logo {
+.nav_element:hover h4 {
+    color: #2e2e2e;
+}
+
+.hidden {
     display: none;
 }
 
-.nav_element:hover .hover_logo {
-    display: inline;
+a {
+    text-decoration: none;
 }
 
-.nav_element:hover h4 {
-    color: #2e2e2e;
+.bouton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 250px;
+    height: 40px;
+
+    font-size: 24px;
+    font-weight: bold;
+    background-color: #2e2e2e;
+    color: white;
+    border: solid 2px #2e2e2e;
+    border-radius: 30px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.bouton:hover {
+    background-color: white;
+    color: #2e2e2e;   
+}
+
+
+form div {
+    display: flex;
+    flex-direction: column;
+}
+
+form {
+	width: 400px;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	margin-top: 40px;
+}
+
+form label {
+	font-size: 18px;
+	text-align: left;
+}
+
+form input {
+    border: none;
+	border-bottom: solid 2px #e2e2e2;
+    transition: border-bottom 0.2s;
+}
+
+form input:hover {
+	border: none;
+	border-bottom: solid 2px #b0b0b0;
+}
+
+form input:focus {
+	border: none;
+	border-bottom: solid 2px #808080;
+    outline: none;
+}
+
+form input:valid {
+	border: none;
+	border-bottom: solid 2px green;
+}
+
+form input:invalid:not(:placeholder-shown) {
+	border: none;
+	border-bottom: solid 2px red;
 }

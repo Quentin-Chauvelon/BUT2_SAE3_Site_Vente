@@ -3,53 +3,34 @@ function passwordPrompt() {
     location.href = '/adminView/' + prompt;
 }
 
-// function moveToSelected(element) {
 
-//   if (element == "next")
-//     let selected = document.getElementsByClassName(".next")
-  
-//   else if (element == "prev")
-//     let selected = document.getElementsByClassName(".prev")
-//   // } else {
-//   //   let selected = element;
+function PreviousClicked() {
+    let previous = document.getElementsByClassName("previous")[0];
+    let current = document.getElementsByClassName("current")[0];
+    let next = document.getElementsByClassName("next")[0];
 
-//   console.log(element)
-//   console.log(selected)
+    previous.classList.remove("previous");
+    previous.classList.add("next");
 
-//   let next = $(selected).next();
-//   let prev = $(selected).prev();
-//   let prevSecond = $(prev).prev();
-//   let nextSecond = $(next).next();
-
-//   $(selected).removeClass().addClass("selected");
-
-//   $(prev).removeClass().addClass("prev");
-//   $(next).removeClass().addClass("next");
-
-//   $(nextSecond).removeClass().addClass("nextRightSecond");
-//   $(prevSecond).removeClass().addClass("prevLeftSecond");
-
-//   $(nextSecond).nextAll().removeClass().addClass('hideRight');
-//   $(prevSecond).prevAll().removeClass().addClass('hideLeft');
-// }
-
-// $(document).keydown(function (e) {
-//   switch (e.which) {
-//     case 37:
-//       moveToSelected('prev');
-//       break;
-
-//     case 39:
-//       moveToSelected('next');
-//       break;
-
-//     default: return;
-//   }
-//   e.preventDefault();
-// });
+    current.classList.remove("current");
+    current.classList.add("previous");
+    
+    next.classList.remove("next");
+    next.classList.add("current");
+}
 
 
+function NextClicked() {
+    let previous = document.getElementsByClassName("previous")[0];
+    let current = document.getElementsByClassName("current")[0];
+    let next = document.getElementsByClassName("next")[0];
 
-// $('#carousel div').click(function () {
-//   moveToSelected($(this));
-// });
+    previous.classList.remove("previous");
+    previous.classList.add("current");
+
+    current.classList.remove("current");
+    current.classList.add("next");
+    
+    next.classList.remove("next");
+    next.classList.add("previous");
+}

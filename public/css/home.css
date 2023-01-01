@@ -45,15 +45,45 @@ svg {
     align-items: center;
 }
 
-.carrousel_images > .prev, .carrousel_images > .next {
+.carrousel_images .previous, .carrousel_images .next {
     display: none;
 }
 
-.carrousel_images > .selected {
+.carrousel_images .current {
     margin: 0 50px;
+
+    max-width: 500px;
+    max-height: 500px;
 }
 
+/* .carrousel .prev {
+    z-index: 5;
+    left: 30%;
+    opacity: 0;
+    transform: translateY(50px) translateX(-50%);
+}
+
+.carrousel .prev img {
+    width: 350px;
+}
+
+.carrousel .next {
+    z-index: 5;
+    left: 70%;
+    transform: translateY(50px) translateX(-50%);
+    opacity: 0;
+}
+
+.carrousel .next img {
+    width: 350px;
+} */
+
+
 .carrousel_button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     width: 100px;
     height: 100px;
     border-radius: 50px;
@@ -137,19 +167,27 @@ svg {
 .populaires > div {
     width: 33%;
     height: 550px;
+
+    background-color: #e6e6e6;
+
     position: relative;
     overflow: hidden;
 }
 
+.populaires > div:nth-child(2) {
+    border-left: solid 3px #2e2e2e;
+    border-right: solid 3px #2e2e2e;
+}
+
 .populaires > div > img {
+    max-width: 100%;
+
     transition: scale 0.3s
 }
 
 .populaires > div > img:hover {
     scale: 1.15;
 }
-
-
 
 .populaires_details {
     --width: 250px;
@@ -180,25 +218,24 @@ svg {
 }
 
 
-.populaires_details > button {
-    width: 55%;
-    height: 35%;
+.populaires_details a div {
+    /* width: 55%; */
+    /* height: 35%; */
     border-radius: 10px;
 
     margin-bottom: 10px;
+    padding: 3px 5px;
     
     background-color: #2e2e2e;
     font-size: 20px;
     font-weight: bold;
     color: white;
     border: solid 2px #2e2e2e;
-}
 
-.populaires_details > button {
     transition: background-color 0.15s, color 0.15s;
 }
 
-.populaires_details > button:hover {
+.populaires_details a div:hover {
     background-color: white;
     color: #2e2e2e;
 }

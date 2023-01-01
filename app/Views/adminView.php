@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src=<?= site_url() . "js_script/adminView.js"?>></script>
     <link rel="stylesheet" href=<?= site_url() . "css/adminView.css"?>>
     <title>Hot genre</title>
 </head>
@@ -71,13 +72,13 @@
 
                         <td>
                             <a href="<?= url_to('AdminController::mettreAdmin', $utilisateur->id_client) ?>">
-                                <div class="bouton">Mettre admin</div>
+                                <div class="button">Mettre admin</div>
                             </a>
                         </td>
 
                         <td>
                             <a href="<?= url_to('AdminController::supprimerUtilisateur', $utilisateur->id_client) ?>">
-                                <div class="bouton">Supprimer</div>
+                                <div class="button">Supprimer</div>
                             </a>
                         </td>
                     </tr>
@@ -88,7 +89,7 @@
         <div id="produits" class="produits <?= ($notHidden == "produits") ? "" : "hidden" ?>">
 
             <a href="#creer_produit">
-                <div class="bouton creer_produit_bouton">Créer produit</div>
+                <div class="button creer_produit_bouton">Créer produit</div>
             </a>
 
             <table>
@@ -118,13 +119,13 @@
 
                         <td>
                             <a href="<?= url_to('AdminController::modifierProduitVue', $produit->id_produit) ?>">
-                                <div class="bouton">Modifier produit</div>
+                                <div class="button">Modifier produit</div>
                             </a>
                         </td>
 
                         <td>
                             <a href="<?= url_to('AdminController::supprimerProduit', $produit->id_produit) ?>">
-                                <div class="bouton">Supprimer produit</div>
+                                <div class="button">Supprimer produit</div>
                             </a>
                         </td>
                     </tr>
@@ -141,7 +142,7 @@
                         <option value="<?= NULL ?>">Aucune</option>
                         
                         <?php foreach($collections as $collection) : ?>
-                            <option value="<?= $collection->id_collection ?>"><?= $collection->id_collection ?></option>
+                            <option value="<?= $collection->id_collection ?>"><?= $collection->nom ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -177,23 +178,23 @@
                     </select>
                 </div>
 
-                <button type="submit" class="bouton">Créer produit</button>
+                <button type="submit" class="button">Créer produit</button>
             </form>
         </div>
         
         <div id="exemplaires" class="exemplaires <?= ($notHidden == "exemplaires") ? "" : "hidden" ?>">
             <a href="#creer_exemplaire">
-                <div class="bouton creer_produit_bouton">Créer exemplaire</div>
+                <div class="button creer_produit_bouton">Créer exemplaire</div>
             </a>
 
             <div class="exemplaires_produits_container">
                 
                 <?php foreach($exemplaires as $idProduit => $exemplaireTailles) : ?>
                     <?php 
-                        $produit = $produits[$idProduit];
+                        $produit = $produits[$idProduit - 1];
                     ?>
 
-                    <h1><?= $produit->nom ?> (<?= $produit->prix ?> · <?= ucfirst($produit->categorie) ?>) :</h1>
+                    <h1><?= $produit->nom ?> (<?= ($produit->prix / 100) ?>€ · <?= ucfirst($produit->categorie) ?>) :</h1>
 
                     <div class="exemplaires_tailles_container">
 
@@ -228,7 +229,17 @@
                             <div class="exemplaires_couleurs_container">
 
                                 <?php foreach($exemplaireCouleurs as $couleur => $quantites) : ?>
-                                    <h5><?= ucfirst($couleur) ?> : <span class="green"><?= $quantites[0] ?> disponibles</span> / <span class="red"><?= $quantites[1] ?> total</span></h5>
+                                    <div class="exemplaire_couleurs">
+                                        <h5><?= ucfirst($couleur) ?> : <span class="green"><?= $quantites[0] ?> disponibles</span> / <span class="red"><?= $quantites[1] ?> total</span></h5>
+
+                                        <a href="<?= url_to('AdminController::supprimer1Exemplaire', $idProduit, $taille, $couleur) ?>">
+                                            <div class="button small">Supprimer 1</div>
+                                        </a>
+
+                                        <a href="<?= url_to('AdminController::supprimerTousLesExemplaires', $idProduit, $taille, $couleur) ?>">
+                                            <div class="button small">Supprimer tout</div>
+                                        </a>
+                                    </div>
                                 <?php endforeach; ?>
                             </div>
                         <?php endforeach; ?>
@@ -236,38 +247,41 @@
                 <?php endforeach; ?>
             </div>
 
+            <form id="creer_exemplaire" class="creer_exemplaire_form" action=<?= url_to('AdminController::creerExemplaire') ?> method="post">
+                <h1>Créer un exemplaire :</h1>
+
+                <div>
+                    <label for="id_produit">Produit *</label>
+
+                    <select id="id_produit" name="id_produit">
+                        <?php foreach($produits as $produit) : ?>
+                            
+                            <option value="<?= $produit->id_produit ?>"><?= $produit->nom ?> (<?= ($produit->prix / 100) ?>€ · <?= ucfirst($produit->categorie) ?>)</option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="couleur">Couleur *</label>
+                    <input type="text" name="couleur" id="couleur" placeholder=" " maxlength="20" required/>
+                </div>
+
+                <div>
+                    <label for="taille">Taille *</label>
+                    
+                    <select id="taille" name="taille">
+                        <?php foreach($exemplaires as $idProduit => $exemplaireTailles) : ?>
+                            <?php foreach($exemplaireTailles as $taille => $valeur) : ?>
+                                <option value="<?= $taille ?>"><?= $taille ?></option>
+                            <?php endforeach; ?>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <button type="submit" class="button">Créer exemplaire</button>
+            </form>
+
         </div>
     </section>
-
-    <!-- TODO déplacer dans un fichier adminView.js -->
-    <script>
-        let utilisateurs = null;
-        let produits = null;
-        let exemplaires = null;
-
-        window.addEventListener('DOMContentLoaded', (event) => {
-            utilisateurs = document.getElementById('utilisateurs');
-            produits = document.getElementById('produits');
-            exemplaires = document.getElementById('exemplaires');
-        });
-
-        function UtilisateursClicked() {
-            utilisateurs.classList.remove("hidden");
-            produits.classList.add("hidden");
-            exemplaires.classList.add("hidden");
-        }
-
-        function ProduitsClicked() {
-            utilisateurs.classList.add("hidden");
-            produits.classList.remove("hidden");
-            exemplaires.classList.add("hidden");
-        }
-
-        function ExemplairesClicked() {
-            utilisateurs.classList.add("hidden");
-            produits.classList.add("hidden");
-            exemplaires.classList.remove("hidden");
-        }
-    </script>
 </body>
 </html>

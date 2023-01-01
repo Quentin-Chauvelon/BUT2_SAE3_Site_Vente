@@ -58,7 +58,7 @@ class AdminController extends BaseController
             }
         }
 
-        $notHidden = "exemplaires";
+        // $notHidden = "exemplaires";
         return view("adminView", array("notHidden" => $notHidden, "utilisateurs" => $this->ModeleClient->findAll(), "produits" => $this->ModeleProduit->findAll(), "collections" => $this->ModeleCollection->findAll(), "exemplaires" => $exemplairesParCouleurTailleProduits));
     }
 
@@ -136,8 +136,6 @@ class AdminController extends BaseController
             "parution" => date("Ymd")
         );
 
-        var_dump($produit);
-
         $this->ModeleProduit->insert($produit);
 
         return $this->returnAdminView('produits');
@@ -169,7 +167,7 @@ class AdminController extends BaseController
             "nom" => $this->request->getPost('nom'),
             "prix" => $this->request->getPost('prix'),
             "reduction" => $this->request->getPost('reduction'),
-            "description" => $description = $this->request->getPost('description'),
+            "description" => $this->request->getPost('description'),
             "categorie" => $this->request->getPost('categorie'),
         );
 
@@ -188,5 +186,64 @@ class AdminController extends BaseController
         $this->ModeleProduit->delete($idProduit);
 
         return $this->returnAdminView('produits');
+    }
+
+
+    public function creerExemplaire() {
+
+        if (!$this->estAdmin()) {
+            return view('home', array("estAdmin" => $this->estAdmin(), "session" => $this->getDonneesSession()));
+        }
+
+        $exemplaire = array(
+            "id_exemplaire" => 0,
+            "id_produit" => $this->request->getPost('id_produit'),
+            "id_commande" => NULL,
+            "date_obtention" => date("Ymd"),
+            "est_disponible" => true,
+            "taille" => $this->request->getPost('taille'),
+            "couleur" => lcfirst($this->request->getPost('couleur')),
+        );
+
+        $this->ModeleExemplaire->insert($exemplaire);
+
+        return $this->returnAdminView('exemplaires');
+    }
+
+
+    public function supprimer1Exemplaire(int $idProduit, string $taille, string $couleur) {
+        
+        if (!$this->estAdmin()) {
+            return view('home', array("estAdmin" => $this->estAdmin(), "session" => $this->getDonneesSession()));
+        }
+
+        $idExemplaire = $this->ModeleExemplaire
+            ->where('id_produit', $idProduit)
+            ->where('taille', $taille)
+            ->where('couleur', $couleur)
+            ->where('est_disponible', true)
+            ->first();
+
+        if ($idExemplaire != NULL) {
+            $this->ModeleExemplaire->delete($idExemplaire->id_exemplaire);
+        }
+
+        return $this->returnAdminView('exemplaires');
+    }
+
+    public function supprimerTousLesExemplaires(int $idProduit, string $taille, string $couleur) {
+
+        if (!$this->estAdmin()) {
+            return view('home', array("estAdmin" => $this->estAdmin(), "session" => $this->getDonneesSession()));
+        }
+
+        $this->ModeleExemplaire
+            ->where('id_produit', $idProduit)
+            ->where('taille', $taille)
+            ->where('couleur', $couleur)
+            ->where('est_disponible', true)
+            ->delete();
+
+        return $this->returnAdminView('exemplaires');
     }
 }

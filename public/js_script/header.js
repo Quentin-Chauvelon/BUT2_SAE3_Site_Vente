@@ -37,16 +37,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
   document.onreadystatechange = function sticky() {
 
     if(document.readyState == "complete"){
-      console.log("salut");
       
       setTimeout(() => {},50);
 
       if ( window.scrollY > 65) {
-        console.log("passage sticky");
         headerNotSticky.classList.add("isSticky");
         headerSticky.classList.remove("isSticky");
       } else {
-        console.log("passage normal");
         headerNotSticky.classList.remove("isSticky");
         headerSticky.classList.add("isSticky");
       }

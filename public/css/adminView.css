@@ -127,7 +127,7 @@ a {
     text-decoration: none;
 }
 
-.bouton {
+.button {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -144,9 +144,16 @@ a {
     transition: background-color 0.2s, color 0.2s;
 }
 
-.bouton:hover {
+.button:hover {
     background-color: white;
-    color: #2e2e2e;   
+    color: #2e2e2e;
+}
+
+.button.small {
+    width: 150px;
+    height: 20px;
+
+    font-size: 18px;
 }
 
 table {
@@ -253,9 +260,16 @@ form input:invalid:not(:placeholder-shown) {
     margin-left: 50px;
 }
 
+.exemplaire_couleurs {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    margin-top: 10px;
+}
+
 .exemplaires_couleurs_container h5 {
     margin: 0;
-    margin-top: 10px;
     font-size: 18px;
     font-weight: 100;
 }

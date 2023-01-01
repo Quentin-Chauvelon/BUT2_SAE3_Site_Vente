@@ -63,7 +63,7 @@
                     <option value="<?= NULL ?>">Aucune</option>
                     
                     <?php foreach($collections as $collection) : ?>
-                        <option <?= ($produit->id_collection == $collection->id_collection) ? "selected" : "" ?> value="<?= $collection->id_collection ?>"><?= $collection->id_collection ?></option>
+                        <option <?= ($produit->id_collection == $collection->id_collection) ? "selected" : "" ?> value="<?= $collection->id_collection ?>"><?= $collection->nom ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>

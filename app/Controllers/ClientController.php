@@ -150,14 +150,14 @@ class ClientController extends BaseController
         
         $this->setDonneesSession($id, $prenom, $nom, $email);
         
-        return view('home', array("estAdmin" => $this->estAdmin(), "session" => $this->getDonneesSession()));
+        return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
     }
 
 
     public function deconnexion() {
         $this->session->destroy();
 
-        return view('home', array("estAdmin" => $this->estAdmin(), "session" => array('panier' => array(), 'id'  => NULL, 'prenom' => NULL, 'nom' => NULL, 'email' => NULL)));       
+        return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => array('panier' => array(), 'id'  => NULL, 'prenom' => NULL, 'nom' => NULL, 'email' => NULL)));       
     }
 
 
@@ -266,7 +266,7 @@ class ClientController extends BaseController
 
                 // si le produit n'a pas été trouvée, on renvoie sur la page d'accueil
                 if ($produit == NULL) {
-                    return view('home', array("estAdmin" => $this->estAdmin(), "session" => $this->getDonneesSession()));
+                    return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
                 }
 
                 if (!array_key_exists($idProduit, $produits)) {
@@ -596,7 +596,7 @@ class ClientController extends BaseController
 
         // si la commande n'a pas été trouvée, on renvoie sur la page d'accueil
         if ($commande == NULL) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "session" => $this->getDonneesSession()));
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
         }
 
         
@@ -619,7 +619,7 @@ class ClientController extends BaseController
 
         // si aucun exemplaire n'a été trouvé, on renvoie sur la page d'accueil
         if (count($exemplaires) == 0) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "session" => $this->getDonneesSession()));
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
         }
 
 
@@ -649,7 +649,7 @@ class ClientController extends BaseController
 
             // si le produit n'a pas été trouvée, on renvoie sur la page d'accueil
             if ($produit == NULL) {
-                return view('home', array("estAdmin" => $this->estAdmin(), "session" => $this->getDonneesSession()));
+                return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
             }
 
             if (!array_key_exists($idProduit, $produits)) {
@@ -666,12 +666,14 @@ class ClientController extends BaseController
 }
 
 
+// admin view password prompt cancel error 
 // rupture de stock lequel est le mieux ?
 
-// admin icon + blanc
+// ajouter les images pour la collection (download en fonction du type de produit + les mettre sur la vue home)
+// admin icon + blanc download + blanc
 // flèche haut/bas pour voir les différentes images des produits
 // tick.png -> retirer contour pour vraiment qu'il soit en png
-// view admin
+
 // quantite dispo quand on change de taille et de couleur
 // rester connecté
 // activation compte par email (rajouter base de données -> bool estVerifie et code activation surement)

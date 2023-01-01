@@ -18,16 +18,16 @@
           </li>
 
           <li>
-            <a href="">Conditions générales d'utilisation</a>
+            <a href="">Qui sommes-nous ?</a>
           </li>
 
           <li>
-            <a href="">Conditions générales d'utilisation</a>
+            <a href="">Contact</a>
           </li>
 
-          <li>
+          <!-- <li>
             <a href="">Conditions générales d'utilisation</a>
-          </li>
+          </li> -->
         </ul>
       </div>
 
@@ -44,9 +44,11 @@
         <ul>
           <li>
             <div class="reseau_container">
-              <h4 class="underline_animation">@jfkdqljfqjlj</h4>
+              <a href="instagram.com">
+                <h4 class="underline_animation">@hot_genre</h4>
+              </a>
 
-              <a href="">
+              <a href="instagram.com">
                 <img src="<?= site_url() . "images/reseaux/instagram.png"?>" alt="Instagram">
               </a>
             </div>
@@ -54,21 +56,25 @@
 
           <li>
             <div class="reseau_container">
-              <h4 class="underline_animation">@jfkdqljfqjlj</h4>
+              <a href="instagram.com">
+                <h4 class="underline_animation">@raven.morty</h4>
+              </a>
 
-              <a href="">
-              <img src="<?= site_url() . "images/reseaux/instagram.png"?>" alt="Instagram">
+              <a href="instagram.com">
+                <img src="<?= site_url() . "images/reseaux/instagram.png"?>" alt="Instagram">
               </a>
             </div>
           </li>
 
           <li>
             <div class="reseau_container">
-              <a class="reseau_container" href="">
-                <h4 class="underline_animation">@jfkdqljfqjlj</h4>
+              <a href="instagram.com">
+                <h4 class="underline_animation">@moi_cest_baba</h4>
               </a>
 
-              <img src="<?= site_url() . "images/reseaux/instagram.png"?>" alt="Instagram">
+              <a href="instagram.com">
+                <img src="<?= site_url() . "images/reseaux/instagram.png"?>" alt="Instagram">
+              </a>
             </div>
           </li>
         </ul>

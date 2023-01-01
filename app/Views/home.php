@@ -10,7 +10,41 @@
   <title>Hot genre DEV</title>
 </head>
 
+<?php
+  $carrouselProduits = array(1, 2, 3);
+  $carrouselImages = array();
 
+	foreach ($carrouselProduits as $idProduit) {
+		$imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $idProduit . DIRECTORY_SEPARATOR . "images/image_1.png";
+		
+		$headers = @get_headers($imageURL);
+		
+		// On vérifie si l'url existe
+		if(!$headers  || strpos($headers[0], '404')) {
+			$imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $idProduit . DIRECTORY_SEPARATOR . "images/image_1.jpg";
+		}
+
+		$carrouselImages[] = $imageURL;
+	}
+
+
+  $produitsPlusVendusImages = array();
+
+	foreach ($produitsPlusPopulaires as $produit) {
+    $idProduit = $produit->id_produit;
+
+		$imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $idProduit . DIRECTORY_SEPARATOR . "images/image_1.png";
+		
+		$headers = @get_headers($imageURL);
+		
+		// On vérifie si l'url existe
+		if(!$headers  || strpos($headers[0], '404')) {
+			$imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $idProduit . DIRECTORY_SEPARATOR . "images/image_1.jpg";
+		}
+
+		$produitsPlusVendusImages[$idProduit] = $imageURL;
+	}
+?>
 
 <body >
 
@@ -130,15 +164,27 @@
 
 
  <div class="carrousel">
-  <button class="carrousel_prev carrousel_button"><</button>
-
+  <a onclick="PreviousClicked()">
+    <div class="carrousel_prev carrousel_button"><</div>
+  </a>
+  
   <div class="carrousel_images">
-   <img id="carrousel_previous_button" class="prev" src="https://i1.sndcdn.com/artworks-000165384395-rhrjdn-t500x500.jpg">
-   <img class="selected" src="https://i1.sndcdn.com/artworks-000185743981-tuesoj-t500x500.jpg">
-   <img id="carrousel_next_button" class="next" src="https://i1.sndcdn.com/artworks-000158708482-k160g1-t500x500.jpg">
- </div>
+    <a href="<?= url_to('Product::display', $carrouselProduits[0]) ?>">
+      <img id="carrousel_previous_button" class="previous" src="<?= $carrouselImages[0] ?>">
+    </a>
+    
+    <a href="<?= url_to('Product::display', $carrouselProduits[1]) ?>">
+      <img class="current" src="<?= $carrouselImages[1] ?>">
+    </a>
+  
+    <a href="<?= url_to('Product::display', $carrouselProduits[2]) ?>">
+      <img id="carrousel_next_button" class="next" src="<?= $carrouselImages[2] ?>">
+    </a>
+  </div>
 
- <button class="carrousel_next carrousel_button">></button>
+  <a onclick="NextClicked()">
+    <div class="carrousel_next carrousel_button">></div>
+  </a>
 </div>
 
 
@@ -195,32 +241,20 @@
  <h2>Les plus populaires</h2>
 
  <div class="populaires">
-   <div style="background-color: #09b3fc;">
-     <img src="https://cdn.shopify.com/s/files/1/1297/1509/files/model-min_550x.png?v=1640328855">
+
+  <?php foreach($produitsPlusPopulaires as $produit) : ?>
+    <div>
+     <img src="<?= $produitsPlusVendusImages[$produit->id_produit]?> ">
 
      <div class="populaires_details">
-       <h3>NOM PRODUIT</h3>
-       <button>ACHETER</button>
+      <h3><?= $produit->nom ?></h3>
+
+      <a href="<?= url_to('Product::display', $produit->id_produit) ?>">
+        <div>ACHETER</div>
+      </a>
      </div>
-   </div>
-
-   <div style="background-color: #a40c12">
-     <img src="https://cdn.shopify.com/s/files/1/1297/1509/files/model-min_550x.png?v=1640328855">
-
-     <div class="populaires_details">
-      <h3>NOM PRODUIT</h3>
-      <button>ACHETER</button>
     </div>
-   </div>
-
-   <div style="background-color: #622d85">
-     <img src="https://cdn.shopify.com/s/files/1/1297/1509/files/model-min_550x.png?v=1640328855">
-
-     <div class="populaires_details">
-      <h3>NOM PRODUIT</h3>
-      <button>ACHETER</button>
-    </div>
-   </div>
+  <?php endforeach; ?>
  </div>
 </div>
 

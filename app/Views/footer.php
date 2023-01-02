@@ -14,15 +14,15 @@
       <div class="cgu">
         <ul>
           <li>
-            <a href="">Conditions générales d'utilisation</a>
+            <a href="<?= url_to('ClientController::cgu') ?>">Conditions générales d'utilisation</a>
           </li>
 
           <li>
-            <a href="">Qui sommes-nous ?</a>
+            <a href="<?= url_to('ClientController::quiSommesNous') ?>">Qui sommes-nous ?</a>
           </li>
 
           <li>
-            <a href="">Contact</a>
+            <a href="<?= url_to('ClientController::contact') ?>">Contact</a>
           </li>
 
           <!-- <li>
@@ -35,8 +35,11 @@
         <h3>DONNEZ-NOUS VOTRE AVIS</h3>
 
         <div class="contact_container">
-          <input class="contact_field" type="text">
-          <button class="contact_button">ENVOYER</button>
+
+          <form action=<?= url_to('ClientController::avis') ?> method="post">
+            <input class="contact_field" type="text" name="avis">
+            <button class="contact_button">ENVOYER</button>
+          </form>
         </div>
       </div>
       

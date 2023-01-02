@@ -663,6 +663,51 @@ class ClientController extends BaseController
 
         return view("compte", array("compteAction" => "detailCommande", "commande" => $commande, "adresse" => $adresse, "exemplaires" => $exemplairesUnique, "quantitesExemplaires" => $quantitesExemplaires, "produits" => $produits, "session" => $this->getDonneesSession()));
     }
+
+
+    public function cgu() {
+        return view("cgu", array("session" => $this->getDonneesSession()));
+    }
+
+
+    public function quiSommesNous() {
+        return view("quiSommesNous", array("session" => $this->getDonneesSession()));
+    }
+
+
+    public function contact() {
+        return view("contact", array("session" => $this->getDonneesSession()));
+    }
+
+
+    public function avis() {
+        $to = "quentin.chauvelon@etu.univ-nantes.fr";
+        $subject = "Avis du " . date("d/m/Y \a H:i:s");
+        $message = wordwrap($this->request->getPost('avis'), 70, "\n", true);
+
+        $headers = "MIME-Version: 1.0" . "\r\n";
+        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+
+        mail($to, $subject, $message, $headers);
+
+        return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+    }
+
+
+    public function messageContact() {
+        $from = $this->request->getPost('from');
+        $to = "quentin.chauvelon@etu.univ-nantes.fr";
+        $subject = $this->request->getPost('subject');
+        $message = wordwrap($this->request->getPost('message'), 70, "\n", true);
+
+        $headers = "MIME-Version: 1.0" . "\r\n";
+        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+        $headers .= 'From: <' . $from . '>' . "\r\n";
+
+        mail($to, $subject, $message, $headers);
+
+        return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+    }
 }
 
 

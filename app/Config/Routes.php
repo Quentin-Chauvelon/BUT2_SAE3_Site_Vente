@@ -70,6 +70,9 @@ $routes->get('afficherHistorique', 'ClientController::afficherHistorique');
 $routes->get('supprimerDuPanier/(:num)/(:any)/(:any)', 'ClientController::supprimerDuPanier/$1/$2/$3');
 $routes->get('validerPanier', 'ClientController::validerPanier');
 $routes->get('detailCommande/(:num)', 'ClientController::detailCommande/$1');
+$routes->get('cgu', 'ClientController::cgu');
+$routes->get('quiSommesNous', 'ClientController::quiSommesNous');
+$routes->get('contact', 'ClientController::contact');
 
 $routes->get('adminView/(:any)', 'AdminController::adminView/$1');
 $routes->get('mettreAdmin/(:any)', 'AdminController::mettreAdmin/$1');
@@ -86,6 +89,8 @@ $routes->post('connexionCompte','ClientController::connexionCompte');
 $routes->post('modifierProfil','ClientController::modifierProfil');
 $routes->post('ajouterAuPanier', 'ClientController::ajouterAuPanier');
 $routes->post('adresseCommande', 'ClientController::adresseCommande');
+$routes->post('avis', 'ClientController::avis');
+$routes->post('messageContact', 'ClientController::messageContact');
 
 $routes->post('creerProduit', 'AdminController::creerProduit');
 $routes->post('modifierProduit', 'AdminController::modifierProduit');

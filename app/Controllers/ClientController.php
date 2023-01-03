@@ -206,7 +206,7 @@ class ClientController extends BaseController
                 $this->supprimerFavori($idProduit);
                 
                 if ($returnProduit == 1) {
-                    return view('product', array("product" => $this->ModeleProduit->find($idProduit), "exemplaires" => $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll(), "ajouteAuPanier" => false, "produitFavori" => false, "session" => $this->getDonneesSession()));
+                    return view('product', array("product" => $this->ModeleProduit->find($idProduit), "exemplaires" => $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll(), "ajouteAuPanier" => false, "produitFavori" => false, "manqueExemplaire" => false, "session" => $this->getDonneesSession()));
                 } else {
                     return $this->afficherFavoris();
                 }
@@ -220,7 +220,7 @@ class ClientController extends BaseController
 
         $this->ModeleFavori->insert($favori);
         
-        return view('product', array("product" => $this->ModeleProduit->find($idProduit), "exemplaires" => $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll(), "ajouteAuPanier" => false, "produitFavori" => true, "session" => $this->getDonneesSession()));
+        return view('product', array("product" => $this->ModeleProduit->find($idProduit), "exemplaires" => $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll(), "ajouteAuPanier" => false, "produitFavori" => true, "manqueExemplaire" => false, "session" => $this->getDonneesSession()));
     }
 
 
@@ -713,6 +713,11 @@ class ClientController extends BaseController
 
 // admin view password prompt cancel error 
 // rupture de stock lequel est le mieux ?
+// user select pour le carousel 
+// visualiser toutes les commandes
+// mettre admin et enlever admin (même bouton mais change en fonction de si l'utilisateur est déjà admin ou pas)
+// grisé les produits sans exemplaires
+// modifier collection (si on a le temps à la fin)
 
 // ajouter les images pour la collection (download en fonction du type de produit + les mettre sur la vue home)
 // admin icon + blanc download + blanc

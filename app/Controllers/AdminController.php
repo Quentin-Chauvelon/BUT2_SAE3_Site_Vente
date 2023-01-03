@@ -66,7 +66,7 @@ class AdminController extends BaseController
     public function adminView($password) {
 
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "session" => $this->getDonneesSession()));
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
         }
 
         // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
@@ -80,7 +80,7 @@ class AdminController extends BaseController
 
         // si les mots de passe sont différents, alors on retourne une erreur
         if (!password_verify($password, $hashedPassword)) {
-            return view('home', array("estAdmin" => true, "session" => $this->getDonneesSession()));
+            return view('home', array("estAdmin" => true, "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
         }
 
         if ($client->est_admin) {
@@ -92,7 +92,7 @@ class AdminController extends BaseController
     public function mettreAdmin($idClient) {
 
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "session" => $this->getDonneesSession()));
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
         }
 
         $client = array(
@@ -104,11 +104,27 @@ class AdminController extends BaseController
         return $this->returnAdminView('utilisateurs');
     }
 
+    
+    public function enleverAdmin($idClient) {
+
+        if (!$this->estAdmin()) {
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+        }
+
+        $client = array(
+            "est_admin" => false
+        );
+
+        $this->ModeleClient->update($idClient, $client);
+
+        return $this->returnAdminView('utilisateurs');
+    }
+
 
     public function supprimerUtilisateur($idClient) {
 
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "session" => $this->getDonneesSession()));
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
         }
 
         $this->ModeleClient->delete($idClient);
@@ -120,7 +136,7 @@ class AdminController extends BaseController
     public function creerProduit() {
 
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "session" => $this->getDonneesSession()));
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
         }
 
         $idCollection = $this->request->getPost('id_collection');
@@ -145,7 +161,7 @@ class AdminController extends BaseController
     public function modifierProduitVue($idProduit) {
 
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "session" => $this->getDonneesSession()));
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
         }
 
         $produit = $this->ModeleProduit->find($idProduit);
@@ -157,21 +173,25 @@ class AdminController extends BaseController
     public function modifierProduit() {
 
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "session" => $this->getDonneesSession()));
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
         }
 
         $idCollection = $this->request->getPost('id_collection');
+        $prix = $this->request->getPost('prix');
+        $reduction = $this->request->getPost('reduction');
 
         $produit = array(
             "id_collection" => ($idCollection != "") ? $idCollection : NULL,
             "nom" => $this->request->getPost('nom'),
-            "prix" => $this->request->getPost('prix'),
-            "reduction" => $this->request->getPost('reduction'),
+            "prix" => $prix,
+            "reduction" => $reduction,
             "description" => $this->request->getPost('description'),
             "categorie" => $this->request->getPost('categorie'),
         );
 
-        $this->ModeleProduit->update($this->request->getPost('id_produit'), $produit);
+        if ($prix >= 0 && $reduction >= 0) {
+            $this->ModeleProduit->update($this->request->getPost('id_produit'), $produit);
+        }
 
         return $this->returnAdminView('produits');
     }
@@ -180,7 +200,7 @@ class AdminController extends BaseController
     public function supprimerProduit($idProduit) {
 
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "session" => $this->getDonneesSession()));
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
         }
 
         $this->ModeleProduit->delete($idProduit);
@@ -192,7 +212,7 @@ class AdminController extends BaseController
     public function creerExemplaire() {
 
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "session" => $this->getDonneesSession()));
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
         }
 
         $exemplaire = array(
@@ -214,7 +234,7 @@ class AdminController extends BaseController
     public function supprimer1Exemplaire(int $idProduit, string $taille, string $couleur) {
         
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "session" => $this->getDonneesSession()));
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
         }
 
         $idExemplaire = $this->ModeleExemplaire
@@ -234,7 +254,7 @@ class AdminController extends BaseController
     public function supprimerTousLesExemplaires(int $idProduit, string $taille, string $couleur) {
 
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "session" => $this->getDonneesSession()));
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
         }
 
         $this->ModeleExemplaire
@@ -245,5 +265,41 @@ class AdminController extends BaseController
             ->delete();
 
         return $this->returnAdminView('exemplaires');
+    }
+
+
+    public function creerCollection() {
+        
+        if (!$this->estAdmin()) {
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+        }
+
+        $today = date("Ymd");
+        $date_limite = $this->request->getPost('date_limite');
+
+        $collection = array(
+            "id_collection" => 0,
+            "nom" => $this->request->getPost('nom'),
+            "parution" => $today,
+            "date_limite" => $date_limite,
+        );
+
+        if ($date_limite > $today) {
+            $this->ModeleExemplaire->insert($exemplaire);
+        }
+
+        return $this->returnAdminView('exemplaires');
+    }
+
+
+    public function supprimerCollection($idCollection) {
+
+        if (!$this->estAdmin()) {
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+        }
+
+        $this->ModeleCollection->delete($idCollection);
+
+        return $this->returnAdminView('collections');
     }
 }

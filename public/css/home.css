@@ -82,7 +82,6 @@ svg {
 .carrousel_button {
     display: flex;
     justify-content: center;
-    align-items: center;
 
     width: 100px;
     height: 100px;
@@ -93,6 +92,7 @@ svg {
     font-weight: bold;
     border: solid 3px #2e2e2e;
     transition: background-color 0.2s, color 0.2s;
+    user-select: none;
 }
 
 .carrousel_button:hover {

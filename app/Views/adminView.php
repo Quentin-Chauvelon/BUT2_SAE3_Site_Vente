@@ -8,6 +8,7 @@
     <link rel="stylesheet" href=<?= site_url() . "css/adminView.css"?>>
     <title>Hot genre</title>
 </head>
+
 <body>
     <header>
         <div>
@@ -22,28 +23,31 @@
     <div class="nav_container">
         <a onclick="UtilisateursClicked()">
             <div class="nav_element">
-                <!-- <img class="logo" src="<?= site_url() . "images/icons/compte/profil_blanc_plein.png"?>" alt="Logo">
-                <img class="hover_logo" src="<?= site_url() . "images/icons/compte/profil_plein.png"?>" alt="Logo"> -->
-
                 <h4>UTILISATEURS</h4>
             </div>
         </a>
 
         <a onclick="ProduitsClicked()">
             <div class="nav_element">
-                <!-- <img class="logo" src="<?= site_url() . "images/icons/compte/historique_blanc_plein.png"?>" alt="Logo">
-                <img class="hover_logo" src="<?= site_url() . "images/icons/compte/historique_plein.png"?>" alt="Logo"> -->
-
                 <h4>PRODUITS</h4>
             </div>
         </a>
         
         <a onclick="ExemplairesClicked()">
             <div class="nav_element">
-                <!-- <img class="logo" src="<?= site_url() . "images/icons/compte/deconnexion_blanc_plein.png"?>" alt="Logo">
-                <img class="hover_logo" src="<?= site_url() . "images/icons/compte/deconnexion_plein.png"?>" alt="Logo"> -->
-
                 <h4>EXEMPLAIRES</h4>
+            </div>
+        </a>
+
+        <a onclick="CollectionsClicked()">
+            <div class="nav_element">
+                <h4>COLLECTIONS</h4>
+            </div>
+        </a>
+
+        <a onclick="CommandesClicked()">
+            <div class="nav_element">
+                <h4>COMMANDES</h4>
             </div>
         </a>
     </div>
@@ -58,7 +62,7 @@
                     <th>Nom</th>
                     <th>Email</th>
                     <th>Est admin</th>
-                    <th style="width: 280px;">Metter admin</th>
+                    <th style="width: 280px;">Mettre admin</th>
                     <th style="width: 280px;">Supprimer</th>
                 </tr>
 
@@ -71,8 +75,8 @@
                         <td><?= $utilisateur->est_admin ?></td>
 
                         <td>
-                            <a href="<?= url_to('AdminController::mettreAdmin', $utilisateur->id_client) ?>">
-                                <div class="button">Mettre admin</div>
+                            <a href="<?= ($utilisateur->est_admin) ? url_to('AdminController::enleverAdmin', $utilisateur->id_client) : url_to('AdminController::mettreAdmin', $utilisateur->id_client) ?>">
+                                <div class="button"><?= ($utilisateur->est_admin) ? "Enlever admin" : "Mettre admin" ?></div>
                             </a>
                         </td>
 
@@ -282,6 +286,66 @@
             </form>
 
         </div>
+
+
+        <div id="collections" class="collections <?= ($notHidden == "collections") ? "" : "hidden" ?>">
+            
+            <a href="#creer_collection">
+                <div class="button creer_collection_bouton">Créer collection</div>
+            </a>
+
+            <table>
+                <tr>
+                    <th>ID collection</th>
+                    <th>Nom</th>
+                    <th>Parution</th>
+                    <th>Date limite</th>
+                    <!-- <th style="width: 280px;">Modifier collection</th> -->
+                    <th style="width: 280px;">Supprimer collection</th>
+                </tr>
+
+                <?php foreach($collections as $collection) : ?>
+                    <tr>
+                        <td><?= $collection->id_collection ?></td>
+                        <td><?= $collection->nom ?></td>
+                        <td><?= $collection->parution ?></td>
+                        <td><?= $collection->date_limite ?></td>
+
+                        <td>
+                            <a href="<?= url_to('AdminController::supprimerCollection', $collection->id_collection) ?>">
+                                <div class="button">Supprimer collection</div>
+                            </a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </table>
+
+
+            <form id="creer_collection" class="creer_collection_form" action=<?= url_to('AdminController::creerCollection') ?> method="post">
+                <h1>Créer une collection :</h1>
+
+                <div>
+                    <label for="nom">Nom *</label>
+                    <input type="text" name="nom" id="nom" placeholder=" " maxlength="50" required/>
+                </div>
+
+                <div>
+                    <label for="date_limite">Date limite *</label>
+                    <input type="date" name="date_limite" id="date_limite" required/>
+                </div>
+
+                <button type="submit" class="button">Créer collection</button>
+            </form>
+        </div>
+
+
+        <div id="collections" class="collections <?= ($notHidden == "collections") ? "" : "hidden" ?>">
+            <?php foreach($utilisateurs as $utilisateur) : ?>
+                <h1><?= $utilisateur->nom ?></h1>
+            <?php endforeach; ?>
+        </div>
+
+
     </section>
 </body>
 </html>

@@ -76,8 +76,8 @@
 
         <a class="underline_animation" href="">FEED</a>
         <a class="underline_animation" href="">LOOKBOOK</a>
-        <a class="underline_animation" href="">QUI SOMMES NOUS?</a>
-        <a class="underline_animation" href="">CONTACT</a>
+        <a class="underline_animation" href="<?= url_to('ClientController::quiSommesNous') ?>">QUI SOMMES NOUS?</a>
+        <a class="underline_animation" href="<?= url_to('ClientController::contact') ?>">CONTACT</a>
       </nav>
     </div>
 
@@ -106,8 +106,8 @@
 
           <a class="underline_animation" href="">FEED</a>
           <a class="underline_animation" href="">LOOKBOOK</a>
-          <a class="underline_animation" href="">QUI SOMMES NOUS?</a>
-          <a class="underline_animation" href="">CONTACT</a>
+          <a class="underline_animation" href="<?= url_to('ClientController::quiSommesNous') ?>">QUI SOMMES NOUS?</a>
+          <a class="underline_animation" href="<?= url_to('ClientController::contact') ?>">CONTACT</a>
         </nav>
       </div>
 

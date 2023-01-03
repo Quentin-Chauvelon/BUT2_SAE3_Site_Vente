@@ -76,12 +76,14 @@ $routes->get('contact', 'ClientController::contact');
 
 $routes->get('adminView/(:any)', 'AdminController::adminView/$1');
 $routes->get('mettreAdmin/(:any)', 'AdminController::mettreAdmin/$1');
+$routes->get('enleverAdmin/(:any)', 'AdminController::enleverAdmin/$1');
 $routes->get('supprimerUtilisateur/(:any)', 'AdminController::supprimerUtilisateur/$1');
 $routes->get('modifierProduitVue/(:any)', 'AdminController::modifierProduitVue/$1');
 // $routes->get('modifierProduit', 'AdminController::modifierProduit');
 $routes->get('supprimerProduit/(:any)', 'AdminController::supprimerProduit/$1');
 $routes->get('supprimer1Exemplaire/(:any)/(:any)/(:any)', 'AdminController::supprimer1Exemplaire/$1/$2/$3');
 $routes->get('supprimerTousLesExemplaires/(:any)/(:any)/(:any)', 'AdminController::supprimerTousLesExemplaires/$1/$2/$3');
+$routes->get('supprimerCollection/(:any)', 'AdminController::supprimerCollection/$1');
 
 
 $routes->post('creerCompte','ClientController::creerCompte');
@@ -95,3 +97,4 @@ $routes->post('messageContact', 'ClientController::messageContact');
 $routes->post('creerProduit', 'AdminController::creerProduit');
 $routes->post('modifierProduit', 'AdminController::modifierProduit');
 $routes->post('creerExemplaire', 'AdminController::creerExemplaire');
+$routes->post('creerCollection', 'AdminController::creerCollection');

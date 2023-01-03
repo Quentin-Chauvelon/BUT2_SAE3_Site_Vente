@@ -77,3 +77,14 @@ body {
     /* height: var(--size); */
     height: calc(var(--size) - 5px);
 }
+
+
+@media screen and (max-width: 1000px) {
+    .image_container {
+        height: 120%;
+    }
+
+    .product > div {
+        margin-top: calc(20% + 20px);
+    }
+}

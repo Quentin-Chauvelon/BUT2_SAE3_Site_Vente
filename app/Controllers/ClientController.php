@@ -598,7 +598,6 @@ class ClientController extends BaseController
         if ($commande == NULL) {
             return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
         }
-
         
         $adresse = NULL;
 
@@ -710,13 +709,8 @@ class ClientController extends BaseController
     }
 }
 
-
-// admin view password prompt cancel error 
-// rupture de stock lequel est le mieux ?
-// user select pour le carousel 
+// responsive : contact (+ problème footer) + commandeValidee + home + modifierProduit (admin) + succesCreationCompteClient + validerCommandeAdresse + adminView ?
 // visualiser toutes les commandes
-// mettre admin et enlever admin (même bouton mais change en fonction de si l'utilisateur est déjà admin ou pas)
-// grisé les produits sans exemplaires
 // modifier collection (si on a le temps à la fin)
 
 // ajouter les images pour la collection (download en fonction du type de produit + les mettre sur la vue home)

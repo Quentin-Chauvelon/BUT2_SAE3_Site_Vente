@@ -6,6 +6,7 @@ use App\Models\ModeleClient;
 use App\Models\ModeleProduit;
 use App\Models\ModeleExemplaire;
 use App\Models\ModeleCollection;
+use App\Models\ModeleCommande;
 
 
 class AdminController extends BaseController
@@ -17,6 +18,7 @@ class AdminController extends BaseController
         $this->ModeleProduit = ModeleProduit::getInstance();
         $this->ModeleExemplaire = ModeleExemplaire::getInstance();
         $this->ModeleCollection = ModeleCollection::getInstance();
+        $this->ModeleCommande = ModeleCommande::getInstance();
         
         $this->request = \Config\Services::request();
     }
@@ -59,7 +61,7 @@ class AdminController extends BaseController
         }
 
         // $notHidden = "exemplaires";
-        return view("adminView", array("notHidden" => $notHidden, "utilisateurs" => $this->ModeleClient->findAll(), "produits" => $this->ModeleProduit->findAll(), "collections" => $this->ModeleCollection->findAll(), "exemplaires" => $exemplairesParCouleurTailleProduits));
+        return view("adminView", array("notHidden" => $notHidden, "utilisateurs" => $this->ModeleClient->findAll(), "produits" => $this->ModeleProduit->findAll(), "collections" => $this->ModeleCollection->findAll(), "exemplaires" => $exemplairesParCouleurTailleProduits, "commandes" => $this->ModeleCommande->findAll()));
     }
 
 
@@ -275,20 +277,22 @@ class AdminController extends BaseController
         }
 
         $today = date("Ymd");
-        $date_limite = $this->request->getPost('date_limite');
+        $dateLimiteArray = explode("-", $this->request->getPost('date_limite'));
+
+        $dateLimite = $dateLimiteArray[0] . $dateLimiteArray[1] . $dateLimiteArray[2];
 
         $collection = array(
             "id_collection" => 0,
             "nom" => $this->request->getPost('nom'),
             "parution" => $today,
-            "date_limite" => $date_limite,
+            "date_limite" => $dateLimite,
         );
 
-        if ($date_limite > $today) {
-            $this->ModeleExemplaire->insert($exemplaire);
+        if ($dateLimite > $today) {
+            $this->ModeleCollection->insert($collection);
         }
 
-        return $this->returnAdminView('exemplaires');
+        return $this->returnAdminView('collections');
     }
 
 

@@ -285,3 +285,37 @@ nav a {
 .icons_container {
     position: relative;
 } */
+
+@media screen and (max-width: 1000px) {
+
+    .header_sticky .navigation {
+        display: none;
+    }
+
+    .header_sticky .icons_container {
+        margin: 8px 20px 8px 0;
+    }
+
+    .icons_container {
+        margin-right: 20px;
+        gap: 10px;
+    }
+
+    .icon_container > a:last-of-type {
+        display: none;
+    }
+
+    .header_not_sticky .header_top > div:first-of-type {
+        display: none;
+    }
+
+    .header_not_sticky .header_top a {
+        margin-left: 20px;
+    }
+
+    .header_not_sticky nav {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+}

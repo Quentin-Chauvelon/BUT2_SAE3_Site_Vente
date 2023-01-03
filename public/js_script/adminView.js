@@ -44,7 +44,7 @@ function CollectionsClicked() {
     commandes.classList.add("hidden");
 }
 
-function CollectionsClicked() {
+function CommandesClicked() {
     utilisateurs.classList.add("hidden");
     produits.classList.add("hidden");
     exemplaires.classList.add("hidden");

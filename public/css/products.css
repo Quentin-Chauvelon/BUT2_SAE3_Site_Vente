@@ -87,6 +87,20 @@ body {
     transform: rotate(-52deg);
 }
 
+.rupture_stock_grise {
+    float: left;
+    position: absolute;
+
+    width: 100%;
+    height: 500px;
+
+    background-color: #2e2e2e;
+    border-radius: 8px;
+    opacity: 0.5;
+
+    z-index: 2;
+}
+
 
 .image_container {
     display: flex;

@@ -105,3 +105,30 @@ html, body {
 	background-color: white;
 	color: #2e2e2e;
 }
+
+
+@media screen and (max-width: 1000px) {
+    .commande {
+        flex-direction: column;
+
+        text-align: center;
+    }
+
+    .left_container {
+        margin: 0 15px;
+    }
+
+    .commande_details_container {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .commande_details {
+        margin: 0;
+    }
+
+    .voir_detail div {
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+}

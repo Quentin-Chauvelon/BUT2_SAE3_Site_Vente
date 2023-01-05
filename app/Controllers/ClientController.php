@@ -721,7 +721,8 @@ class ClientController extends BaseController
     }
 }
 
-
+// oberserver decorateur singleton 
+// composite ou delegate pour le decouper le clientController
 
 // ajouter image (compter nombre d'images , ajouter l'image à nbImages + 1)
 // supprimer (compter nombre d'images, si une seule image, alors on ne supprime pas, sinon on supprime l'image et on rename toutes les autres images pour décaler)

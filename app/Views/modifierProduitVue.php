@@ -84,21 +84,40 @@
                 </select>
             </div>
         
+
             <button type="submit" class="bouton">Modifier produit</button>
         </form>
 
         <div class="images_container">
-            <?php foreach($productImages as $key=>$imageSrc) : ?>
+            <form action=<?= url_to('AdminController::reordonnerImagesProduits') ?> method="post">
+                <input type="hidden" name="id_produit" id="id_produit" value="<?= $produit->id_produit ?>" />
 
-                <div class="image_container">
-                    <div class="image">
-                        <img src= <?= $imageSrc ?>>
+                <?php foreach($productImages as $key=>$imageSrc) : ?>
+
+                    <div class="image_container">
+                        <div class="image">
+                            <img src= <?= $imageSrc ?>>
+                        </div>
+
+                        <div>
+                            <a href="<?= url_to('AdminController::supprimerImageProduit', $produit->id_produit, $key + 1) ?>">
+                                <img class="bin" src="<?= site_url() . "images/icons/bin.png"?>">
+                            </a>
+
+                            <a href="<?= url_to('AdminController::supprimerImageProduit', $produit->id_produit, $key + 1) ?>">
+                                <select id="produit<?= $key + 1 ?>" name="produit<?= $key + 1 ?>" >
+                                    <?php foreach($productImages as $key2=>$valeur) : ?>
+                                        <option <?= ($key == $key2) ? "selected" : "" ?> value="<?= $key2 + 1 ?>"><?= $key2 + 1 ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </a>
+                        </div>
 
                     </div>
+                <?php endforeach; ?>
 
-                    <img class="bin" src="<?= site_url() . "images/icons/bin.png"?>">
-                </div>
-			<?php endforeach; ?>
+                <button type="submit" class="bouton">Valider ordre</button>
+            </form>
 
             <form action=<?= url_to('AdminController::ajouterImageProduit') ?> method="post" enctype='multipart/form-data'>
                 <input type="hidden" name="id_produit" id="id_produit" value="<?= $produit->id_produit ?>" />
@@ -107,6 +126,49 @@
             </form>
         </div>
     </section>
+
+
+    <script>
+        // onchange="updateValeur()"
+
+        // const input = document.getElementById('produit3');
+
+        // input.addEventListener('change', updateValue);
+
+        // function updateValeur(e) {
+        // log.textContent = e.target.value;
+        // }
+
+
+        function OrdreImageModifie(e) {
+            console.log(e.srcElement.value);
+            const produitAEchanger = document.getElementById("produit" + e.srcElement.value.toString());
+            
+            const tmp = e.srcElement.id.charAt(e.srcElement.id.length - 1);;
+            e.srcElement.value = produitAEchanger.value;
+            produitAEchanger.value = tmp;
+        }
+        
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const produit1 = document.getElementById("produit1");
+            const produit2 = document.getElementById("produit2");
+            const produit3 = document.getElementById("produit3");
+            const produit4 = document.getElementById("produit4");
+            const produit5 = document.getElementById("produit5");
+            const produit6 = document.getElementById("produit6");
+            const produit7 = document.getElementById("produit7");
+            const produit8 = document.getElementById("produit8");
+
+            if (produit1 != null) { produit1.onchange = (e) => { OrdreImageModifie(e); }}
+            if (produit2 != null) { produit2.onchange = (e) => { OrdreImageModifie(e); }}
+            if (produit3 != null) { produit3.onchange = (e) => { OrdreImageModifie(e); }}
+            if (produit4 != null) { produit4.onchange = (e) => { OrdreImageModifie(e); }}
+            if (produit5 != null) { produit5.onchange = (e) => { OrdreImageModifie(e); }}
+            if (produit6 != null) { produit6.onchange = (e) => { OrdreImageModifie(e); }}
+            if (produit1 != null) { produit1.onchange = (e) => { OrdreImageModifie(e); }}
+            if (produit7 != null) { produit7.onchange = (e) => { OrdreImageModifie(e); }}
+        });
+    </script>
 </body>
 </html>
 

@@ -225,15 +225,119 @@ class AdminController extends BaseController
             return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
         }
 
+        $filename = $_FILES['image']['tmp_name'];
+
         // si l'utilisateur a annulé la sélection d'image, ça envoie une image vide
-        if ($_FILES['image']['tmp_name'] != "") {
+        if ($filename != "") {
             $idProduit = $this->request->getPost("id_produit");
 
             $nbImages = count(glob("images/produits/" . (string)$idProduit . "/images/" . "*"));
             //$nbImages = count(scandir("images/produits/" . $idProduit . "/images"))-2;
-
-            var_dump($nbImages);
+    
+            // 8 images maximum
+            if ($nbImages < 8) {
+                move_uploaded_file($filename, "images/produits/" . (string)$idProduit . "/images/image_" . (string)($nbImages + 1) . "." . str_replace("image/", "", $_FILES['image']['type']));
+            }
         }
+
+        return $this->modifierProduitVue($idProduit);
+    }
+
+
+    public function reordonnerImagesProduits() {
+
+        $idProduit = (string)$this->request->getPost("id_produit");
+
+        if (!$this->estAdmin()) {
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+        }
+
+        $ordre = array();
+
+        for ($i=1; $i < 9; $i++) {
+            $produit = $this->request->getPost("produit" . (string)$i);
+
+            if ($produit != NULL) {
+                $ordre[$i] = (int)$produit;
+            }
+            else {
+                break;
+            }
+        }
+
+
+        $imagesDejaInversees = array();
+
+        // on inverse les images si elles ont été réordonnées
+        for ($i=1; $i < 9; $i++) {
+            
+            if (array_key_exists($i, $ordre) && $ordre[$i] != $i) {
+
+                // changer la valeur du tableau pour pas le rééchanger une 2ème fois les images
+                if (file_exists("images/produits/" . (string)$idProduit . "/images/image_" . $i . ".jpg") && file_exists("images/produits/" . (string)$idProduit . "/images/image_" . $ordre[$i] . ".jpg")) {
+                    rename("images/produits/" . (string)$idProduit . "/images/image_" . $i . ".jpg", "images/produits/" . (string)$idProduit . "/images/tmp");
+                    rename("images/produits/" . (string)$idProduit . "/images/image_" . $ordre[$i] . ".jpg", "images/produits/" . (string)$idProduit . "/images/image_" . $i . ".jpg");
+                    rename("images/produits/" . (string)$idProduit . "/images/tmp", "images/produits/" . (string)$idProduit . "/images/image_" . $ordre[$i] . ".jpg");
+                }
+
+                if (file_exists("images/produits/" . (string)$idProduit . "/images/image_" . $i . ".png") && file_exists("images/produits/" . (string)$idProduit . "/images/image_" . $ordre[$i] . ".png")) {
+                    var_dump("ici");
+                    rename("images/produits/" . (string)$idProduit . "/images/image_" . $i . ".png", "images/produits/" . (string)$idProduit . "/images/tmp");
+                    rename("images/produits/" . (string)$idProduit . "/images/image_" . $ordre[$i] . ".png", "images/produits/" . (string)$idProduit . "/images/image_" . $i . ".png");
+                    rename("images/produits/" . (string)$idProduit . "/images/tmp", "images/produits/" . (string)$idProduit . "/images/image_" . $ordre[$i] . ".png");
+                }
+
+                // $imagesDejaInversees[] = $i;
+                // $imagesDejaInversees[] = $ordre[i];
+            }
+        }
+
+        // return $this->modifierProduitVue($idProduit);
+    }
+
+
+    public function supprimerImageProduit($idProduit, $numeroImage) {
+
+        if (!$this->estAdmin()) {
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+        }
+
+
+        $idProduit = (string)$idProduit;
+        $nbImages = count(glob("images/produits/" . $idProduit . "/images/" . "*"));
+
+        if ($nbImages == 1) {
+            return $this->modifierProduitVue($idProduit);
+        }
+
+        if (file_exists("images/produits/" . $idProduit . "/images/image_" . $numeroImage . ".jpg")) {
+            unlink("images/produits/" . $idProduit . "/images/image_" . $numeroImage . ".jpg");
+        }
+
+        if (file_exists("images/produits/" . $idProduit . "/images/image_" . $numeroImage . ".png")) {
+            unlink("images/produits/" . $idProduit . "/images/image_" . $numeroImage . ".png");
+        }
+
+        if (file_exists("images/produits/" . $idProduit . "/images/image_" . $numeroImage . ".jpeg")) {
+            unlink("images/produits/" . $idProduit . "/images/image_" . $numeroImage . ".jpeg");
+        }
+
+        // on change le nom des images pour qu'ils aillent toujours de 1 au nombre d'images (pas de trous)
+        for ($i = $numeroImage + 1; $i <= $nbImages; $i++) { 
+            if (file_exists("images/produits/" . $idProduit . "/images/image_" . $i . ".jpg")) {
+                rename("images/produits/" . $idProduit . "/images/image_" . $i . ".jpg", "images/produits/" . $idProduit . "/images/image_" . ($i - 1) . ".jpg");
+            }
+    
+            if (file_exists("images/produits/" . $idProduit . "/images/image_" . $i . ".png")) {
+                rename("images/produits/" . $idProduit . "/images/image_" . $i . ".png", "images/produits/" . $idProduit . "/images/image_" . ($i - 1) . ".png");
+            }
+    
+            if (file_exists("images/produits/" . $idProduit . "/images/image_" . $i . ".jpeg")) {
+                rename("images/produits/" . $idProduit . "/images/image_" . $i . ".jpeg", "images/produits/" . $idProduit . "/images/image_" . ($i - 1) . ".jpeg");
+            }
+        }
+
+        return $this->modifierProduitVue($idProduit);
     }
 
 
@@ -340,6 +444,10 @@ class AdminController extends BaseController
             if (file_exists("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".png")) {
                 unlink("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".png");
             }
+
+            if (file_exists("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".jpeg")) {
+                unlink("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".jpeg");
+            }
         }
 
         return $this->returnAdminView('exemplaires');
@@ -372,6 +480,10 @@ class AdminController extends BaseController
 
             if (file_exists("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".png")) {
                 unlink("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".png");
+            }
+            
+            if (file_exists("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".jpeg")) {
+                unlink("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".jpeg");
             }
         }
 

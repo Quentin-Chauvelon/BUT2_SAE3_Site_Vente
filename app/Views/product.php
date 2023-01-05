@@ -6,7 +6,7 @@
 	function ProduitAjoutePanier() {
 		setTimeout(() => {
 			AfficherProduitAjoutePanier();
-		}, 1000)
+		}, 200)
 	}
 </script>
 

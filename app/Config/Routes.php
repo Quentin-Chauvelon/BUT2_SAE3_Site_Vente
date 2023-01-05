@@ -83,6 +83,7 @@ $routes->get('supprimerProduit/(:any)', 'AdminController::supprimerProduit/$1');
 $routes->get('supprimer1Exemplaire/(:any)/(:any)/(:any)', 'AdminController::supprimer1Exemplaire/$1/$2/$3');
 $routes->get('supprimerTousLesExemplaires/(:any)/(:any)/(:any)', 'AdminController::supprimerTousLesExemplaires/$1/$2/$3');
 $routes->get('supprimerCollection/(:any)', 'AdminController::supprimerCollection/$1');
+$routes->get('supprimerImageProduit/(:any)/(:any)', 'AdminController::supprimerImageProduit/$1/$2');
 
 
 $routes->post('creerCompte','ClientController::creerCompte');
@@ -98,3 +99,4 @@ $routes->post('modifierProduit', 'AdminController::modifierProduit');
 $routes->post('creerExemplaire', 'AdminController::creerExemplaire');
 $routes->post('creerCollection', 'AdminController::creerCollection');
 $routes->post('ajouterImageProduit', 'AdminController::ajouterImageProduit');
+$routes->post('reordonnerImagesProduits', 'AdminController::reordonnerImagesProduits');

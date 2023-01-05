@@ -157,3 +157,25 @@ header .deconnexion:hover {
 .nav_element:hover h4 {
     color: #2e2e2e;
 }
+
+
+@media screen and (max-width: 1000px) {
+
+    header h3 {
+        display: none;
+    }
+
+    .nav_container {
+        flex-wrap: wrap;
+        flex-direction: column;
+        margin-top: 20px;
+    }
+
+    .compte_action {
+        width: 100%;
+        margin: 100px auto;
+        padding: 50px 0;
+    }
+
+    
+}

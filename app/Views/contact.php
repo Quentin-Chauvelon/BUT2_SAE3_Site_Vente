@@ -17,7 +17,7 @@
         <form class="contact" action=<?= url_to('ClientController::messageContact') ?> method="post">
             <div>
                 <label for="from">Votre adresse mail *</label>
-                <input type="email" name="from" id="from" placeholder=" " maxlength="70" required/>
+                <input type="email" name="from" id="from" placeholder=" " maxlength="70" value="<?= $session["email"] ?>" required/>
             </div>
             
             <div>

@@ -15,6 +15,8 @@
 
 <body>
 
+    <h1 class="pas_de_commandes <?= (count($commandes) == 0) ? "" : "hidden" ?>">Vous n'avez passé aucune commande pour l'instant.</h1>
+
     <div class="commandes_container">
 
         <?php foreach($commandes as $commande) : ?>

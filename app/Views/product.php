@@ -6,7 +6,7 @@
 	function ProduitAjoutePanier() {
 		setTimeout(() => {
 			AfficherProduitAjoutePanier();
-		}, 1000)
+		}, 200)
 	}
 </script>
 
@@ -102,7 +102,7 @@
 			
 			<div class="arrow_background up_arrow">
 			
-				<img class="arrow_image" src="<?= site_url() . "images/icons/account.png"?>">
+				<img class="arrow_image" src="<?= site_url() . "images/icons/arrow.png"?>">
 			</div>
 
 			<?php foreach($productImages as $key=>$imageSrc) : ?>
@@ -112,7 +112,7 @@
 			<?php endforeach; ?>
 
 			<div class="arrow_background down_arrow">
-				<img class="arrow_image" src="<?= site_url() . "images/icons/account.png"?>">
+				<img class="arrow_image" src="<?= site_url() . "images/icons/arrow.png"?>">
 			</div>
 		</div>
 

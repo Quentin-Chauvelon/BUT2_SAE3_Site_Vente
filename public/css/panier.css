@@ -95,7 +95,9 @@ body {
 
 .product img {
     width: calc(100% - 50px);
-    transition: scale 0.4s
+    transition: scale 0.4s;
+    max-height: 90%;
+    object-fit: contain;
 }
 
 .product > div {
@@ -149,4 +151,29 @@ body {
 
 .product_details_right {
     text-align: right;
+}
+
+
+@media screen and (max-width: 1000px) {
+
+    .panier_header {
+        flex-direction: column;
+    }
+
+    .panier_header > div:first-of-type {
+        text-align: center;
+    }
+
+    .panier_header > a {
+        display: flex;
+        justify-content: center;
+    }
+
+    .image_container {
+        height: 120%;
+    }
+
+    .product > div {
+        margin-top: calc(20% + 20px);
+    }
 }

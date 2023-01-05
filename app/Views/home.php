@@ -146,18 +146,17 @@
  -->
 
   <div class="icon_container admin <?= ($estAdmin == true) ? "" : "not_admin" ?>">
-    <a>
+    <!-- <a onclick="passwordPrompt()"> -->
+    <a href="<?= url_to('AdminController::adminView') ?>">
       <div class="icon_logo_background">
-        <form action="" >
-          <input class="admin_password" type="button" name="admin_password" onclick="passwordPrompt()">
-        </form>
 
-        <img class="icon_logo" src="https://icons.veryicon.com/png/o/miscellaneous/yuanql/icon-admin.png">
-        <img class="hover_image" src="https://icons.veryicon.com/png/o/miscellaneous/yuanql/icon-admin.png">
+        <img class="icon_logo" src="<?= site_url() . "images/icons/admin.png" ?>">
+        <img class="hover_image" src="<?= site_url() . "images/icons/admin_blanc.png" ?>">
       </div>
     </a>
 
-    <a>
+    <!-- <a onclick="passwordPrompt()"> -->
+    <a href="<?= url_to('AdminController::adminView') ?>">
       <h3 class="underline_animation">Admin</h3>
     </a>
   </div>
@@ -165,7 +164,11 @@
 
  <div class="carrousel">
   <a onclick="PreviousClicked()">
-    <div class="carrousel_prev carrousel_button"><</div>
+    <div class="carrousel_prev carrousel_button">
+            <span class="arrowicon_carroussel">
+                <i class="arrow_carroussel left"></i>
+            </span>
+    </div>
   </a>
   
   <div class="carrousel_images">
@@ -183,7 +186,11 @@
   </div>
 
   <a onclick="NextClicked()">
-    <div class="carrousel_next carrousel_button">></div>
+    <div class="carrousel_next carrousel_button">
+            <span class="arrowicon_carroussel">
+                <i class="arrow_carroussel right"></i>
+            </span>
+    </div>
   </a>
 </div>
 
@@ -244,7 +251,10 @@
 
   <?php foreach($produitsPlusPopulaires as $produit) : ?>
     <div>
-     <img src="<?= $produitsPlusVendusImages[$produit->id_produit]?> ">
+
+      <a href="<?= url_to('Product::display', $produit->id_produit) ?>">
+        <img src="<?= $produitsPlusVendusImages[$produit->id_produit]?> ">
+      </a>
 
      <div class="populaires_details">
       <h3><?= $produit->nom ?></h3>

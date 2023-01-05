@@ -11,7 +11,10 @@
 
 <body>
 
+    <h1 class="pas_de_favoris <?= (count($favoris) == 0) ? "" : "hidden" ?>">Vous n'avez aucun favori pour le moment.</h1>
+
     <div class="products_container">
+
         <?php foreach($favoris as $favori) : ?>
             <div class="product">
                 <a href="<?= url_to('Product::display', $favori->id_produit) ?>">

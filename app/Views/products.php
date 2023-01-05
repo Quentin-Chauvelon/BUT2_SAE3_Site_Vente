@@ -33,6 +33,8 @@
                         ?>
 
                         <img src=<?= $imageURL ?>>
+
+                        <div class="<?= (array_search($product->id_produit, $produitsRuptureStock) !== false) ? "rupture_stock_grise" : "" ?>"></div>
                     </div>
                 </a>
 

@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href=<?= site_url() . "css/creerCompte.css"?>>
-	<script src=<?= site_url() . "js_script/creerCompte.js"?>></script>
+    <script src=<?= site_url() . "js_script/creerCompte.js"?>></script>
     <title>Hot genre</title>
 </head>
 
@@ -64,7 +64,7 @@
 					<div class="password_container">
 						<input type="password" name="password" id="password" placeholder=" " minlength="8" maxlength="64" required/>
 
-						<div class="toggle_password_visibility" onclick="togglePasswordVisibilty()">
+						<div class="toggle_password_visibility" onclick="togglePasswordVisibility1()">
 								<img src="https://cdn-icons-png.flaticon.com/512/65/65000.png" alt="Logo">
 						</div>
 					</div>
@@ -78,7 +78,7 @@
 					<div class="password_container">
 						<input type="password" name="passwordRepetition" id="passwordRepetition" placeholder=" " minlength="8" maxlength="64" required/>
 
-						<div class="toggle_password_visibility" onclick="togglePasswordVisibilty()">
+						<div class="toggle_password_visibility" onclick="togglePasswordVisibility2()">
 							<img src="https://cdn-icons-png.flaticon.com/512/65/65000.png" alt="Logo">
 						</div>
 					</div>
@@ -88,10 +88,16 @@
 
 				<div>
 					<div class="cgu_checkbox">
-						<input class="checkbox" type="checkbox" name="titre" id="titre" placeholder=" " required/>
-						<label>J'accepte les conditions générales d'utilisation</label>
+						<input class="checkbox" type="checkbox" name="cgu" id="cgu" placeholder=" " required/>
+						<label>J'accepte les <a href="<?= url_to('ClientController::cgu') ?>">conditions générales d'utilisation</a></label>
 					</div>
-					<h5>Hint or Error Message</h5>
+				</div>
+
+				<div>
+					<div class="rester_connecte">
+						<input class="checkbox" type="checkbox" name="rester_connecte" id="rester_connecte" value="rester_connecte" placeholder=" "/>
+						<label>Rester connecté</label>
+					</div>
 				</div>
 
 				<button type="submit">Je crée mon compte</button>

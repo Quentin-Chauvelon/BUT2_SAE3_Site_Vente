@@ -6,12 +6,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	passwordRepetitionInput = document.getElementById("passwordRepetition");
 });
 
-function togglePasswordVisibilty() {
+function togglePasswordVisibility1() {
 	if (passwordInput.type === "password") {
 		passwordInput.type = "text";
-		passwordRepetitionInput.type = "text";
 	} else {
 		passwordInput.type = "password";
+	}
+}
+
+
+function togglePasswordVisibility2() {
+	if (passwordRepetitionInput.type === "password") {
+		passwordRepetitionInput.type = "text";
+	} else {
 		passwordRepetitionInput.type = "password";
 	}
 }

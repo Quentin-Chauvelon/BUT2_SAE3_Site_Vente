@@ -7,6 +7,20 @@
     <link rel="stylesheet" href=<?= site_url() . "css/modifierProduit.css"?>>
     <title>Hot genre</title>
 </head>
+
+<?php
+    $productImages = [];
+
+    foreach(new DirectoryIterator(dirname("images/produits" . DIRECTORY_SEPARATOR . $produit->id_produit . DIRECTORY_SEPARATOR . "images/.")) as $file)
+    {
+        if(!$file->isDot()) {
+            $productImages[] = site_url() . $file->getPath() . DIRECTORY_SEPARATOR . $file->getFileName();
+        }
+    }
+
+    sort($productImages);
+?>
+
 <body>
     <header>
         <div>
@@ -17,35 +31,6 @@
 
         <h3 class="underline_animation">Admin</h3>
     </header>
-
-    <div class="nav_container">
-        <a onclick="UtilisateursClicked()">
-            <div class="nav_element">
-                <!-- <img class="logo" src="<?= site_url() . "images/icons/compte/profil_blanc_plein.png"?>" alt="Logo">
-                <img class="hover_logo" src="<?= site_url() . "images/icons/compte/profil_plein.png"?>" alt="Logo"> -->
-
-                <h4>UTILISATEURS</h4>
-            </div>
-        </a>
-
-        <a onclick="ProduitsClicked()">
-            <div class="nav_element">
-                <!-- <img class="logo" src="<?= site_url() . "images/icons/compte/historique_blanc_plein.png"?>" alt="Logo">
-                <img class="hover_logo" src="<?= site_url() . "images/icons/compte/historique_plein.png"?>" alt="Logo"> -->
-
-                <h4>PRODUITS</h4>
-            </div>
-        </a>
-        
-        <a onclick="ExemplairesClicked()">
-            <div class="nav_element">
-                <!-- <img class="logo" src="<?= site_url() . "images/icons/compte/deconnexion_blanc_plein.png"?>" alt="Logo">
-                <img class="hover_logo" src="<?= site_url() . "images/icons/compte/deconnexion_plein.png"?>" alt="Logo"> -->
-
-                <h4>EXEMPLAIRES</h4>
-            </div>
-        </a>
-    </div>
 
     <section class="compte_action">
         
@@ -99,9 +84,91 @@
                 </select>
             </div>
         
+
             <button type="submit" class="bouton">Modifier produit</button>
         </form>
+
+        <div class="images_container">
+            <form action=<?= url_to('AdminController::reordonnerImagesProduits') ?> method="post">
+                <input type="hidden" name="id_produit" id="id_produit" value="<?= $produit->id_produit ?>" />
+
+                <?php foreach($productImages as $key=>$imageSrc) : ?>
+
+                    <div class="image_container">
+                        <div class="image">
+                            <img src= <?= $imageSrc ?>>
+                        </div>
+
+                        <div>
+                            <a href="<?= url_to('AdminController::supprimerImageProduit', $produit->id_produit, $key + 1) ?>">
+                                <img class="bin" src="<?= site_url() . "images/icons/bin.png"?>">
+                            </a>
+
+                            <a href="<?= url_to('AdminController::supprimerImageProduit', $produit->id_produit, $key + 1) ?>">
+                                <select id="produit<?= $key + 1 ?>" name="produit<?= $key + 1 ?>" >
+                                    <?php foreach($productImages as $key2=>$valeur) : ?>
+                                        <option <?= ($key == $key2) ? "selected" : "" ?> value="<?= $key2 + 1 ?>"><?= $key2 + 1 ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </a>
+                        </div>
+
+                    </div>
+                <?php endforeach; ?>
+
+                <button type="submit" class="bouton">Valider ordre</button>
+            </form>
+
+            <form action=<?= url_to('AdminController::ajouterImageProduit') ?> method="post" enctype='multipart/form-data'>
+                <input type="hidden" name="id_produit" id="id_produit" value="<?= $produit->id_produit ?>" />
+                <input class="add_image image" value="+" type="button" onclick="document.getElementById('image').click();" />
+                <input type="file" style="display:none;" id="image" name="image" accept=".jpg, .png" onchange="this.form.submit()"/>
+            </form>
+        </div>
     </section>
+
+
+    <script>
+        // onchange="updateValeur()"
+
+        // const input = document.getElementById('produit3');
+
+        // input.addEventListener('change', updateValue);
+
+        // function updateValeur(e) {
+        // log.textContent = e.target.value;
+        // }
+
+
+        function OrdreImageModifie(e) {
+            console.log(e.srcElement.value);
+            const produitAEchanger = document.getElementById("produit" + e.srcElement.value.toString());
+            
+            const tmp = e.srcElement.id.charAt(e.srcElement.id.length - 1);;
+            e.srcElement.value = produitAEchanger.value;
+            produitAEchanger.value = tmp;
+        }
+        
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const produit1 = document.getElementById("produit1");
+            const produit2 = document.getElementById("produit2");
+            const produit3 = document.getElementById("produit3");
+            const produit4 = document.getElementById("produit4");
+            const produit5 = document.getElementById("produit5");
+            const produit6 = document.getElementById("produit6");
+            const produit7 = document.getElementById("produit7");
+            const produit8 = document.getElementById("produit8");
+
+            if (produit1 != null) { produit1.onchange = (e) => { OrdreImageModifie(e); }}
+            if (produit2 != null) { produit2.onchange = (e) => { OrdreImageModifie(e); }}
+            if (produit3 != null) { produit3.onchange = (e) => { OrdreImageModifie(e); }}
+            if (produit4 != null) { produit4.onchange = (e) => { OrdreImageModifie(e); }}
+            if (produit5 != null) { produit5.onchange = (e) => { OrdreImageModifie(e); }}
+            if (produit6 != null) { produit6.onchange = (e) => { OrdreImageModifie(e); }}
+            if (produit1 != null) { produit1.onchange = (e) => { OrdreImageModifie(e); }}
+            if (produit7 != null) { produit7.onchange = (e) => { OrdreImageModifie(e); }}
+        });
+    </script>
 </body>
 </html>
 

@@ -31,6 +31,7 @@ let articleAjouteTimerAnimation = null;
 // On attent que le site soit chargé
 document.addEventListener("DOMContentLoaded", function(event) { 
 	// let imagesContainer = document.getElementById("product_images_container")
+	let imagesContainerChildCount = 0;
 	let imagesContainer = document.getElementById("product_images_container");
 	let selectedImage = imagesContainer.getElementsByClassName("selected")[0];
 	let mainImage = document.getElementById("product_image");
@@ -42,6 +43,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 				mainImage.src = selectImage(selectedImage, e);
 				selectedImage = e;
 			});
+
+			imagesContainerChildCount += 1;
 		}
 	}
 
@@ -104,6 +107,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 		productIamgesContainer.style.height = imageHeight.toString() + "px";
 		downArrow.style.marginTop = (imageHeight - 80).toString() + "px";
+
+		console.log(imagesContainerChildCount * 200);
+		console.log(imageHeight);
+		if (imagesContainerChildCount * 200 < imageHeight) {
+			downArrow.style.display = "none";
+			upArrow.style.display = "none";
+		}
 
 		productImage.style.width = imageWidth.toString() + "px";
 	});

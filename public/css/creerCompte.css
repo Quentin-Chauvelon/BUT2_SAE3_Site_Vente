@@ -87,7 +87,7 @@ form label {
 }
 
 form > div:last-of-type {
-	margin-top: -10px;
+	margin-top: 10px;
 }
 
 
@@ -139,7 +139,7 @@ select:focus ~ label, input:focus ~ label, textarea:focus  {
 	font-weight: 600;
 	font-size: 30px;
 
-	margin-top: -10px;
+	margin-top: 10px;
 	transition: background-color 0.2s, color 0.2s;
 }
 
@@ -215,4 +215,44 @@ form h5 {
 	height: 80%;
 	
 	margin: 0 0 0 0;
+}
+
+
+@media screen and (max-width: 1200px) {
+
+	.page_container {
+		justify-content: center;
+	}
+
+	.left_side_container {
+		display: none;
+	}
+
+	.right_side_container {
+		width: 100%;
+	}
+
+	.right_side_container h3 {
+		text-align: center;
+	}
+
+	.form {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	form {
+		max-width: 85%;
+		padding: 0 20px;
+	}
+
+	.right_side_container button {
+		width: 280px;
+		height: 80px;
+	}
+
+	.form h4 {
+		text-align: center;
+	}
 }

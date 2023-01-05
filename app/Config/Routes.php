@@ -55,7 +55,6 @@ if (is_file(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
 }
 
 $routes->get('product/(:num)', 'Product::display/$1');
-$routes->get('product', 'Product::display');
 $routes->get('products', 'Product::displayAll');
 $routes->get('products/categories/(:any)', 'Product::trouverToutDeCategorie/$1');
 
@@ -74,7 +73,7 @@ $routes->get('cgu', 'ClientController::cgu');
 $routes->get('quiSommesNous', 'ClientController::quiSommesNous');
 $routes->get('contact', 'ClientController::contact');
 
-$routes->get('adminView/(:any)', 'AdminController::adminView/$1');
+$routes->get('adminView', 'AdminController::adminView');
 $routes->get('mettreAdmin/(:any)', 'AdminController::mettreAdmin/$1');
 $routes->get('enleverAdmin/(:any)', 'AdminController::enleverAdmin/$1');
 $routes->get('supprimerUtilisateur/(:any)', 'AdminController::supprimerUtilisateur/$1');
@@ -84,6 +83,7 @@ $routes->get('supprimerProduit/(:any)', 'AdminController::supprimerProduit/$1');
 $routes->get('supprimer1Exemplaire/(:any)/(:any)/(:any)', 'AdminController::supprimer1Exemplaire/$1/$2/$3');
 $routes->get('supprimerTousLesExemplaires/(:any)/(:any)/(:any)', 'AdminController::supprimerTousLesExemplaires/$1/$2/$3');
 $routes->get('supprimerCollection/(:any)', 'AdminController::supprimerCollection/$1');
+$routes->get('supprimerImageProduit/(:any)/(:any)', 'AdminController::supprimerImageProduit/$1/$2');
 
 
 $routes->post('creerCompte','ClientController::creerCompte');
@@ -98,3 +98,5 @@ $routes->post('creerProduit', 'AdminController::creerProduit');
 $routes->post('modifierProduit', 'AdminController::modifierProduit');
 $routes->post('creerExemplaire', 'AdminController::creerExemplaire');
 $routes->post('creerCollection', 'AdminController::creerCollection');
+$routes->post('ajouterImageProduit', 'AdminController::ajouterImageProduit');
+$routes->post('reordonnerImagesProduits', 'AdminController::reordonnerImagesProduits');

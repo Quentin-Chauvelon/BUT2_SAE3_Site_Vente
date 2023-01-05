@@ -93,7 +93,7 @@
         <div id="produits" class="produits <?= ($notHidden == "produits") ? "" : "hidden" ?>">
 
             <a href="#creer_produit">
-                <div class="button creer_produit_bouton">Créer produit</div>
+                <div class="button creer_bouton">Créer produit</div>
             </a>
 
             <table>
@@ -137,7 +137,7 @@
             </table>
 
 
-            <form id="creer_produit" class="creer_produit_form" action=<?= url_to('AdminController::creerProduit') ?> method="post">
+            <form id="creer_produit" class="creer_produit_form" action=<?= url_to('AdminController::creerProduit') ?> method="post" enctype='multipart/form-data'>
                 <h1>Créer un produit :</h1>
 
                 <div>
@@ -182,20 +182,32 @@
                     </select>
                 </div>
 
+                <div>
+                    <label for="description">Images</label>
+                    <input type="file" name="images[]" id="images" multiple accept=".jpg, .png">
+                </div>
+
                 <button type="submit" class="button">Créer produit</button>
             </form>
         </div>
         
         <div id="exemplaires" class="exemplaires <?= ($notHidden == "exemplaires") ? "" : "hidden" ?>">
             <a href="#creer_exemplaire">
-                <div class="button creer_produit_bouton">Créer exemplaire</div>
+                <div class="button creer_bouton">Créer exemplaire</div>
             </a>
 
             <div class="exemplaires_produits_container">
                 
                 <?php foreach($exemplaires as $idProduit => $exemplaireTailles) : ?>
                     <?php 
-                        $produit = $produits[$idProduit - 1];
+                        // $produit = $produits[$idProduit - 1];
+                        $produit = NULL;
+                        
+                        foreach ($produits as $produitBoucle) {
+                        	if ($produitBoucle->id_produit == $idProduit) {
+                        		$produit = $produitBoucle;
+                        	}
+                        }
                     ?>
 
                     <h1><?= $produit->nom ?> (<?= ($produit->prix / 100) ?>€ · <?= ucfirst($produit->categorie) ?>) :</h1>
@@ -251,7 +263,7 @@
                 <?php endforeach; ?>
             </div>
 
-            <form id="creer_exemplaire" class="creer_exemplaire_form" action=<?= url_to('AdminController::creerExemplaire') ?> method="post">
+            <form id="creer_exemplaire" class="creer_exemplaire_form" action=<?= url_to('AdminController::creerExemplaire') ?> method="post" enctype='multipart/form-data'>
                 <h1>Créer un exemplaire :</h1>
 
                 <div>
@@ -281,6 +293,16 @@
                         <?php endforeach; ?>
                     </select>
                 </div>
+                
+                <div>
+                    <label for="quantite">Quantite *</label>
+                    <input type="number" name="quantite" id="quantite" value="1" required/>
+                </div>
+                
+        	    <div>
+                    <label for="description">Image</label>
+                    <input type="file" name="image" id="image" accept=".jpg, .png">
+                </div>
 
                 <button type="submit" class="button">Créer exemplaire</button>
             </form>
@@ -291,7 +313,7 @@
         <div id="collections" class="collections <?= ($notHidden == "collections") ? "" : "hidden" ?>">
             
             <a href="#creer_collection">
-                <div class="button creer_collection_bouton">Créer collection</div>
+                <div class="button creer_bouton">Créer collection</div>
             </a>
 
             <table>
@@ -339,12 +361,41 @@
         </div>
 
 
-        <div id="collections" class="collections <?= ($notHidden == "collections") ? "" : "hidden" ?>">
+        <div id="commandes" class="commandes <?= ($notHidden == "commandes") ? "" : "hidden" ?>">
+
             <?php foreach($utilisateurs as $utilisateur) : ?>
                 <h1><?= $utilisateur->nom ?></h1>
+
+                <table>
+                    <tr>
+                        <th>ID commande</th>
+                        <th>ID adresse</th>
+                        <th>Date</th>
+                        <th>Date livraison estimée</th>
+                        <th>Date livraison</th>
+                        <th>ID coupon</th>
+                        <th>Est validee</th>
+                        <th>montant</th>
+                    </tr>
+
+                    <?php foreach($commandes as $commande) : ?>
+
+                        <?php if ($commande->id_client == $utilisateur->id_client) : ?>
+                            <tr>
+                                <td><?= $commande->id_commande ?></td>
+                                <td><?= $commande->id_adresse ?></td>
+                                <td><?= $commande->date_commande ?></td>
+                                <td><?= $commande->date_livraison_estimee ?></td>
+                                <td><?= $commande->date_livraison ?></td>
+                                <td><?= $commande->id_coupon ?></td>
+                                <td><?= $commande->est_validee ?></td>
+                                <td><?= $commande->montant / 100 ?>€</td>
+                            </tr>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </table>
             <?php endforeach; ?>
         </div>
-
 
     </section>
 </body>

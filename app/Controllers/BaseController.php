@@ -58,6 +58,40 @@ abstract class BaseController extends Controller
         $this->ModeleClient = ModeleClient::getInstance();
         $this->ModeleProduit = ModeleProduit::getInstance();
         $this->ModeleExemplaire = ModeleExemplaire::getInstance();
+
+        // on connecte l'utilisateur si le cookie de rester connecte est définie
+        if (isset($_COOKIE["idClient"]) && isset($_COOKIE["password"])) {
+            $client =  $this->ModeleClient->find((int)$_COOKIE["idClient"]);
+            
+            if ($client == NULL) {
+                return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
+            }
+            
+            $hashedPassword = $client->password;
+            
+            // si les mots de passes sont identiques, on connecte l'utilisateur
+            if ($_COOKIE["password"] == $hashedPassword) {
+                $this->setDonneesSession(
+                    $client->id_client,
+                    $client->prenom,
+                    $client->nom,
+                    $client->adresse_email,
+                );
+            }
+        }
+    }
+
+
+    public function setDonneesSession(int $id, string $prenom, string $nom, string $email) {
+        $donneesClient = [
+            'panier'  => array(),
+            'id' => $id,
+            'prenom'  => $prenom,
+            'nom'     => $nom,
+            'email' => $email
+        ];
+        
+        $this->session->set($donneesClient);
     }
 
 
@@ -88,8 +122,13 @@ abstract class BaseController extends Controller
 
             $estAdmin = $this->ModeleClient
                 ->where('adresse_email', $email)
-                ->first()
-                ->est_admin;
+                ->first();
+                
+            if ($estAdmin != NULL) {
+            	$estAdmin = $estAdmin->est_admin;
+	    } else {
+	    	$estAdmin = false;
+	    }
         }
 
         return $estAdmin;

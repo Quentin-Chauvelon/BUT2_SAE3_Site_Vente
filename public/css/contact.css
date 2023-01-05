@@ -99,6 +99,6 @@ body {
 @media screen and (max-width: 1000px) {
 
 	.contact_container form.contact > div {
-		width: 80%;
+		width: 100%;
 	}
 }

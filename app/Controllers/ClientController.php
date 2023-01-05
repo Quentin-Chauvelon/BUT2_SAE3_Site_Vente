@@ -30,19 +30,6 @@ class ClientController extends BaseController
     }
 
 
-    public function setDonneesSession(int $id, string $prenom, string $nom, string $email) {
-        $donneesClient = [
-            'panier'  => array(),
-            'id' => $id,
-            'prenom'  => $prenom,
-            'nom'     => $nom,
-            'email' => $email
-        ];
-        
-        $this->session->set($donneesClient);
-    }
-
-
     public function estEnFavori(int $idProduit) {
         $produitFavori = true;
 
@@ -116,6 +103,11 @@ class ClientController extends BaseController
         
         // on sauvegarde certaines données dans la session
         $this->setDonneesSession($idClient, $prenom, $nom, $email);
+
+        if ($this->request->getPost("rester_connecte") == "rester_connecte") {
+            setcookie("idClient", (int)$idClient, time() + 60 * 60 * 24 * 30);
+            setcookie("password", $passwordEncrypte, time() + 60 * 60 * 24 * 30);
+        }
         
         return view("succesCreationCompteClient");
     }
@@ -149,6 +141,11 @@ class ClientController extends BaseController
         $nom = $result->nom;
         
         $this->setDonneesSession($id, $prenom, $nom, $email);
+
+        if ($this->request->getPost("rester_connecte") == "rester_connecte") {
+            setcookie("idClient", (int)$id, time() + 60 * 60 * 24 * 30);
+            setcookie("password", $hashedPassword, time() + 60 * 60 * 24 * 30);
+        }
         
         return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
     }
@@ -156,6 +153,14 @@ class ClientController extends BaseController
 
     public function deconnexion() {
         $this->session->destroy();
+
+        // on supprime le cookie de rester connecte s'il est présent
+        if (isset($_COOKIE["idClient"]) && isset($_COOKIE["password"])) {
+            unset($_COOKIE['idClient']);
+            unset($_COOKIE['password']);
+            setcookie('idClient', "", 1);
+            setcookie('password', "", 1); 
+        }        
 
         return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => array('panier' => array(), 'id'  => NULL, 'prenom' => NULL, 'nom' => NULL, 'email' => NULL)));       
     }
@@ -545,14 +550,17 @@ class ClientController extends BaseController
         $idClient = $this->getSessionId();
         $idCommande = $this->request->getPost('idCommande');
 
+        $rue = $this->request->getPost('rue');
+        $codePostal = (int)$this->request->getPost('codePostal');
+        $ville = $this->request->getPost('ville');
+
 
         // on regarde si le client a réutilisé une adresse
         $idAdresse = $this->ModeleAdresse
-            ->where('rue', $this->request->getPost('rue'))
-            ->where('code_postal', (int)$this->request->getPost('codePostal'))
-            ->where('ville', $this->request->getPost('ville'))
-            ->first();
-
+            ->where('rue', $rue)
+            ->where('code_postal', $codePostal)
+            ->where('ville', $ville)
+            ->first(); 
 
         if ($idAdresse != NULL) {
             $idAdresse = $idAdresse->id_adresse;
@@ -562,16 +570,20 @@ class ClientController extends BaseController
         else {
             $adresse = array(
                 'id_adresse' => 0,
-                'code_postal' => (int)$this->request->getPost('codePostal'),
-                'ville' => $this->request->getPost('ville'),
-                'rue' => $this->request->getPost('rue')
+                'code_postal' => $codePostal,
+                'ville' => $ville,
+                'rue' => $rue
             );
+
+            var_dump($adresse);
 
             // on ajoute l'adresse dans la table
             $this->ModeleAdresse->insert($adresse);
 
             // on récupère l'id de l'adresse qui vient d'être crée
             $idAdresse = $this->ModeleAdresse->getInsertID();
+
+            var_dump($idAdresse);
         }
 
         // on modifie l'adresse de la commande et on la valide
@@ -709,16 +721,21 @@ class ClientController extends BaseController
     }
 }
 
-// responsive : contact (+ problème footer) + commandeValidee + home + modifierProduit (admin) + succesCreationCompteClient + validerCommandeAdresse + adminView ?
-// visualiser toutes les commandes
+
+
+// ajouter image (compter nombre d'images , ajouter l'image à nbImages + 1)
+// supprimer (compter nombre d'images, si une seule image, alors on ne supprime pas, sinon on supprime l'image et on rename toutes les autres images pour décaler)
+
+// on ne peut pas insérer l'adresse 190 boulevard Jules Verne, 44300, Nantes (marche depuis le terminal)
+
+// afficher la quantite en fonction de la couleur ou de la taille sélectionnée
+// tester rester connecté
+// modifier produit et exemplaire (ajouter image, supprimer ou réordonner)
+// image collection
+// bouton vider panier ?
+
 // modifier collection (si on a le temps à la fin)
 
-// ajouter les images pour la collection (download en fonction du type de produit + les mettre sur la vue home)
-// admin icon + blanc download + blanc
-// flèche haut/bas pour voir les différentes images des produits
-// tick.png -> retirer contour pour vraiment qu'il soit en png
-
 // quantite dispo quand on change de taille et de couleur
-// rester connecté
 // activation compte par email (rajouter base de données -> bool estVerifie et code activation surement)
 // + - pour les quantités du panier (caché quand min et max)

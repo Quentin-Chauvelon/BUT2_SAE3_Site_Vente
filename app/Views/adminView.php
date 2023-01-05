@@ -137,7 +137,7 @@
             </table>
 
 
-            <form id="creer_produit" class="creer_produit_form" action=<?= url_to('AdminController::creerProduit') ?> method="post">
+            <form id="creer_produit" class="creer_produit_form" action=<?= url_to('AdminController::creerProduit') ?> method="post" enctype='multipart/form-data'>
                 <h1>Créer un produit :</h1>
 
                 <div>
@@ -182,6 +182,11 @@
                     </select>
                 </div>
 
+                <div>
+                    <label for="description">Images</label>
+                    <input type="file" name="images[]" id="images" multiple accept=".jpg, .png">
+                </div>
+
                 <button type="submit" class="button">Créer produit</button>
             </form>
         </div>
@@ -195,7 +200,14 @@
                 
                 <?php foreach($exemplaires as $idProduit => $exemplaireTailles) : ?>
                     <?php 
-                        $produit = $produits[$idProduit - 1];
+                        // $produit = $produits[$idProduit - 1];
+                        $produit = NULL;
+                        
+                        foreach ($produits as $produitBoucle) {
+                        	if ($produitBoucle->id_produit == $idProduit) {
+                        		$produit = $produitBoucle;
+                        	}
+                        }
                     ?>
 
                     <h1><?= $produit->nom ?> (<?= ($produit->prix / 100) ?>€ · <?= ucfirst($produit->categorie) ?>) :</h1>
@@ -251,7 +263,7 @@
                 <?php endforeach; ?>
             </div>
 
-            <form id="creer_exemplaire" class="creer_exemplaire_form" action=<?= url_to('AdminController::creerExemplaire') ?> method="post">
+            <form id="creer_exemplaire" class="creer_exemplaire_form" action=<?= url_to('AdminController::creerExemplaire') ?> method="post" enctype='multipart/form-data'>
                 <h1>Créer un exemplaire :</h1>
 
                 <div>
@@ -280,6 +292,16 @@
                             <?php endforeach; ?>
                         <?php endforeach; ?>
                     </select>
+                </div>
+                
+                <div>
+                    <label for="quantite">Quantite *</label>
+                    <input type="number" name="quantite" id="quantite" value="1" required/>
+                </div>
+                
+        	    <div>
+                    <label for="description">Image</label>
+                    <input type="file" name="image" id="image" accept=".jpg, .png">
                 </div>
 
                 <button type="submit" class="button">Créer exemplaire</button>

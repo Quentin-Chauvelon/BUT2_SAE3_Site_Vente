@@ -47,7 +47,7 @@
         <ul>
           <li>
             <div class="reseau_container">
-              <a href="instagram.com">
+              <a href="https://www.instagram.com/hot_genre">
                 <h4 class="underline_animation">@hot_genre</h4>
               </a>
 
@@ -59,7 +59,7 @@
 
           <li>
             <div class="reseau_container">
-              <a href="instagram.com">
+              <a href="https://www.instagram.com/raven.morty">
                 <h4 class="underline_animation">@raven.morty</h4>
               </a>
 
@@ -71,7 +71,7 @@
 
           <li>
             <div class="reseau_container">
-              <a href="instagram.com">
+              <a href="https://www.instagram.com/moi_cest_baba">
                 <h4 class="underline_animation">@moi_cest_baba</h4>
               </a>
 

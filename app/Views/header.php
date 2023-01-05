@@ -63,7 +63,11 @@
 
       <nav>
         <div class="shop_dropdown">
-          <a class="underline_animation" href="<?= url_to('Product::displayAll') ?>">SHOP ˅</a>
+          <a class="underline_animation" href="<?= url_to('Product::displayAll') ?>">SHOP
+          <span class="arrowicon_not_sticky">
+                <i class="arrow_not_sticky down_not_sticky"></i>
+            </span>
+          </a>
 
           <div class="dropdown_content">
             <a href="<?= url_to('Product::trouverToutDeCategorie', 'sweat') ?>"><div><h3>Sweats</h3></div></a>
@@ -74,8 +78,8 @@
           </div>
         </div>
 
-        <a class="underline_animation" href="">FEED</a>
-        <a class="underline_animation" href="">LOOKBOOK</a>
+        <a class="underline_animation" href="<?= url_to('Home::index') ?>">FEED</a>
+        <a class="underline_animation" href="<?= url_to('Home::index') ?>">LOOKBOOK</a>
         <a class="underline_animation" href="<?= url_to('ClientController::quiSommesNous') ?>">QUI SOMMES NOUS?</a>
         <a class="underline_animation" href="<?= url_to('ClientController::contact') ?>">CONTACT</a>
       </nav>
@@ -92,7 +96,11 @@
       <div class="navigation">
         <nav>
           <div class="shop_dropdown">
-            <a class="underline_animation" href="<?= url_to('Product::displayAll') ?>">SHOP ˅</a>
+            <a class="underline_animation" href="<?= url_to('Product::displayAll') ?>">SHOP 
+              <span class="arrowicon">
+                <i class="arrow down"></i>
+            </span>
+          </a>
 
             <div class="dropdown_content">
             <a href="<?= url_to('Product::trouverToutDeCategorie', 'sweat') ?>"><div><h3>Sweats</h3></div></a>
@@ -104,8 +112,8 @@
           </div>
 
 
-          <a class="underline_animation" href="">FEED</a>
-          <a class="underline_animation" href="">LOOKBOOK</a>
+          <a class="underline_animation" href="<?= url_to('Home::index') ?>">FEED</a>
+          <a class="underline_animation" href="<?= url_to('Home::index') ?>">LOOKBOOK</a>
           <a class="underline_animation" href="<?= url_to('ClientController::quiSommesNous') ?>">QUI SOMMES NOUS?</a>
           <a class="underline_animation" href="<?= url_to('ClientController::contact') ?>">CONTACT</a>
         </nav>

@@ -77,3 +77,12 @@ body {
     font-size: 25px;
     margin: 20px 0 50px 0;
 }
+
+
+@media screen and (max-width: 800px) {
+
+    .middle_container, .bottom_container {
+        width: 90%;
+        text-align: center;
+    }
+}

@@ -7,6 +7,20 @@
     <link rel="stylesheet" href=<?= site_url() . "css/modifierProduit.css"?>>
     <title>Hot genre</title>
 </head>
+
+<?php
+    $productImages = [];
+
+    foreach(new DirectoryIterator(dirname("images/produits" . DIRECTORY_SEPARATOR . $produit->id_produit . DIRECTORY_SEPARATOR . "images/.")) as $file)
+    {
+        if(!$file->isDot()) {
+            $productImages[] = site_url() . $file->getPath() . DIRECTORY_SEPARATOR . $file->getFileName();
+        }
+    }
+
+    sort($productImages);
+?>
+
 <body>
     <header>
         <div>
@@ -17,35 +31,6 @@
 
         <h3 class="underline_animation">Admin</h3>
     </header>
-
-    <div class="nav_container">
-        <a onclick="UtilisateursClicked()">
-            <div class="nav_element">
-                <!-- <img class="logo" src="<?= site_url() . "images/icons/compte/profil_blanc_plein.png"?>" alt="Logo">
-                <img class="hover_logo" src="<?= site_url() . "images/icons/compte/profil_plein.png"?>" alt="Logo"> -->
-
-                <h4>UTILISATEURS</h4>
-            </div>
-        </a>
-
-        <a onclick="ProduitsClicked()">
-            <div class="nav_element">
-                <!-- <img class="logo" src="<?= site_url() . "images/icons/compte/historique_blanc_plein.png"?>" alt="Logo">
-                <img class="hover_logo" src="<?= site_url() . "images/icons/compte/historique_plein.png"?>" alt="Logo"> -->
-
-                <h4>PRODUITS</h4>
-            </div>
-        </a>
-        
-        <a onclick="ExemplairesClicked()">
-            <div class="nav_element">
-                <!-- <img class="logo" src="<?= site_url() . "images/icons/compte/deconnexion_blanc_plein.png"?>" alt="Logo">
-                <img class="hover_logo" src="<?= site_url() . "images/icons/compte/deconnexion_plein.png"?>" alt="Logo"> -->
-
-                <h4>EXEMPLAIRES</h4>
-            </div>
-        </a>
-    </div>
 
     <section class="compte_action">
         
@@ -101,6 +86,26 @@
         
             <button type="submit" class="bouton">Modifier produit</button>
         </form>
+
+        <div class="images_container">
+            <?php foreach($productImages as $key=>$imageSrc) : ?>
+
+                <div class="image_container">
+                    <div class="image">
+                        <img src= <?= $imageSrc ?>>
+
+                    </div>
+
+                    <img class="bin" src="<?= site_url() . "images/icons/bin.png"?>">
+                </div>
+			<?php endforeach; ?>
+
+            <form action=<?= url_to('AdminController::ajouterImageProduit') ?> method="post" enctype='multipart/form-data'>
+                <input type="hidden" name="id_produit" id="id_produit" value="<?= $produit->id_produit ?>" />
+                <input class="add_image image" value="+" type="button" onclick="document.getElementById('image').click();" />
+                <input type="file" style="display:none;" id="image" name="image" accept=".jpg, .png" onchange="this.form.submit()"/>
+            </form>
+        </div>
     </section>
 </body>
 </html>

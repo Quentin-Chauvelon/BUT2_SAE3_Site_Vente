@@ -60,6 +60,13 @@
 					<h5>Votre mot de passe doit faire entre 8 et 64 caractères</h5>
 				</div>
 
+				<div>
+					<div class="rester_connecte">
+						<input class="checkbox" type="checkbox" name="rester_connecte" id="rester_connecte" value="rester_connecte" placeholder=" "/>
+						<label>Rester connecté</label>
+					</div>
+				</div>
+
 				<button type="submit">Je me connecte</button>
 
 				<h4 class="connexion_compte">Vous n'avez pas encore de compte ? <a href="<?= url_to('ClientController::inscription') ?>">Inscrivez-vous</a> plutôt.</h4>

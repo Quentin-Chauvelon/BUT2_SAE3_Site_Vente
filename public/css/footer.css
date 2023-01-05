@@ -118,34 +118,39 @@ footer {
         text-align: center;
     }
 
+    .footer .cgu {
+        width: 80% !important;
+    }
+
     .footer ul {
+        width: 100%;
         padding: 0;
     }
 
-    .contact {
+    .footer .contact {
         width: 100%;
         margin-bottom: 40px;
     }
 
-    .contact h3 {
+    .footer .contact h3 {
         font-size: 23px;
     }
 
-    .contact_container {
+    .footer .contact_container {
         width: 100%;
     }
 
-    .contact_container > form {
+    .footer .contact_container > form {
         display: flex;
         justify-content: center;
         width: 100%;
     }
     
-    .contact_field {
+    .footer .contact_field {
         width: 60%;
     }
 
-    .reseaux ul {
+    .footer .reseaux ul {
         align-items: center;
         margin: 0;
         padding: 0;

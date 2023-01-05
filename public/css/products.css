@@ -117,7 +117,9 @@ body {
 
 .product img {
     width: calc(100% - 50px);
-    transition: scale 0.4s
+    transition: scale 0.4s;
+    max-height: 90%;
+    object-fit: contain;
 }
 
 .product h3 {

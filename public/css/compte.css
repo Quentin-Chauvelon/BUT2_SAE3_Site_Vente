@@ -166,7 +166,7 @@ header .deconnexion:hover {
     }
 
     .nav_container {
-        /* flex-wrap: wrap; */
+        flex-wrap: wrap;
         flex-direction: column;
         margin-top: 20px;
     }

@@ -5,6 +5,15 @@ body {
 	font-family: Arial, Helvetica, sans-serif;
 }
 
+.pas_de_favoris {
+    font-size: 25px;
+    font-weight: 900px;
+}
+
+.hidden {
+    display: none;
+}
+
 .products_container {
     display: flex;
     justify-content: center;
@@ -47,7 +56,9 @@ body {
 
 .product img {
     width: calc(100% - 50px);
-    transition: scale 0.4s
+    transition: scale 0.4s;
+    max-height: 90%;
+    object-fit: contain;
 }
 
 .product > div {

@@ -80,9 +80,6 @@ body {
 
 .arrow_background.up_arrow {
 	margin-top: 10px;
-}
-
-.arrow_background.down_arrow {
 	transform: rotate(180deg);
 }
 

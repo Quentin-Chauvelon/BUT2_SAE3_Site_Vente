@@ -25,6 +25,15 @@
     </header>
 
     <div class="nav_container">
+        <a href="<?= url_to('Home::index') ?>">
+            <div class="nav_element">
+                <img class="logo" src="<?= site_url() . "images/icons/compte/profil_blanc_plein.png"?>" alt="Logo">
+                <img class="hover_logo" src="<?= site_url() . "images/icons/compte/profil_plein.png"?>" alt="Logo">
+
+                <h4>ACCUEIL</h4>
+            </div>
+        </a>
+
         <a href="<?= url_to('ClientController::') ?>">
             <div class="nav_element <?= ($compteAction == "profil" ? "selected" : "") ?>">
                 <img class="logo" src="<?= site_url() . "images/icons/compte/profil_blanc_plein.png"?>" alt="Logo">

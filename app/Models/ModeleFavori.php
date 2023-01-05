@@ -25,4 +25,36 @@ class ModeleFavori extends Model
         }
         return self::$instance;
     }
+
+    public function getFavorisClient(int $id_client): array
+    {
+        $sql = "CALL GetFavorisClient(?)";
+        try {
+            return $this->db->query($sql, [$id_client])->getResult('array[App\Entities\Favori]');
+        } catch (\Exception) {
+            return [];
+        }
+    }
+
+    public function estEnFavori(int $id_client, int $id_produit): bool
+    {
+        $liste = $this->getFavorisClient($id_client);
+        foreach ($liste as $favori) {
+            if ($favori->id_produit == $id_produit) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function ajouterFavori(int $id_client, int $id_produit): bool
+    {
+        $sql = "CALL CreerFavori(?, ?)";
+        try {
+            $this->db->query($sql, [$id_client, $id_produit]);
+            return true;
+        } catch (\Exception) {
+            return false;
+        }
+    }
 }

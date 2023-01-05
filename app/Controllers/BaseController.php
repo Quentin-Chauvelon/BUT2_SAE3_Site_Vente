@@ -58,6 +58,7 @@ abstract class BaseController extends Controller
         $this->ModeleClient = ModeleClient::getInstance();
         $this->ModeleProduit = ModeleProduit::getInstance();
         $this->ModeleExemplaire = ModeleExemplaire::getInstance();
+        $this->ModeleProduit = ModeleProduit::getInstance();
     }
 
 
@@ -80,75 +81,30 @@ abstract class BaseController extends Controller
     }
 
 
-    public function estAdmin() {
-        $estAdmin = false;
-
-        if ($this->SessionExistante()) {
-            $email = $this->session->get("email");
-
-            $estAdmin = $this->ModeleClient
-                ->where('adresse_email', $email)
-                ->first()
-                ->est_admin;
+    public function estAdmin(): bool {
+        if (!$this->SessionExistante()) {
+            return false;
         }
-
-        return $estAdmin;
+        $email = $this->session->get("email");
+        if ($email == NULL) {
+            return false;
+        }
+        try{
+            $client = $this->ModeleClient->getClientParEmail($email);
+            if ($client == null) {
+                return false;
+            }
+            return $client->est_admin;
+        } catch (\Exception) {
+            return false;
+        }
     }
 
     public function ProduitsPlusPopulaires() {
-        $produitsPlusPopulaires = array();
-        $idProduitMinimum = -1;
-
-        foreach ($this->ModeleProduit->findAll() as $produit) {
-            $idProduit = $produit->id_produit;
-
-            $quantiteProduitsVendus = count(
-                $this->ModeleExemplaire
-                    ->where('id_produit', $idProduit)
-                    ->where('est_disponible', false)
-                    ->findAll()
-            );
-
-            // si le tableau n'est pas encore plein, on met l'article dedans
-            if (count($produitsPlusPopulaires) < 3) {
-                $produitsPlusPopulaires[$idProduit] = $quantiteProduitsVendus;
-
-                $idProduitMinimum = $this->ProduitsLeMoinsVenduParmiLesPlusPopulaires($produitsPlusPopulaires);
-
-                continue;
-            }
-
-            if ($quantiteProduitsVendus > $produitsPlusPopulaires[$idProduitMinimum]) {
-                unset($produitsPlusPopulaires[$idProduitMinimum]);
-                $produitsPlusPopulaires[$idProduit] = $quantiteProduitsVendus;
-
-                $idProduitMinimum = $this->ProduitsLeMoinsVenduParmiLesPlusPopulaires($produitsPlusPopulaires);
-            }
+        $produits = $this->ModeleProduit->getAllProduitsPlusVendus();
+        if (count($produits) > 3) {
+            return array_slice($produits, 0, 3);
         }
-
-        arsort($produitsPlusPopulaires);
-
-        $produitsPlusVendus = array();
-
-        foreach ($produitsPlusPopulaires as $idProduit => $quantite) {
-            $produitsPlusVendus[] = $this->ModeleProduit->find($idProduit);
-        }
-
-        return $produitsPlusVendus;
-    }
-
-    public function ProduitsLeMoinsVenduParmiLesPlusPopulaires($produitsPlusPopulaires) {
-        $quantiteProduitMoinsVendu = 1000000;
-        $idProduitMoinsVendu = -1;
-
-        foreach($produitsPlusPopulaires as $idProduit => $quantite) {
-
-            if ($quantite < $quantiteProduitMoinsVendu) {
-                $quantiteProduitMoinsVendu = $quantite;
-                $idProduitMoinsVendu = $idProduit;
-            }
-        }
-
-        return $idProduitMoinsVendu;
+        return $produits;
     }
 }

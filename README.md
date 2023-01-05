@@ -1,11 +1,13 @@
 # Équipe 1-3
 
 ## Informations de connexion
+
 * IP : `172.26.82.56`
 * Pass : `c8PFN69nv7mV`
 * Mot de pass root : `manoir`
 
 ## Diagramme de classes SQL
+
 ```mermaid
 classDiagram
 direction BT
@@ -190,10 +192,10 @@ Exemplaire  -->  Taille : taille
 Favori  -->  Client : id_client
 Favori  -->  Produit : id_produit
 Produit  -->  Collection : id_collection
-
 ```
 
 ## Triggers SQL
+
 * `coupon_trop_utilise_insert`
 * `coupon_trop_utilise_update`
 * `coupon_expire_insert`
@@ -212,7 +214,9 @@ Produit  -->  Collection : id_collection
 * `commande_validee_mauvaise`
 
 ## Procédures SQL
+
 ### Table Client
+
 - `GetAllClients()`
 - `GetClientParID(ID)`
 - `GetClientParEmail(email)`
@@ -223,6 +227,7 @@ Produit  -->  Collection : id_collection
 - `SupprimerClient(id)`
 
 ### Table Collection
+
 - `CreerCollection(nom)` Parution aujourd'hui et pas de date limite par défaut
 - `ModifierCollection(id, nom, parution, date_limite)`
 - `GetAllCollections()`
@@ -233,6 +238,7 @@ Produit  -->  Collection : id_collection
 - `SupprimerCollection(id)`
 
 ### Table Coupon
+
 - `CreerCoupon(id_coupon, nom, montant, est_pourcentage, est_valable)` Pas de date limite ni de nombre d'utilisations max par défaut.
 - `ModifierCoupon(id_coupon, nom, montant, est_pourcentage, est_valable, date_limite, utilisations_max)`
 - `GetAllCoupons()`
@@ -244,6 +250,7 @@ Produit  -->  Collection : id_collection
 - `SupprimerCoupon(id_coupon)`
 
 ### Table Produit
+
 - `CreerProduit(nom, prix, description, categorie)`
 - `GetAllProduits()`
 - `GetAllProduitsReduction()`
@@ -259,6 +266,7 @@ Produit  -->  Collection : id_collection
 - `GetAllProduitsDispo()`
 
 ### Table Favori
+
 - `CreerFavori(id_client, id_produit)`
 - `SupprimerFavori(id_client, id_produit)`
 - `GetAllFavoris()`
@@ -266,6 +274,7 @@ Produit  -->  Collection : id_collection
 - `ProduitsPlusFavoris()`
 
 ### Table Exemplaire
+
 - `CreerExemplaire(id_produit, couleur, taille)`
 - `SupprimerExemplaire(id_exemplaire)`
 - `ModifierExemplaire(id_exemplaire, id_produit, couleur, taille, est_disponible, date_obtention, id_commande)`
@@ -278,6 +287,7 @@ Produit  -->  Collection : id_collection
 - `GetExemplairesDispoParProduitCouleurTaille(id_produit, couleur, taille)`
 
 ### Table Commande
+
 - `CreerCommande(id_client)`
 - `ModifierCommande(id_commande, id_client, date_commande, date_livraison_estimee, date_livraison, id_coupon, est_validee, montant, id_adresse)`
 - `SupprimerCommande(id_commande)`
@@ -287,6 +297,7 @@ Produit  -->  Collection : id_collection
 - `CalculerMontant(id_commande)`
 
 ### Table Adresse
+
 - `CreerAdresse(code_postal, ville, rue)`
 - `ModifierAdresse(id_adresse, ville, code_postal, rue)`
 - `SupprimerAdresse(id_adresse)`
@@ -296,6 +307,7 @@ Produit  -->  Collection : id_collection
 - `GetAdressesParClient(id_client)`
 
 ### Table Taille
+
 - `GetAllTailles()`
 - `GetCategorieParTaille(taille)`
 - `GetTaillesParCategorie(categorie)`

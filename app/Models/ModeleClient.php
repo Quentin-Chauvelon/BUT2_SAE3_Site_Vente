@@ -27,4 +27,14 @@ class ModeleClient extends Model
         }
         return self::$instance;
     }
+
+    function getClientParEmail(string $email): ?Client
+    {
+        $sql = "CALL GetClientParEmail(?)";
+        try {
+            return $this->db->query($sql, [$email])->getFirstRow('App\Entities\Client');
+        } catch (\Exception) {
+            return null;
+        }
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Entities\Exemplaire;
 use App\Models\ModeleClient;
 use App\Entities\Client;
 use App\Models\ModeleProduit;
@@ -44,20 +45,7 @@ class ClientController extends BaseController
 
 
     public function estEnFavori(int $idProduit) {
-        $produitFavori = true;
-
-        $favoris = $this->ModeleFavori->where('id_client', $this->getSessionId())->findAll();
-
-        // on regarde si le produit est en favori
-        foreach ($favoris as $favori) {
-            $idFavori = $favori->id_produit;
-
-            if ($idFavori == $idProduit) {
-                $produitFavori = true;
-            }
-        }
-
-        return $produitFavori;
+        return $this->ModeleFavori->estEnFavori($this->getSessionId(), $idProduit);
     }
 
 
@@ -96,17 +84,11 @@ class ClientController extends BaseController
         }
 
         // si les deux mot de passe sont égaux, on crée le compte
-        $prenom = $this->request->getPost('prenom');
-        $nom = $this->request->getPost('nom');
-        $passwordEncrypte = password_hash($password, PASSWORD_DEFAULT);
-        
-        $client = array(
-            'adresse_email' => $email,
-            'prenom' => $prenom,
-            'nom' => $nom,
-            'password' => $passwordEncrypte
-        );
-        
+        $client = new Client();
+        $client->adresse_email = $email;
+        $client->nom = $this->request->getPost('nom');
+        $client->prenom = $this->request->getPost('prenom');
+        $client->password = $password;
         // on ajoute le client à la base de donnée
         $this->ModeleClient->insert($client);
         
@@ -115,7 +97,7 @@ class ClientController extends BaseController
         // $idClient = $this->ModeleClient->where('adresse_email', $email)->first()->id_client;
         
         // on sauvegarde certaines données dans la session
-        $this->setDonneesSession($idClient, $prenom, $nom, $email);
+        $this->setDonneesSession($idClient, $client->prenom, $client->nom, $email);
         
         return view("succesCreationCompteClient");
     }
@@ -129,17 +111,16 @@ class ClientController extends BaseController
     public function connexionCompte() {
         $email = $this->request->getPost('email');
         $password = $this->request->getPost('password');
-        $result =  $this->ModeleClient->where('adresse_email', $email)->first();
+        $result =  $this->ModeleClient->getClientParEmail($email);
 
         // si l'utilisateur n'a pas encore de compte, on lui suggère d'en créer un
         if ($result == NULL) {
             return view("connexionCompte", array("compteNonExistant" => true, "passwordFaux" => false, "session" => $this->getDonneesSession()));
         }
 
-        $hashedPassword = $result->password;
 
         // si les mots de passe sont différents, alors on retourne une erreur
-        if (!password_verify($password, $hashedPassword)) {
+        if (!$result->checkPassword($password)) {
             return view("connexionCompte", array("compteNonExistant" => false, "passwordFaux" => true, "session" => $this->getDonneesSession()));
         }
 
@@ -161,8 +142,8 @@ class ClientController extends BaseController
     }
 
 
-    public function getAllFavorisClient() {
-        return $this->ModeleFavori->where('id_client', $this->getSessionId())->findAll();
+    public function getAllFavorisClient(): array {
+        return $this->ModeleFavori->getFavorisClient($this->session->get('id'));
     }
 
 
@@ -179,9 +160,12 @@ class ClientController extends BaseController
 
         foreach ($favoris as $favori) {
             $idFavori = $favori->id_produit;
-            
-            $produit = $this->ModeleProduit->find($idFavori);
-
+            try{
+                $produit = $this->ModeleProduit->find($idFavori);
+            }
+            catch (\Exception $e) {
+                continue;
+            }
             $produits[] = $produit;
         }
 
@@ -195,37 +179,27 @@ class ClientController extends BaseController
         if (!$this->SessionExistante()) {
             return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
         }
-        
-        $favoris = $this->getAllFavorisClient();
-
-        foreach ($favoris as $favori) {
-            $idFavori = $favori->id_produit;
-
-            // si le produit que l'on veut ajouter aux favoris y est déjà, alors on le supprime
-            if ($idFavori == $idProduit) {
-                $this->supprimerFavori($idProduit);
-                
-                if ($returnProduit == 1) {
-                    return view('product', array("product" => $this->ModeleProduit->find($idProduit), "exemplaires" => $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll(), "ajouteAuPanier" => false, "produitFavori" => false, "manqueExemplaire" => false, "session" => $this->getDonneesSession()));
-                } else {
-                    return $this->afficherFavoris();
-                }
-            }
+        if ($this->estEnFavori($idProduit)) {
+            $this->supprimerFavori($idProduit);
+        } else
+        {
+            $this->ModeleFavori->ajouterFavori($this->session->get('id'), $idProduit);
         }
-
-        $favori = array(
-            'id_client' => $this->getSessionId(),
-            'id_produit' => $idProduit
-        );
-
-        $this->ModeleFavori->insert($favori);
-        
-        return view('product', array("product" => $this->ModeleProduit->find($idProduit), "exemplaires" => $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll(), "ajouteAuPanier" => false, "produitFavori" => true, "manqueExemplaire" => false, "session" => $this->getDonneesSession()));
+        if ($returnProduit == 1) {
+            return view('product', array("product" => $this->ModeleProduit->find($idProduit), "exemplaires" => $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll(), "ajouteAuPanier" => false, "produitFavori" => false, "manqueExemplaire" => false, "session" => $this->getDonneesSession()));
+        } else {
+            return $this->afficherFavoris();
+        }
     }
 
 
     public function supprimerFavori(int $idProduit) {
-        $this->ModeleFavori->where('id_client', $this->getSessionId())->where('id_produit', $idProduit)->delete();
+        try {
+            $this->ModeleFavori->where('id_client', $this->getSessionId())->where('id_produit', $idProduit)->delete();
+        }
+        catch (\Exception $e) {
+            return;
+        }
     }
 
 
@@ -249,9 +223,9 @@ class ClientController extends BaseController
                 $exemplaireCle = (string)$exemplaire->id_produit . $exemplaire->couleur . $exemplaire->taille;
 
                 if (array_key_exists($exemplaireCle, $quantitesExemplaires)) {
-                    $quantitesExemplaires[$exemplaireCle] += 1;
+                    $quantitesExemplaires[$exemplaireCle] += $exemplaire->quantite;
                 } else {
-                    $quantitesExemplaires[$exemplaireCle] = 1;
+                    $quantitesExemplaires[$exemplaireCle] = $exemplaire->quantite;
                     $exemplairesUnique[$exemplaireCle] = array(
                         "id_produit" => $exemplaire->id_produit,
                         "couleur" => $exemplaire->couleur,
@@ -370,54 +344,37 @@ class ClientController extends BaseController
         $couleur = $this->request->getPost('couleur');
         $taille = $this->request->getPost('taille');
 
-        $exemplaires = $this->ModeleExemplaire
+        $exemplaire = $this->ModeleExemplaire
             ->where('est_disponible', true)
             ->where('id_produit', $idProduit)
             ->where('couleur', $couleur)
             ->where('taille', $taille)
-            ->findAll();
+            ->first();
 
         // on s'assure qu'il y assez d'exemplaires pour la couleur et la taille donnée
-        if (count($exemplaires) < $quantite) {
+        if ($exemplaire->quantite < $quantite) {
             return view('product', array("product" => $this->ModeleProduit->find($idProduit), "exemplaires" => $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll(), "ajouteAuPanier" => false, "produitFavori" => $this->estEnFavori($idProduit), "manqueExemplaire" => true, "session" => $this->getDonneesSession()));
         }
 
         // on récupère le panier de l'utilisateur
         $panier = $this->session->get("panier");
 
-        foreach ($exemplaires as $exemplaire) {
-            // $idExemplaire = $exemplaire->id_exemplaire;
-            // $estDisponible = $exemplaire->est_disponible;
-            // $dateObtention = $exemplaire->date_obtention;
-
-            // if ($estDisponible) {
-
-            //     $this->ModeleExemplaire->modifierExemplaire($idExemplaire, array('id_commande' => $idCommandeClient));
-
-            //     $quantite -= 1;
-
-            //     if ($quantite == 0) {
-            //         break;
-            //     }
-            // }
-
-            // on ajoute le bon nombre d'exemplaires dans le panier
-            $panier[] = $exemplaire;
-
-            $quantite -= 1;
-
-            if ($quantite == 0) {
-                break;
-            }
-        }
+        $exempl = new Exemplaire(array(
+            "id_produit" => $exemplaire->id_produit,
+            "couleur" => $exemplaire->couleur,
+            "taille" => $exemplaire->taille,
+            "quantite" => $quantite,
+            "est_disponible" => false
+        ));
+        $panier[] = $exempl;
 
         // on sauvegarde le panier dans la session
         $this->session->set("panier", $panier);
-
-        // si certains exemplaires n'étaient pas disponibles
-        if ($quantite != 0) {
-            return view('product', array("product" => $this->ModeleProduit->find($idProduit), "exemplaires" => $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll(), "ajouteAuPanier" => false, "produitFavori" => $this->estEnFavori($idProduit), "manqueExemplaire" => true, "session" => $this->getDonneesSession()));
-        }
+//
+//        // si certains exemplaires n'étaient pas disponibles
+//        if ($quantite != 0) {
+//            return view('product', array("product" => $this->ModeleProduit->find($idProduit), "exemplaires" => $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll(), "ajouteAuPanier" => false, "produitFavori" => $this->estEnFavori($idProduit), "manqueExemplaire" => true, "session" => $this->getDonneesSession()));
+//        }
 
         return view('product', array("product" => $this->ModeleProduit->find($idProduit), "exemplaires" => $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll(), "ajouteAuPanier" => true, "produitFavori" => $this->estEnFavori($idProduit), "manqueExemplaire" => false, "session" => $this->getDonneesSession()));
     }
@@ -467,7 +424,7 @@ class ClientController extends BaseController
 
         // on regarde si l'utiliateur n'a pas déjà une commande en cours, sinon en crée une
         foreach($commandes as $commande) {
-            if ($commande->id_client == $idClient && $commande->id_adresse == NULL && $commande->est_validee == false) {
+            if ($commande->id_client == $idClient && $commande->id_adresse == NULL && !$commande->est_validee) {
                 $idCommande = $commande->id_commande;
             }
         }
@@ -632,9 +589,9 @@ class ClientController extends BaseController
             $exemplaireCle = (string)$exemplaire->id_produit . $exemplaire->couleur . $exemplaire->taille;
 
             if (array_key_exists($exemplaireCle, $quantitesExemplaires)) {
-                $quantitesExemplaires[$exemplaireCle] += 1;
+                $quantitesExemplaires[$exemplaireCle] += $exemplaire->quantite;
             } else {
-                $quantitesExemplaires[$exemplaireCle] = 1;
+                $quantitesExemplaires[$exemplaireCle] = $exemplaire->quantite;
                 $exemplairesUnique[$exemplaireCle] = array(
                     "id_produit" => $exemplaire->id_produit,
                     "couleur" => $exemplaire->couleur,

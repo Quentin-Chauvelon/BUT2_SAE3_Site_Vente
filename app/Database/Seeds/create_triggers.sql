@@ -15,6 +15,7 @@
 * `taille_valide_update`
 * `update_commande_validee`
 * `commande_validee_mauvaise`
+* `supprimer_exemplaires_vides_update`
 */
 
 CREATE OR REPLACE TRIGGER coupon_trop_utilise_insert
@@ -90,7 +91,7 @@ END;
 
 CREATE OR REPLACE TRIGGER suppression_commande_liberer_exemplaire BEFORE
 DELETE ON Commande FOR EACH ROW BEGIN
-    UPDATE Exemplaire SET id_commande=NULL, est_disponible=true WHERE id_commande=OLD.id_commande;
+    DELETE FROM Exemplaire WHERE id_commande=OLD.id_commande;
 END;
 
 CREATE OR REPLACE TRIGGER suppression_collection BEFORE

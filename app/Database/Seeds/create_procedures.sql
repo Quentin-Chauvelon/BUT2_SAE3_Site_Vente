@@ -31,7 +31,7 @@
 - `SupprimerCoupon(id_coupon)`
 
 ### Table Produit
-- `CreerProduit(nom, prix, description, categorie)`
+- `CreerProduit(nom, prix, description, categorie, id_collection)`
 - `GetAllProduits()`
 - `GetAllProduitsReduction()`
 - `GetProduitParId(id_produit)`
@@ -44,6 +44,7 @@
 - `GetAllPosters()`
 - `GetAllAccessoires()`
 - `GetAllProduitsDispo()`
+- `GetAllProduitsPlusVendus()`
 
 ### Table Favori
 - `CreerFavori(id_client, id_produit)`
@@ -53,9 +54,9 @@
 - `ProduitsPlusFavoris()`
 
 ### Table Exemplaire
-- `CreerExemplaire(id_produit, couleur, taille)`
+- `CreerExemplaire(id_produit, couleur, taille, quantite)`
 - `SupprimerExemplaire(id_exemplaire)`
-- `ModifierExemplaire(id_exemplaire, id_produit, couleur, taille, est_disponible, date_obtention, id_commande)`
+- `ModifierExemplaire(id_exemplaire, id_produit, couleur, taille, est_disponible, date_obtention, id_commande, quantite)`
 - `GetAllExemplaires()`
 - `GetAllExemplairesDispo()`
 - `GetExemplaireParId(id_exemplaire)`
@@ -63,6 +64,8 @@
 - `GetExemplairesDispoParProduit(id_produit)`
 - `GetExemplairesParProduitCouleurTaille(id_produit, couleur, taille)`
 - `GetExemplairesDispoParProduitCouleurTaille(id_produit, couleur, taille)`
+- `AjouterExemplaireCommande(id_commande, id_exemplaire, quantite)`
+- `GetNbExemplairesVendusParProduit(id_produit)`
 
 ### Table Commande
 - `CreerCommande(id_client)`
@@ -244,10 +247,10 @@ END;
 
 
 CREATE OR REPLACE PROCEDURE CreerProduit(IN _nom VARCHAR(100), IN _prix INT, IN _description VARCHAR(500),
-IN _categorie VARCHAR(50))
+IN _categorie VARCHAR(50), IN _id_collection INT)
 BEGIN
     INSERT INTO Produit(nom, prix, reduction, description, categorie, parution, id_collection)
-    VALUES (_nom, _prix, 0, _description, _categorie, CURDATE(), NULL);
+    VALUES (_nom, _prix, 0, _description, _categorie, CURDATE(), _id_collection);
 END;
 
 CREATE OR REPLACE PROCEDURE GetAllProduits()
@@ -338,10 +341,22 @@ BEGIN
    SELECT id_produit, COUNT(*) AS nombre FROM Favori GROUP BY id_produit ORDER BY nombre DESC;
 END;
 
-CREATE OR REPLACE PROCEDURE CreerExemplaire(IN _id_produit INT, IN _couleur VARCHAR(20), IN _taille VARCHAR(50))
+
+CREATE OR REPLACE PROCEDURE GetAllProduitsPlusVendus()
 BEGIN
-    INSERT INTO Exemplaire(id_produit, couleur, taille, est_disponible, date_obtention, id_commande)
-    VALUES (_id_produit, _couleur, _taille, true, CURDATE(), NULL) ;
+    SELECT * FROM Produit ORDER BY (SELECT SUM(quantite) FROM Exemplaire WHERE Exemplaire.id_produit=Produit.id_produit AND id_commande IS NOT NULL) DESC;
+END;
+
+CREATE OR REPLACE PROCEDURE CreerExemplaire(IN _id_produit INT, IN _couleur VARCHAR(20), IN _taille VARCHAR(50), IN _quantite INT)
+BEGIN
+    IF EXISTS(SELECT * FROM Exemplaire
+                    WHERE id_produit=_id_produit AND couleur=_couleur AND taille=_taille AND id_commande IS NULL
+                      AND est_disponible=true) THEN
+        UPDATE Exemplaire SET quantite=quantite+_quantite WHERE id_produit=_id_produit AND couleur=_couleur AND taille=_taille AND id_commande IS NULL
+                      AND est_disponible=true AND id_commande IS NULL;
+    ELSE
+        INSERT INTO Exemplaire(id_produit, couleur, taille, quantite) VALUES (_id_produit, _couleur, _taille, _quantite);
+    END IF;
 END;
 
 CREATE OR REPLACE PROCEDURE SupprimerExemplaire(IN _id_exemplaire INT)
@@ -350,12 +365,12 @@ BEGIN
 END;
 
 CREATE OR REPLACE PROCEDURE ModifierExemplaire(IN _id_exemplaire INT, IN _id_produit INT, IN _couleur VARCHAR(20),
-IN _taille VARCHAR(50), IN _est_disponible BOOLEAN, IN _date_obtention DATE, IN _id_commande INT)
+IN _taille VARCHAR(50), IN _est_disponible BOOLEAN, IN _id_commande INT, IN _quantite INT)
 BEGIN
-    UPDATE Exemplaire SET id_produit=_id_produit, couleur=_couleur, taille=_taille, est_disponible=_est_disponible,
-                          date_obtention=_date_obtention, id_commande=_id_commande
+    UPDATE Exemplaire SET id_produit=_id_produit, couleur=_couleur, taille=_taille, est_disponible=_est_disponible, id_commande=_id_commande, quantite=_quantite
     WHERE id_exemplaire=_id_exemplaire;
 END;
+
 
 CREATE OR REPLACE PROCEDURE GetAllExemplaires()
 BEGIN
@@ -431,7 +446,7 @@ BEGIN
     DECLARE coupon VARCHAR(20);
     DECLARE montant INT DEFAULT 0;
     SELECT id_coupon INTO coupon FROM Commande WHERE id_commande=_id_commande;
-    SELECT SUM(prix) INTO montant FROM Produit AS p INNER JOIN Exemplaire AS e ON p.id_produit = e.id_produit
+    SELECT SUM(prix* e.quantite) INTO montant FROM Produit AS p INNER JOIN Exemplaire AS e ON p.id_produit = e.id_produit
                     WHERE id_commande=_id_commande;
     IF coupon IS NOT NULL THEN
         IF EXISTS(SELECT * FROM Coupon AS c WHERE c.id_coupon=coupon AND c.est_pourcentage=false) THEN
@@ -442,6 +457,32 @@ BEGIN
         END IF;
     END IF;
     UPDATE Commande SET montant=montant WHERE id_commande=_id_commande;
+END;
+
+CREATE OR REPLACE PROCEDURE AjouterExemplaireCommande(IN _id_commande INT, IN _id_exemplaire INT, IN _quantite INT)
+BEGIN
+    DECLARE cou VARCHAR(20) DEFAULT '';
+    DECLARE tai VARCHAR(50) DEFAULT '';
+    DECLARE id_prod INT DEFAULT 0;
+    DECLARE new_id INT DEFAULT 0;
+    IF NOT EXISTS(SELECT * FROM Exemplaire AS e WHERE e.id_exemplaire=_id_exemplaire AND e.est_disponible=true AND quantite >= _quantite) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Exemplaire indisponible';
+    ELSE
+        UPDATE Exemplaire SET quantite=quantite-_quantite WHERE id_exemplaire=_id_exemplaire;
+        SELECT couleur, taille, id_produit INTO cou, tai, id_prod FROM Exemplaire WHERE id_exemplaire=_id_exemplaire;
+        SELECT id_exemplaire INTO new_id FROM Exemplaire WHERE couleur=cou AND taille=tai AND id_produit=id_prod AND id_commande=_id_commande;
+        IF (new_id = 0) THEN
+            INSERT INTO Exemplaire(id_produit, couleur, taille, quantite, id_commande, est_disponible)
+            VALUES(id_prod, cou, tai, _quantite, _id_commande, false);
+        ELSE
+            UPDATE Exemplaire SET quantite=quantite+_quantite WHERE id_exemplaire=new_id;
+        END IF;
+    END IF;
+END;
+
+CREATE OR REPLACE PROCEDURE GetNbExemplairesVendusParProduit(IN _id_produit INT)
+    BEGIN
+    SELECT SUM(quantite) FROM Exemplaire WHERE id_produit=_id_produit AND est_disponible=false;
 END;
 
 CREATE OR REPLACE PROCEDURE CreerAdresse(IN _code_postal INT, IN _ville VARCHAR(100), IN _rue VARCHAR(100))

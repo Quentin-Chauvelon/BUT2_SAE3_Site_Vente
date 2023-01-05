@@ -47,12 +47,17 @@ class Product extends BaseController
 
         // on regarde quelles produits n'ont pas d'exemplaires (sont en rupture de stock)
         foreach ($products as $product) {
-            $idProduit = $product->id_produit;
-            
-            $exemplaires = $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll();
+            $exemplaires = $this->ModeleExemplaire->getExemplairesDispoParProduit($product->id_produit);
             
             if (count($exemplaires) == 0) {
-                $produitSansExemplaires[] = $idProduit;
+                $produitSansExemplaires[] = $products->id_produit;
+                continue;
+            }
+            foreach ($exemplaires as $exemplaire) {
+                if ($exemplaire->quantite <= 0) {
+                    $produitSansExemplaires[] = $products->id_produit;
+                    break;
+                }
             }
         }
         
@@ -62,15 +67,22 @@ class Product extends BaseController
 
     public function displayAll()
     {
-        $products =  $this->ModeleProduit->findAll();
-
+        try {
+            $products =  $this->ModeleProduit->findAll();
+        } catch (\Exception $e) {
+            $products = array();
+        }
         return view('products', array("products" => $products, "produitsRuptureStock" => $this->getProduitsRuptureStock($products), "session" => $this->getDonneesSession()));
     }
 
 
     public function trouverToutDeCategorie($categorie)
     {
-        $products =  $this->ModeleProduit->where('categorie', $categorie)->findAll();
+        try {
+            $products =  $this->ModeleProduit->where('categorie', $categorie)->findAll();
+        } catch (\Exception $e) {
+            $products = array();
+        }
         return view('products', array("products" => $products, "produitsRuptureStock" => $this->getProduitsRuptureStock($products), "session" => $this->getDonneesSession()));
     }
 }

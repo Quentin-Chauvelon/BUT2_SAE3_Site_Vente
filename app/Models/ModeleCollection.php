@@ -27,4 +27,25 @@ class ModeleCollection extends Model
         }
         return self::$instance;
     }
+
+    function creerCollection($nom): bool
+    {
+        $sql = "CALL CreerCollection(?)";
+        try {
+            $this->db->query($sql, [$nom]);
+        } catch (\Exception) {
+            return false;
+        }
+        return true;
+    }
+
+    public function getCollectionParNom(string $nom): ?Collection
+    {
+        $sql = "CALL GetCollectionParNom(?)";
+        try {
+            return $this->db->query($sql, [$nom])->getResult()[0];
+        } catch (\Exception) {
+            return null;
+        }
+    }
 }

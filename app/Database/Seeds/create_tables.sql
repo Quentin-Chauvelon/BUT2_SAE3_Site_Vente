@@ -164,17 +164,19 @@ TABLE
         id_exemplaire INT PRIMARY KEY AUTO_INCREMENT,
         id_produit INT NOT NULL,
         id_commande INT,
-        date_obtention DATE NOT NULL,
         est_disponible BOOLEAN NOT NULL DEFAULT true,
         taille VARCHAR(3),
         couleur VARCHAR(20),
+        quantite INT NOT NULL DEFAULT 1,
         CONSTRAINT fk_exemplaire_produit FOREIGN KEY(id_produit) REFERENCES Produit(id_produit),
         CONSTRAINT fk_exemplaire_commande FOREIGN KEY(id_commande) REFERENCES Commande(id_commande),
         CONSTRAINT dispo_pas_commande CHECK(
             id_commande IS NULL
             OR est_disponible = false
         ), -- empêche l'article d'être dispo alors qu'il est commandé
-        CONSTRAINT fk_taille FOREIGN KEY (taille) REFERENCES Taille(taille)
+        CONSTRAINT fk_taille FOREIGN KEY (taille) REFERENCES Taille(taille),
+        CONSTRAINT check_quantite_positive CHECK(quantite >= 0),
+        CONSTRAINT exemplaire_unique UNIQUE (id_produit, taille, couleur, est_disponible, id_commande)
     );
 
 CREATE OR REPLACE VIEW ExemplaireDispo AS

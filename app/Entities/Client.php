@@ -23,7 +23,7 @@ class Client extends Entity
 
     /** Vérifie si le mot de passe est correct.
      * @param string $pass Le mot de passe en clair.
-     * @return bool
+     * @return bool True si le password donné correspond à celui de l'utilisateur.
      */
     public function checkPassword(string $pass): bool
     {

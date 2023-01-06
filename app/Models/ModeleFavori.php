@@ -26,11 +26,11 @@ class ModeleFavori extends Model
         return self::$instance;
     }
 
-    public function getFavorisClient(int $id_client): array
+    public function getFavorisClient(int $id_client)
     {
         $sql = "CALL GetFavorisClient(?)";
         try {
-            return $this->db->query($sql, [$id_client])->getResult('array[App\Entities\Favori]');
+            return $this->db->query($sql, [$id_client])->getResult();
         } catch (\Exception) {
             return [];
         }

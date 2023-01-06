@@ -16,6 +16,13 @@
 </div>
 
 
+<?php foreach($exemplaires as $idProduit => $exemplaireTailles) : ?>
+  <?php foreach($exemplaireTailles as $taille => $valeur) : ?>
+    <option value="<?= $taille ?>"><?= $taille ?></option>
+  <?php endforeach; ?>
+<?php endforeach; ?>
+
+
 <table>
   <tr>
       <th><?= $produit->id_produit ?></th>

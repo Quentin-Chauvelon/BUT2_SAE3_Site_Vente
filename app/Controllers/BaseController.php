@@ -62,6 +62,7 @@ abstract class BaseController extends Controller
 
         // on connecte l'utilisateur si le cookie de rester connecte est définie
         if (isset($_COOKIE["idClient"]) && isset($_COOKIE["password"])) {
+
             $client =  $this->ModeleClient->find((int)$_COOKIE["idClient"]);
 
             if ($client == NULL) {
@@ -72,12 +73,16 @@ abstract class BaseController extends Controller
 
             // si les mots de passes sont identiques, on connecte l'utilisateur
             if ($_COOKIE["password"] == $hashedPassword) {
-                $this->setDonneesSession(
-                    $client->id_client,
-                    $client->prenom,
-                    $client->nom,
-                    $client->adresse_email,
-                );
+                $session = $this->getDonneesSession();
+
+                if ($session["id"] == 0 && $session["prenom"] == "") {
+                    $this->setDonneesSession(
+                        $client->id_client,
+                        $client->prenom,
+                        $client->nom,
+                        $client->adresse_email,
+                    );
+                }
             }
         }
     }

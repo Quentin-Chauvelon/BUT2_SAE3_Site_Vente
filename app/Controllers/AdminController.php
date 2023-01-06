@@ -6,6 +6,9 @@ use App\Models\ModeleClient;
 use App\Models\ModeleProduit;
 use App\Models\ModeleExemplaire;
 use App\Models\ModeleCollection;
+use App\Models\ModeleCommande;
+use App\Entities\Taille;
+require_once APPPATH  . 'Entities' . DIRECTORY_SEPARATOR . 'Taille.php';
 
 
 class AdminController extends BaseController
@@ -17,6 +20,7 @@ class AdminController extends BaseController
         $this->ModeleProduit = ModeleProduit::getInstance();
         $this->ModeleExemplaire = ModeleExemplaire::getInstance();
         $this->ModeleCollection = ModeleCollection::getInstance();
+        $this->ModeleCommande = ModeleCommande::getInstance();
         
         $this->request = \Config\Services::request();
     }
@@ -29,7 +33,8 @@ class AdminController extends BaseController
     public function returnAdminView(string $notHidden): string
     {
         $exemplaires = $this->ModeleExemplaire->getExemplairesDispo();
-        return view("adminView", array("notHidden" => $notHidden, "utilisateurs" => $this->ModeleClient->findAll(), "produits" => $this->ModeleProduit->findAll(), "collections" => $this->ModeleCollection->findAll(), "exemplaires" => $exemplaires));
+
+        return view("adminView", array("notHidden" => $notHidden, "utilisateurs" => $this->ModeleClient->findAll(), "produits" => $this->ModeleProduit->findAll(), "collections"=> $this->ModeleCollection->findAll(), "exemplaires" => $exemplaires, "tailles" => array("XS", "S", "M", "L", "XL", "XXL"), "commandes" => $this->ModeleCommande->findAll()));
     }
 
     /** adminView : Redirige vers la vue admin.
@@ -83,12 +88,53 @@ class AdminController extends BaseController
         if (!$this->estAdmin()) {
             return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
         }
+
         $nom = $this->request->getPost('nom');
         $prix = $this->request->getPost('prix');
         $description = $this->request->getPost('description');
         $categorie = $this->request->getPost('categorie');
         $idCollection = $this->request->getPost('id_collection');
-        $this->ModeleProduit->creerProduit($nom, $prix, $description, $categorie, $idCollection);
+    
+        $result = false;
+
+        if ($nom != "" && $prix > 0) {
+            $result = $this->ModeleProduit->creerProduit($nom, $prix, $description, $categorie, ($idCollection == "") ? NULL : (int)$this->request->getPost($idCollection));
+        }
+
+        if ($result) {
+            $produit = NULL;
+
+            try {
+                $produit = $this->ModeleProduit
+                    ->where('nom', $nom)
+                    ->first();
+            } catch (\Exception) {
+                
+            }
+
+            if ($produit != NULL) {
+                    
+                $idProduit = $produit->id_produit;
+
+                mkdir("images/produits/" . (string)$idProduit);
+                mkdir("images/produits/" . (string)$idProduit . "/images");
+                mkdir("images/produits/" . (string)$idProduit . "/couleurs");
+
+                // Count total files
+                $countfiles = count($_FILES['images']['name']);
+                
+                // Looping all files
+                for($i=0;$i<$countfiles;$i++){
+                    $filename = $_FILES['images']['tmp_name'][$i];
+            
+                    // Upload file
+                    //move_uploaded_file($filename, "images/produits/" . (string)$idProduit . "/images/image_"  . (string)$i . "." . $_FILES['images']['type'][$i]);
+                    move_uploaded_file($filename, "images/produits/" . (string)$idProduit . "/images/image_" . (string)($i + 1) . "." . str_replace("image/", "", $_FILES['images']['type'][$i]));
+                    //rename("images/produits/" . (string)$idProduit . "/images/" . $filename, site_url() . "images/produits/" . (string)$idProduit . "/images/image_" . (string)$i . "." . $_FILES['images']['type'][$i]);
+                }
+            }
+        }
+
         return $this->returnAdminView('produits');
     }
 
@@ -99,7 +145,9 @@ class AdminController extends BaseController
         {
             return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
         }
+
         $produit = $this->ModeleProduit->find($idProduit);
+
         return view('modifierProduitVue', array("produit" => $produit, "collections" => $this->ModeleCollection->findAll(), "session" => $this->getDonneesSession()));
     }
     
@@ -109,11 +157,16 @@ class AdminController extends BaseController
         if (!$this->estAdmin()) {
             return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
         }
+
         $produit = $this->ModeleProduit->find($this->request->getPost('id_produit'));
+        
         if ($produit == null) {
             return $this->returnAdminView('produits');
         }
-        $produit->id_collection = $this->request->getPost('id_collection');
+
+        $idCollection = $this->request->getPost('id_collection');
+
+        $produit->id_collection = ($idCollection == "") ? NULL : (int)$idCollection;
         $produit->prix = $this->request->getPost('prix');
         $produit->nom = $this->request->getPost('nom');
         $produit->description = $this->request->getPost('description');
@@ -123,8 +176,8 @@ class AdminController extends BaseController
         try{
             $this->ModeleProduit->save($produit);
         } catch (\Exception $e) {}
-        return $this->returnAdminView('produits');
 
+        return $this->returnAdminView('produits');
     }
 
 
@@ -301,27 +354,29 @@ class AdminController extends BaseController
         $idProduit = $this->request->getPost('id_produit');
         $couleur = $this->request->getPost('couleur');
         $taille = $this->request->getPost('taille');
-        $quantite = $this->request->getPost('quantite');
+        $quantite = (int)$this->request->getPost('quantite');
+
         if ($quantite == null || $quantite <= 0)
         {
             $quantite = 1;
         }
+        
         $this->ModeleExemplaire->creerExemplaire($idProduit, $couleur, $taille, $quantite);
 
-        $idProduit = $this->request->getPost('id_produit');
-        $couleur = $this->request->getPost('couleur');
+        // $idProduit = $this->request->getPost('id_produit');
+        // $couleur = $this->request->getPost('couleur');
 
-        $exemplaire = array(
-            "id_exemplaire" => 0,
-            "id_produit" => $idProduit,
-            "id_commande" => NULL,
-            "date_obtention" => date("Ymd"),
-            "est_disponible" => true,
-            "taille" => $this->request->getPost('taille'),
-            "couleur" => lcfirst($couleur),
-        );
+        // $exemplaire = array(
+        //     "id_exemplaire" => 0,
+        //     "id_produit" => $idProduit,
+        //     "id_commande" => NULL,
+        //     "date_obtention" => date("Ymd"),
+        //     "est_disponible" => true,
+        //     "taille" => $this->request->getPost('taille'),
+        //     "couleur" => lcfirst($couleur),
+        // );
 
-        $this->ModeleExemplaire->insert($exemplaire);
+        // $this->ModeleExemplaire->insert($exemplaire);
 
         if (!file_exists("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".jpg") && !file_exists("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".png")) {
             $filename = $_FILES['image']['tmp_name'];

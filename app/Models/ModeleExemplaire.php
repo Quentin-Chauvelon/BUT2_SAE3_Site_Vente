@@ -77,11 +77,11 @@ class ModeleExemplaire extends Model
         return self::$instance;
     }
 
-    function getExemplairesDispoParProduit(int $id_produit): array
+    function getExemplairesDispoParProduit(int $id_produit)
     {
         $sql = "CALL GetExemplairesDispoParProduit(?)";
         try {
-            return $this->db->query($sql, [$id_produit])->getResult('array(App\Entities\Exemplaire)');
+            return $this->db->query($sql, [$id_produit])->getResult();
         } catch (\Exception) {
             return array();
         }

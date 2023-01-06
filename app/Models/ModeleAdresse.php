@@ -32,4 +32,15 @@ class ModeleAdresse extends Model
         }
         return self::$instance;
     }
+
+
+    function getAdressesParClient($idClient): array
+    {
+        $sql = "CALL GetAdressesParClient(?)";
+        try {
+            return $this->db->query($sql, [$idClient])->getResult();
+        } catch (\Exception) {
+            return array();
+        }
+    }
 }

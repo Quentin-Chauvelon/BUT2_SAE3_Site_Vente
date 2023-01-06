@@ -27,9 +27,10 @@ class ModeleProduit extends Model
         return self::$instance;
     }
 
-    public function creerProduit(string $nom, int $prix, string $description, string $categorie, int $collection): bool
+    public function creerProduit(string $nom, int $prix, string $description, string $categorie, ?int $collection): bool
     {
         $sql = "CALL CreerProduit(?, ?, ?, ?, ?)";
+        
         try {
             $this->db->query($sql, [$nom, $prix, $description, $categorie, $collection]);
             return true;

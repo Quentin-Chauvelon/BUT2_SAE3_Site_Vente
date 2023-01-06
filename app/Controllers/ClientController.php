@@ -76,6 +76,7 @@ class ClientController extends BaseController
         $client->nom = $this->request->getPost('nom');
         $client->prenom = $this->request->getPost('prenom');
         $client->password = $password;
+
         // on ajoute le client à la base de donnée
         $this->ModeleClient->insert($client);
         
@@ -86,7 +87,7 @@ class ClientController extends BaseController
         // on sauvegarde certaines données dans la session
         if ($this->request->getPost("rester_connecte") == "rester_connecte") {
             setcookie("idClient", (int)$idClient, time() + 60 * 60 * 24 * 30);
-            setcookie("password", $passwordEncrypte, time() + 60 * 60 * 24 * 30);
+            setcookie("password", $password, time() + 60 * 60 * 24 * 30);
         }
         $this->setDonneesSession($idClient, $client->prenom, $client->nom, $email);
 
@@ -124,7 +125,7 @@ class ClientController extends BaseController
 
         if ($this->request->getPost("rester_connecte") == "rester_connecte") {
             setcookie("idClient", (int)$id, time() + 60 * 60 * 24 * 30);
-            setcookie("password", $hashedPassword, time() + 60 * 60 * 24 * 30);
+            setcookie("password", $result->password, time() + 60 * 60 * 24 * 30);
         }
 
         return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
@@ -190,7 +191,7 @@ class ClientController extends BaseController
             $this->ModeleFavori->ajouterFavori($this->session->get('id'), $idProduit);
         }
         if ($returnProduit == 1) {
-            return view('product', array("product" => $this->ModeleProduit->find($idProduit), "exemplaires" => $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll(), "ajouteAuPanier" => false, "produitFavori" => false, "manqueExemplaire" => false, "session" => $this->getDonneesSession()));
+            return view('product', array("product" => $this->ModeleProduit->find($idProduit), "exemplaires" => $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll(), "ajouteAuPanier" => false, "produitFavori" => $this->estEnFavori($idProduit), "manqueExemplaire" => false, "session" => $this->getDonneesSession()));
         } else {
             return $this->afficherFavoris();
         }
@@ -355,6 +356,10 @@ class ClientController extends BaseController
             ->where('taille', $taille)
             ->first();
 
+        if ($exemplaire == NULL) {
+            return view('product', array("product" => $this->ModeleProduit->find($idProduit), "exemplaires" => $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll(), "ajouteAuPanier" => false, "produitFavori" => $this->estEnFavori($idProduit), "manqueExemplaire" => true, "session" => $this->getDonneesSession()));
+        }
+
         // on s'assure qu'il y assez d'exemplaires pour la couleur et la taille donnée
         if ($exemplaire->quantite < $quantite) {
             return view('product', array("product" => $this->ModeleProduit->find($idProduit), "exemplaires" => $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll(), "ajouteAuPanier" => false, "produitFavori" => $this->estEnFavori($idProduit), "manqueExemplaire" => true, "session" => $this->getDonneesSession()));
@@ -370,11 +375,23 @@ class ClientController extends BaseController
             "quantite" => $quantite,
             "est_disponible" => false
         ));
-        $panier[] = $exempl;
+
+        $exemplaireDejaPresentDansPanier = false;
+
+        foreach($panier as $key=>$exemplaire) {
+            if ($exemplaire->id_produit == $exempl->id_produit && $exemplaire->couleur == $exempl->couleur && $exemplaire->taille == $exempl->taille) {
+                $panier[$key]->quantite = $panier[$key]->quantite + (int)$exempl->quantite; 
+                $exemplaireDejaPresentDansPanier = true;
+            }
+        }
+
+        if (!$exemplaireDejaPresentDansPanier) {
+            $panier[] = $exempl;
+        }
 
         // on sauvegarde le panier dans la session
         $this->session->set("panier", $panier);
-//
+
 //        // si certains exemplaires n'étaient pas disponibles
 //        if ($quantite != 0) {
 //            return view('product', array("product" => $this->ModeleProduit->find($idProduit), "exemplaires" => $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll(), "ajouteAuPanier" => false, "produitFavori" => $this->estEnFavori($idProduit), "manqueExemplaire" => true, "session" => $this->getDonneesSession()));
@@ -461,10 +478,10 @@ class ClientController extends BaseController
         }
 
         // on ajoute tous les articles à la commande
-        $exemplaireModifiee = array(
-            'id_commande' => $idCommande,
-            'est_disponible' => false
-        );
+        // $exemplaireModifiee = array(
+        //     'id_commande' => $idCommande,
+        //     'est_disponible' => false
+        // );
 
         // on trouve un exemplaire disponible correspondant à l'exemplaire et on modifie id_commande et est_disponible
         foreach ($panier as $exemplaire) {
@@ -473,10 +490,13 @@ class ClientController extends BaseController
                 ->where('id_produit', $exemplaire->id_produit)
                 ->where('couleur', $exemplaire->couleur)
                 ->where('taille', $exemplaire->taille)
-                ->first()
-                ->id_exemplaire;
+                ->first();
 
-            $this->ModeleExemplaire->update($idExemplaire, $exemplaireModifiee);
+            if ($idExemplaire == NULL) {
+                return $this->afficherPanier();
+            }
+
+            $this->ModeleExemplaire->ajouterExemplaireCommande($idCommande, $idExemplaire->id_exemplaire, $exemplaire->quantite);
         }
 
         // on calcule le montant de la commande
@@ -485,20 +505,24 @@ class ClientController extends BaseController
         $montant = $this->ModeleCommande
             ->where('id_commande', $idCommande)
             ->where('est_validee', false)
-            ->first()
-            ->montant;
+            ->first();
 
-
-        $adressesPrecendentes = array();
-
-        // on récupère les adresses déjà utilisées par le client
-        foreach ($commandes as $commande) {
-            if ($commande->id_client == $idClient && $commande->id_adresse != NULL) {
-                $adressesPrecendentes[] = $this->ModeleAdresse->find($commande->id_adresse);
-            }
+        if ($montant == NULL) {
+            return $this->afficherPanier();
         }
 
-        return view("compte", array("compteAction" => "validerCommandeAdresse", "montant" => $montant, "nombreArticles" => $nombreArticles, "idCommande" => $idCommande, "adressesPrecendentes" => $adressesPrecendentes, "session" => $this->getDonneesSession()));
+        $montant = $montant->montant;
+
+        // $adressesPrecendentes = array();
+
+        // on récupère les adresses déjà utilisées par le client
+        // foreach ($commandes as $commande) {
+        //     if ($commande->id_client == $idClient && $commande->id_adresse != NULL) {
+        //         $adressesPrecendentes[] = $this->ModeleAdresse->find($commande->id_adresse);
+        //     }
+        // }
+
+        return view("compte", array("compteAction" => "validerCommandeAdresse", "montant" => $montant, "nombreArticles" => $nombreArticles, "idCommande" => $idCommande, "adressesPrecendentes" => $this->ModeleAdresse->getAdressesParClient($commande->id_client), "session" => $this->getDonneesSession()));
     }
 
 
@@ -510,6 +534,9 @@ class ClientController extends BaseController
         $codePostal = (int)$this->request->getPost('codePostal');
         $ville = $this->request->getPost('ville');
 
+        if (count($this->session->get("panier")) == 0) {
+            return $this->afficherPanier();
+        }
 
         // on regarde si le client a réutilisé une adresse
         $idAdresse = $this->ModeleAdresse
@@ -678,19 +705,22 @@ class ClientController extends BaseController
 // oberserver decorateur singleton
 // composite ou delegate pour le decouper le clientController
 
-// ajouter image (compter nombre d'images , ajouter l'image à nbImages + 1)
-// supprimer (compter nombre d'images, si une seule image, alors on ne supprime pas, sinon on supprime l'image et on rename toutes les autres images pour décaler)
+// reordonner image
+// rajouter Taille:vetements()
+// changer foreach en haut d'admin view.php pour que ce soit plus élégant et mieux fait + ne marche pas pour le nombre d'exemplaires puisque ça compte le nombre d'exemplaires au lieu d'utiliser la quantité
+// créer un produit sans images empêche de le supprimer ? (pareil pour exemplaire ?)
+// home image maison au lieu de utilisateur
+// envoyer facture à email après livraison
+// payer ?
 
 // on ne peut pas insérer l'adresse 190 boulevard Jules Verne, 44300, Nantes (marche depuis le terminal)
 
 // afficher la quantite en fonction de la couleur ou de la taille sélectionnée
 // tester rester connecté
-// modifier produit et exemplaire (ajouter image, supprimer ou réordonner)
 // image collection
 // bouton vider panier ?
 
 // modifier collection (si on a le temps à la fin)
 
-// quantite dispo quand on change de taille et de couleur
 // activation compte par email (rajouter base de données -> bool estVerifie et code activation surement)
 // + - pour les quantités du panier (caché quand min et max)

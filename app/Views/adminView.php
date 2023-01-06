@@ -9,6 +9,43 @@
     <title>Hot genre</title>
 </head>
 
+<?php
+    $exemplairesParCouleurTailleProduits = array();
+
+    foreach ($exemplaires as $exemplaire) {
+        $idProduit = $exemplaire->id_produit;
+        $taille = $exemplaire->taille;
+        $couleur = $exemplaire->couleur;
+        $estDisponible = $exemplaire->est_disponible;
+
+        if (!array_key_exists($exemplaire->id_produit, $exemplairesParCouleurTailleProduits)) {
+            $exemplairesParCouleurTailleProduits[$idProduit] = array();
+        }
+
+        if (!array_key_exists($taille, $exemplairesParCouleurTailleProduits[$idProduit])) {
+            $exemplairesParCouleurTailleProduits[$idProduit][$taille] = array();
+        }
+
+        if (array_key_exists($couleur, $exemplairesParCouleurTailleProduits[$idProduit][$taille])) {
+            if ($estDisponible) {
+                $exemplairesParCouleurTailleProduits[$idProduit][$taille][$couleur][0] += 1;
+            }
+
+            $exemplairesParCouleurTailleProduits[$idProduit][$taille][$couleur][1] += 1;
+        }
+
+        else {
+            if ($estDisponible) {
+                $exemplairesParCouleurTailleProduits[$idProduit][$taille][$couleur] = array(1, 1);
+            } else {
+                $exemplairesParCouleurTailleProduits[$idProduit][$taille][$couleur] = array(0, 1);
+            }
+        }
+    }
+
+    $exemplaires = $exemplairesParCouleurTailleProduits;
+?>
+
 <body>
     <header>
         <div>
@@ -286,10 +323,8 @@
                     <label for="taille">Taille *</label>
                     
                     <select id="taille" name="taille">
-                        <?php foreach($exemplaires as $idProduit => $exemplaireTailles) : ?>
-                            <?php foreach($exemplaireTailles as $taille => $valeur) : ?>
-                                <option value="<?= $taille ?>"><?= $taille ?></option>
-                            <?php endforeach; ?>
+                        <?php foreach($tailles as $taille) : ?>
+                            <option value="<?= $taille ?>"><?= $taille ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>

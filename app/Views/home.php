@@ -11,7 +11,7 @@
 </head>
 
 <?php
-  $carrouselProduits = array(1, 2, 3);
+  $carrouselProduits = array(7, 8, 9);
   $carrouselImages = array();
 
 	foreach ($carrouselProduits as $idProduit) {

@@ -45,17 +45,18 @@ class Product extends BaseController
     public function getProduitsRuptureStock($products) {
         $produitSansExemplaires = array();
 
-        // on regarde quelles produits n'ont pas d'exemplaires (sont en rupture de stock)
+        // on regarde quels produits n'ont pas d'exemplaires (sont en rupture de stock)
         foreach ($products as $product) {
             $exemplaires = $this->ModeleExemplaire->getExemplairesDispoParProduit($product->id_produit);
             
             if (count($exemplaires) == 0) {
-                $produitSansExemplaires[] = $products->id_produit;
+                $produitSansExemplaires[] = $product->id_produit;
                 continue;
             }
+            
             foreach ($exemplaires as $exemplaire) {
                 if ($exemplaire->quantite <= 0) {
-                    $produitSansExemplaires[] = $products->id_produit;
+                    $produitSansExemplaires[] = $product->id_produit;
                     break;
                 }
             }

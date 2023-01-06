@@ -1,10 +1,10 @@
 <?php
-
+namespace App\Entities;
 /**
  * Énumération des tailles possibles des vêtements et des posters.
  * Est une classe fille de string.
  */
-enum Taille: string
+enum Taille : string
 {
     case XS = 'XS';
     case S = 'S';

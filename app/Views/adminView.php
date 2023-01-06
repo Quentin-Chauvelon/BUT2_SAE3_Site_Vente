@@ -323,9 +323,17 @@
                     <label for="taille">Taille *</label>
                     
                     <select id="taille" name="taille">
-                        <?php foreach($tailles as $taille) : ?>
-                            <option value="<?= $taille ?>"><?= $taille ?></option>
-                        <?php endforeach; ?>
+                        <optgroup label="Tailles vêtements">
+                            <?php foreach($taillesVetements as $taille) : ?>
+                                <option value="<?= $taille ?>"><?= $taille ?></option>                            
+                            <?php endforeach; ?>
+                        </optgroup>
+
+                        <optgroup label="Tailles posters">
+                            <?php foreach($taillesPosters as $taille) : ?>
+                                <option value="<?= $taille ?>"><?= $taille ?></option>                            
+                            <?php endforeach; ?>
+                        </optgroup>
                     </select>
                 </div>
                 
@@ -399,7 +407,7 @@
         <div id="commandes" class="commandes <?= ($notHidden == "commandes") ? "" : "hidden" ?>">
 
             <?php foreach($utilisateurs as $utilisateur) : ?>
-                <h1><?= $utilisateur->nom ?></h1>
+                <h1><?= $utilisateur->prenom . " " . $utilisateur->nom ?></h1>
 
                 <table>
                     <tr>

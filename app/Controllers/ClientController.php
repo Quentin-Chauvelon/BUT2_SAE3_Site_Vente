@@ -705,8 +705,8 @@ class ClientController extends BaseController
 // oberserver decorateur singleton
 // composite ou delegate pour le decouper le clientController
 
-// reordonner image
-// rajouter Taille:vetements()
+// reordonner image ne marche que avec deux png ou deux jpg
+// s'assurer que l'utilisateur crée un exemplaire avec une taille possible (poster ou vetement -> utiliser les méthodes de taille)
 // changer foreach en haut d'admin view.php pour que ce soit plus élégant et mieux fait + ne marche pas pour le nombre d'exemplaires puisque ça compte le nombre d'exemplaires au lieu d'utiliser la quantité
 // créer un produit sans images empêche de le supprimer ? (pareil pour exemplaire ?)
 // home image maison au lieu de utilisateur

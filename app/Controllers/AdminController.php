@@ -34,7 +34,18 @@ class AdminController extends BaseController
     {
         $exemplaires = $this->ModeleExemplaire->getExemplairesDispo();
 
-        return view("adminView", array("notHidden" => $notHidden, "utilisateurs" => $this->ModeleClient->findAll(), "produits" => $this->ModeleProduit->findAll(), "collections"=> $this->ModeleCollection->findAll(), "exemplaires" => $exemplaires, "tailles" => array("XS", "S", "M", "L", "XL", "XXL"), "commandes" => $this->ModeleCommande->findAll()));
+        //array("XS", "S", "M", "L", "XL", "XXL")
+        $taillesVetements = array();
+        foreach (Taille::vetements() as $taille) {
+            $taillesVetements[] = $taille->value;
+        }
+
+        $taillesPosters = array();
+        foreach (Taille::posters() as $taille) {
+            $taillesPosters[] = $taille->value;
+        }
+
+        return view("adminView", array("notHidden" => $notHidden, "utilisateurs" => $this->ModeleClient->findAll(), "produits" => $this->ModeleProduit->findAll(), "collections"=> $this->ModeleCollection->findAll(), "exemplaires" => $exemplaires, "taillesVetements" => $taillesVetements, "taillesPosters" => $taillesPosters, "commandes" => $this->ModeleCommande->findAll()));
     }
 
     /** adminView : Redirige vers la vue admin.
@@ -215,10 +226,10 @@ class AdminController extends BaseController
         }
 
         $ordre = array();
-
+        
         for ($i=1; $i < 9; $i++) {
             $produit = $this->request->getPost("produit" . (string)$i);
-
+            
             if ($produit != NULL) {
                 $ordre[$i] = (int)$produit;
             }
@@ -226,35 +237,46 @@ class AdminController extends BaseController
                 break;
             }
         }
-
-
+        
         $imagesDejaInversees = array();
 
         // on inverse les images si elles ont été réordonnées
         for ($i=1; $i < 9; $i++) {
 
-            if (array_key_exists($i, $ordre) && $ordre[$i] != $i) {
+            if (array_key_exists($i, $ordre) && $ordre[$i] != $i  && !in_array($i, $imagesDejaInversees)) {
 
-                // changer la valeur du tableau pour pas le rééchanger une 2ème fois les images
-                if (file_exists("images/produits/" . (string)$idProduit . "/images/image_" . $i . ".jpg") && file_exists("images/produits/" . (string)$idProduit . "/images/image_" . $ordre[$i] . ".jpg")) {
-                    rename("images/produits/" . (string)$idProduit . "/images/image_" . $i . ".jpg", "images/produits/" . (string)$idProduit . "/images/tmp");
-                    rename("images/produits/" . (string)$idProduit . "/images/image_" . $ordre[$i] . ".jpg", "images/produits/" . (string)$idProduit . "/images/image_" . $i . ".jpg");
-                    rename("images/produits/" . (string)$idProduit . "/images/tmp", "images/produits/" . (string)$idProduit . "/images/image_" . $ordre[$i] . ".jpg");
+                $extensionI = "";
+                $extensionOrdreI = "";
+
+                // on récupère l'extension de la première image
+                if (file_exists("images/produits/" . (string)$idProduit . "/images/image_" . $i . ".jpg")) {
+                    $extensionI = ".jpg";
+                }
+                else if (file_exists("images/produits/" . (string)$idProduit . "/images/image_" . $i . ".png")) {
+                    $extensionI = ".png";
                 }
 
-                if (file_exists("images/produits/" . (string)$idProduit . "/images/image_" . $i . ".png") && file_exists("images/produits/" . (string)$idProduit . "/images/image_" . $ordre[$i] . ".png")) {
-                    var_dump("ici");
-                    rename("images/produits/" . (string)$idProduit . "/images/image_" . $i . ".png", "images/produits/" . (string)$idProduit . "/images/tmp");
-                    rename("images/produits/" . (string)$idProduit . "/images/image_" . $ordre[$i] . ".png", "images/produits/" . (string)$idProduit . "/images/image_" . $i . ".png");
-                    rename("images/produits/" . (string)$idProduit . "/images/tmp", "images/produits/" . (string)$idProduit . "/images/image_" . $ordre[$i] . ".png");
+                // on récupère l'extension de la deuxième image
+                if (file_exists("images/produits/" . (string)$idProduit . "/images/image_" . $ordre[$i] . ".jpg")) {
+                    $extensionOrdreI = ".jpg";
+                }
+                else if (file_exists("images/produits/" . (string)$idProduit . "/images/image_" . $ordre[$i] . ".png")) {
+                    $extensionOrdreI = ".png";
                 }
 
-                // $imagesDejaInversees[] = $i;
-                // $imagesDejaInversees[] = $ordre[i];
+                // on inverse les deux images
+                if ($extensionI != "" && $extensionOrdreI != "") {
+                    rename("images/produits/" . (string)$idProduit . "/images/image_" . $i . $extensionI, "images/produits/" . (string)$idProduit . "/images/tmp");
+                    rename("images/produits/" . (string)$idProduit . "/images/image_" . $ordre[$i] . $extensionOrdreI, "images/produits/" . (string)$idProduit . "/images/image_" . $i . $extensionOrdreI);
+                    rename("images/produits/" . (string)$idProduit . "/images/tmp", "images/produits/" . (string)$idProduit . "/images/image_" . $ordre[$i] . $extensionI);
+                }
+
+                $imagesDejaInversees[] = $i;
+                $imagesDejaInversees[] = $ordre[$i];
             }
         }
 
-        // return $this->modifierProduitVue($idProduit);
+        return $this->modifierProduitVue($idProduit);
     }
 
 

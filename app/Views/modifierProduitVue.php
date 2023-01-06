@@ -104,13 +104,11 @@
                                 <img class="bin" src="<?= site_url() . "images/icons/bin.png"?>">
                             </a>
 
-                            <a href="<?= url_to('AdminController::supprimerImageProduit', $produit->id_produit, $key + 1) ?>">
-                                <select id="produit<?= $key + 1 ?>" name="produit<?= $key + 1 ?>" >
-                                    <?php foreach($productImages as $key2=>$valeur) : ?>
-                                        <option <?= ($key == $key2) ? "selected" : "" ?> value="<?= $key2 + 1 ?>"><?= $key2 + 1 ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </a>
+                            <select id="produit<?= $key + 1 ?>" name="produit<?= $key + 1 ?>" >
+                                <?php foreach($productImages as $key2=>$valeur) : ?>
+                                    <option <?= ($key == $key2) ? "selected" : "" ?> value="<?= $key2 + 1 ?>"><?= $key2 + 1 ?></option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
 
                     </div>

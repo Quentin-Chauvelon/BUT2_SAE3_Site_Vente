@@ -16,7 +16,7 @@
             <h2 class="nombre_produits">Nombre de produits : <?= $nombreArticles ?></h2>
         </div>
 
-        <a  href="<?= url_to('ClientController::afficherPanier') ?>">
+        <a  href="<?= url_to('ClientController::annulerCommande', $idCommande) ?>">
             <div class="annuler_commande">Annuler ma commande</div>
         </a>
     </div>

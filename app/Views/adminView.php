@@ -17,6 +17,7 @@
         $taille = $exemplaire->taille;
         $couleur = $exemplaire->couleur;
         $estDisponible = $exemplaire->est_disponible;
+        $quantite = $exemplaire->quantite;
 
         if (!array_key_exists($exemplaire->id_produit, $exemplairesParCouleurTailleProduits)) {
             $exemplairesParCouleurTailleProduits[$idProduit] = array();
@@ -27,23 +28,24 @@
         }
 
         if (array_key_exists($couleur, $exemplairesParCouleurTailleProduits[$idProduit][$taille])) {
-            if ($estDisponible) {
-                $exemplairesParCouleurTailleProduits[$idProduit][$taille][$couleur][0] += 1;
-            }
+            // if ($estDisponible) {
+            //     $exemplairesParCouleurTailleProduits[$idProduit][$taille][$couleur][0] += 1;
+            // }
 
-            $exemplairesParCouleurTailleProduits[$idProduit][$taille][$couleur][1] += 1;
+            // $exemplairesParCouleurTailleProduits[$idProduit][$taille][$couleur][1] += 1;
+            $exemplairesParCouleurTailleProduits[$idProduit][$taille][$couleur] += $quantite;
         }
 
         else {
-            if ($estDisponible) {
-                $exemplairesParCouleurTailleProduits[$idProduit][$taille][$couleur] = array(1, 1);
-            } else {
-                $exemplairesParCouleurTailleProduits[$idProduit][$taille][$couleur] = array(0, 1);
-            }
+            // if ($estDisponible) {
+            //     $exemplairesParCouleurTailleProduits[$idProduit][$taille][$couleur] = array(1, 1);
+            // } else {
+            //     $exemplairesParCouleurTailleProduits[$idProduit][$taille][$couleur] = array(0, 1);
+            // }
+
+            $exemplairesParCouleurTailleProduits[$idProduit][$taille][$couleur] = $quantite;
         }
     }
-
-    $exemplaires = $exemplairesParCouleurTailleProduits;
 ?>
 
 <body>
@@ -152,7 +154,7 @@
                         <td><?= $produit->id_produit ?></td>
                         <td><?= $produit->id_collection ?></td>
                         <td><?= $produit->nom ?></td>
-                        <td><?= $produit->prix ?></td>
+                        <td><?= $produit->prix / 100 ?>€</td>
                         <td><?= $produit->reduction ?></td>
                         <td><?= $produit->description ?></td>
                         <td><?= $produit->categorie ?></td>
@@ -220,8 +222,8 @@
                 </div>
 
                 <div>
-                    <label for="description">Images</label>
-                    <input type="file" name="images[]" id="images" multiple accept=".jpg, .png">
+                    <label for="description">Images * (.jpg ou .png)</label>
+                    <input type="file" name="images[]" id="images" multiple accept=".jpg, .png" required>
                 </div>
 
                 <button type="submit" class="button">Créer produit</button>
@@ -235,7 +237,7 @@
 
             <div class="exemplaires_produits_container">
                 
-                <?php foreach($exemplaires as $idProduit => $exemplaireTailles) : ?>
+                <?php foreach($exemplairesParCouleurTailleProduits as $idProduit => $exemplaireTailles) : ?>
                     <?php 
                         // $produit = $produits[$idProduit - 1];
                         $produit = NULL;
@@ -252,38 +254,40 @@
                     <div class="exemplaires_tailles_container">
 
                         <?php
-                            $quantiteTotalDisponible = 0;
-                            $quantiteTotalTotal = 0;
+                            // $quantiteTotalDisponible = 0;
+                            // $quantiteTotalTotal = 0;
+                            $quantiteTotal = 0;
 
                             foreach($exemplaireTailles as $exemplaireCouleurs) {
-                                foreach($exemplaireCouleurs as $quantites) {
-                                    $quantiteTotalDisponible += $quantites[0];
-                                    $quantiteTotalTotal += $quantites[1];
+                                foreach($exemplaireCouleurs as $quantite) {
+                                    // $quantiteTotalDisponible += $quantites[0];
+                                    // $quantiteTotalTotal += $quantites[1];
+                                    $quantiteTotal += $quantite;
                                 }
                             }
                         ?>
 
-                        <h3>Total : <span class="green"><?= $quantiteTotalDisponible ?> disponibles</span> / <span class="red"><?= $quantiteTotalTotal ?> total</span></h3>
+                        <h3>Total : <span class="green"><?= $quantiteTotal ?> disponibles</span></h3>
 
                         <?php foreach($exemplaireTailles as $taille => $exemplaireCouleurs) : ?>
 
                             <?php
-                                $quantiteDisponible = 0;
+                                // $quantiteDisponible = 0;
                                 $quantiteTotal = 0;
 
-                                foreach($exemplaireCouleurs as $quantites) {
-                                    $quantiteDisponible += $quantites[0];
-                                    $quantiteTotal += $quantites[1];
+                                foreach($exemplaireCouleurs as $quantite) {
+                                    // $quantiteDisponible += $quantites[0];
+                                    $quantiteTotal += $quantite;
                                 }
                             ?>
 
-                            <h3><?= $taille ?> : <span class="green"><?= $quantiteDisponible ?> disponibles</span> / <span class="red"><?= $quantiteTotal ?> total</span></h3>
+                            <h3><?= $taille ?> : <span class="green"><?= $quantiteTotal ?> disponibles</span></h3>
 
                             <div class="exemplaires_couleurs_container">
 
-                                <?php foreach($exemplaireCouleurs as $couleur => $quantites) : ?>
+                                <?php foreach($exemplaireCouleurs as $couleur => $quantite) : ?>
                                     <div class="exemplaire_couleurs">
-                                        <h5><?= ucfirst($couleur) ?> : <span class="green"><?= $quantites[0] ?> disponibles</span> / <span class="red"><?= $quantites[1] ?> total</span></h5>
+                                        <h5><?= ucfirst($couleur) ?> : <span class="green"><?= $quantite ?> disponibles</span></h5>
 
                                         <a href="<?= url_to('AdminController::supprimer1Exemplaire', $idProduit, $taille, $couleur) ?>">
                                             <div class="button small">Supprimer 1</div>
@@ -343,7 +347,7 @@
                 </div>
                 
         	    <div>
-                    <label for="description">Image</label>
+                    <label for="description">Image (.jpg ou .png)</label>
                     <input type="file" name="image" id="image" accept=".jpg, .png">
                 </div>
 

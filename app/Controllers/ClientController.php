@@ -143,7 +143,7 @@ class ClientController extends BaseController
             setcookie('password', "", 1);
         }
 
-        return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => array('panier' => array(), 'id'  => NULL, 'prenom' => NULL, 'nom' => NULL, 'email' => NULL)));
+        return view('home', array("estAdmin" => false, "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => array('panier' => array(), 'id'  => NULL, 'prenom' => NULL, 'nom' => NULL, 'email' => NULL)));
     }
 
 
@@ -433,7 +433,12 @@ class ClientController extends BaseController
 
         $idClient = $this->getSessionId();
         $panier = $this->session->get("panier");
-        $nombreArticles = count($panier);
+
+        $nombreArticles = 0;
+
+        foreach ($panier as $exemplaire) {
+            $nombreArticles += $exemplaire->quantite;
+        }
 
         if ($nombreArticles == 0) {
             return $this->afficherPanier();
@@ -470,11 +475,31 @@ class ClientController extends BaseController
         }
 
         // on enlève tous les exemplaires de la commande au cas où la commande aurait été annulée et certains articles enlevés ou ajoutés
-        foreach ($panier as $exemplaire) {
-            $this->ModeleExemplaire
+        $exemplaire = $this->ModeleExemplaire->where('id_commande', $idCommande)->first();
+
+        while ($exemplaire != NULL) {
+            $this->ModeleExemplaire->delete($exemplaire->id_exemplaire);
+
+            $exemplaireAvecProduitCouleurTaille = $this->ModeleExemplaire
                 ->where('id_commande', $idCommande)
-                ->set(['id_commande' => NULL, "est_disponible" => true])
+                ->where('est_disponible', true)
+                ->where('id_produit', $exemplaire->id_produit)
+                ->where('couleur', $exemplaire->couleur)
+                ->where('taille', $exemplaire->taille)
+                ->first();
+
+            // s'il y a déjà un exemplaire du même produit avec la même couleur et la même taille, on augmente la quantité, sinon on en crée un
+            if ($exemplaireAvecProduitCouleurTaille != NULL) {
+                $this->ModeleExemplaire
+                ->where('id_exemplaire', $exemplaireAvecProduitCouleurTaille->id_exemplaire)
+                ->set(['quantite' => (int)$exemplaireAvecProduitCouleurTaille->quantite + (int)$exemplaire->quantite])
                 ->update();
+            }
+            else {
+                $this->ModeleExemplaire->creerExemplaire($exemplaire->id_produit, $exemplaire->couleur, $exemplaire->taille, $exemplaire->quantite);
+            }
+
+            $exemplaire = $this->ModeleExemplaire->where('id_commande', $idCommande)->first();
         }
 
         // on ajoute tous les articles à la commande
@@ -485,18 +510,18 @@ class ClientController extends BaseController
 
         // on trouve un exemplaire disponible correspondant à l'exemplaire et on modifie id_commande et est_disponible
         foreach ($panier as $exemplaire) {
-            $idExemplaire = $this->ModeleExemplaire
+            $exemplaireCommande = $this->ModeleExemplaire
                 ->where('est_disponible', true)
                 ->where('id_produit', $exemplaire->id_produit)
                 ->where('couleur', $exemplaire->couleur)
                 ->where('taille', $exemplaire->taille)
                 ->first();
 
-            if ($idExemplaire == NULL) {
+            if ($exemplaireCommande == NULL) {
                 return $this->afficherPanier();
             }
 
-            $this->ModeleExemplaire->ajouterExemplaireCommande($idCommande, $idExemplaire->id_exemplaire, $exemplaire->quantite);
+            $this->ModeleExemplaire->ajouterExemplaireCommande($idCommande, $exemplaireCommande->id_exemplaire, $exemplaire->quantite);
         }
 
         // on calcule le montant de la commande
@@ -513,16 +538,48 @@ class ClientController extends BaseController
 
         $montant = $montant->montant;
 
-        // $adressesPrecendentes = array();
+        return view("compte", array("compteAction" => "validerCommandeAdresse", "montant" => $montant, "nombreArticles" => $nombreArticles, "idCommande" => $idCommande, "adressesPrecendentes" => $this->ModeleAdresse->getAdressesParClient($idClient), "session" => $this->getDonneesSession()));
+    }
 
-        // on récupère les adresses déjà utilisées par le client
-        // foreach ($commandes as $commande) {
-        //     if ($commande->id_client == $idClient && $commande->id_adresse != NULL) {
-        //         $adressesPrecendentes[] = $this->ModeleAdresse->find($commande->id_adresse);
-        //     }
-        // }
 
-        return view("compte", array("compteAction" => "validerCommandeAdresse", "montant" => $montant, "nombreArticles" => $nombreArticles, "idCommande" => $idCommande, "adressesPrecendentes" => $this->ModeleAdresse->getAdressesParClient($commande->id_client), "session" => $this->getDonneesSession()));
+    public function viderPanier() {
+        $this->session->set("panier", array());
+
+        return $this->afficherPanier();
+    }
+
+
+    public function annulerCommande($idCommande) {
+
+        // on enlève tous les exemplaires de la commande au cas où la commande aurait été annulée et certains articles enlevés ou ajoutés
+        $exemplaire = $this->ModeleExemplaire->where('id_commande', $idCommande)->first();
+
+        while ($exemplaire != NULL) {
+            $this->ModeleExemplaire->delete($exemplaire->id_exemplaire);
+
+            $exemplaireAvecProduitCouleurTaille = $this->ModeleExemplaire
+                ->where('id_commande', $idCommande)
+                ->where('est_disponible', true)
+                ->where('id_produit', $exemplaire->id_produit)
+                ->where('couleur', $exemplaire->couleur)
+                ->where('taille', $exemplaire->taille)
+                ->first();
+
+            // s'il y a déjà un exemplaire du même produit avec la même couleur et la même taille, on augmente la quantité, sinon on en crée un
+            if ($exemplaireAvecProduitCouleurTaille != NULL) {
+                $this->ModeleExemplaire
+                ->where('id_exemplaire', $exemplaireAvecProduitCouleurTaille->id_exemplaire)
+                ->set(['quantite' => (int)$exemplaireAvecProduitCouleurTaille->quantite + (int)$exemplaire->quantite])
+                ->update();
+            }
+            else {
+                $this->ModeleExemplaire->creerExemplaire($exemplaire->id_produit, $exemplaire->couleur, $exemplaire->taille, $exemplaire->quantite);
+            }
+
+            $exemplaire = $this->ModeleExemplaire->where('id_commande', $idCommande)->first();
+        }
+
+        return $this->afficherPanier();
     }
 
 
@@ -558,22 +615,22 @@ class ClientController extends BaseController
                 'rue' => $rue
             );
 
-
             // on ajoute l'adresse dans la table
             $this->ModeleAdresse->insert($adresse);
 
-            // on récupère l'id de l'adresse qui vient d'être crée
+            // // on récupère l'id de l'adresse qui vient d'être crée
             $idAdresse = $this->ModeleAdresse->getInsertID();
-
         }
 
-        // on modifie l'adresse de la commande et on la valide
-        $commandeModifiee = array(
-            'id_adresse' => $idAdresse,
-            'est_validee' => true
-        );
+        if ($idAdresse != NULL) {
+            // on modifie l'adresse de la commande et on la valide
+            $commandeModifiee = array(
+                'id_adresse' => $idAdresse,
+                'est_validee' => true
+            );
 
-        $this->ModeleCommande->update((int)$idCommande, $commandeModifiee);
+            $this->ModeleCommande->update((int)$idCommande, $commandeModifiee);
+        }
 
         // on vide le panier
         $this->session->set("panier", array());
@@ -705,22 +762,15 @@ class ClientController extends BaseController
 // oberserver decorateur singleton
 // composite ou delegate pour le decouper le clientController
 
-// reordonner image ne marche que avec deux png ou deux jpg
-// s'assurer que l'utilisateur crée un exemplaire avec une taille possible (poster ou vetement -> utiliser les méthodes de taille)
-// changer foreach en haut d'admin view.php pour que ce soit plus élégant et mieux fait + ne marche pas pour le nombre d'exemplaires puisque ça compte le nombre d'exemplaires au lieu d'utiliser la quantité
-// créer un produit sans images empêche de le supprimer ? (pareil pour exemplaire ?)
-// home image maison au lieu de utilisateur
-// envoyer facture à email après livraison
-// payer ?
+// reordonner empêche de cache les images sinon quand on les change parfois elles restent les mêmes et il faut force reload la page (pareil pour l'affichage du produit), meileure solution est donc d'ajouter ?randomNumber mais les images sont archi longues à charger du coup
+// validation rules dans les modeles comme pour adresse
 
-// on ne peut pas insérer l'adresse 190 boulevard Jules Verne, 44300, Nantes (marche depuis le terminal)
-
-// afficher la quantite en fonction de la couleur ou de la taille sélectionnée
-// tester rester connecté
 // image collection
-// bouton vider panier ?
-
 // modifier collection (si on a le temps à la fin)
-
+// modifier image exemplaire
+// changer foreach en haut d'admin view.php pour que ce soit plus élégant et mieux fait
+// envoyer facture à email après livraison
+// custom 404
+// désactiver les erreurs + page spéciale ?
 // activation compte par email (rajouter base de données -> bool estVerifie et code activation surement)
 // + - pour les quantités du panier (caché quand min et max)

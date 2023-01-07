@@ -89,14 +89,20 @@
         </form>
 
         <div class="images_container">
+            <form action=<?= url_to('AdminController::ajouterImageProduit') ?> method="post" enctype='multipart/form-data'>
+                <input type="hidden" name="id_produit" id="id_produit" value="<?= $produit->id_produit ?>" />
+                <input class="add_image image" value="+" type="button" onclick="document.getElementById('image').click();" />
+                <input type="file" style="display:none;" id="image" name="image" accept=".jpg, .png" onchange="this.form.submit()"/>
+            </form>
+
             <form action=<?= url_to('AdminController::reordonnerImagesProduits') ?> method="post">
                 <input type="hidden" name="id_produit" id="id_produit" value="<?= $produit->id_produit ?>" />
-
+                
                 <?php foreach($productImages as $key=>$imageSrc) : ?>
 
                     <div class="image_container">
                         <div class="image">
-                            <img src= <?= $imageSrc ?>>
+                            <img src= <?= $imageSrc . "?" . time() ?>>
                         </div>
 
                         <div>
@@ -114,13 +120,9 @@
                     </div>
                 <?php endforeach; ?>
 
-                <button type="submit" class="bouton">Valider ordre</button>
-            </form>
-
-            <form action=<?= url_to('AdminController::ajouterImageProduit') ?> method="post" enctype='multipart/form-data'>
-                <input type="hidden" name="id_produit" id="id_produit" value="<?= $produit->id_produit ?>" />
-                <input class="add_image image" value="+" type="button" onclick="document.getElementById('image').click();" />
-                <input type="file" style="display:none;" id="image" name="image" accept=".jpg, .png" onchange="this.form.submit()"/>
+                <div class="valider_ordre">
+                    <button type="submit" class="bouton">Valider ordre</button>
+                </div>
             </form>
         </div>
     </section>

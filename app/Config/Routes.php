@@ -68,6 +68,8 @@ $routes->get('afficherPanier', 'ClientController::afficherPanier');
 $routes->get('afficherHistorique', 'ClientController::afficherHistorique');
 $routes->get('supprimerDuPanier/(:num)/(:any)/(:any)', 'ClientController::supprimerDuPanier/$1/$2/$3');
 $routes->get('validerPanier', 'ClientController::validerPanier');
+$routes->get('viderPanier', 'ClientController::viderPanier');
+$routes->get('annulerCommande/(:any)', 'ClientController::annulerCommande/$1');
 $routes->get('detailCommande/(:num)', 'ClientController::detailCommande/$1');
 $routes->get('cgu', 'ClientController::cgu');
 $routes->get('quiSommesNous', 'ClientController::quiSommesNous');

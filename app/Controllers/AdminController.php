@@ -105,10 +105,11 @@ class AdminController extends BaseController
         $description = $this->request->getPost('description');
         $categorie = $this->request->getPost('categorie');
         $idCollection = $this->request->getPost('id_collection');
+        $countfiles = count($_FILES['images']['name']);
     
         $result = false;
 
-        if ($nom != "" && $prix > 0) {
+        if ($nom != "" && $prix > 0 && $countfiles > 0) {
             $result = $this->ModeleProduit->creerProduit($nom, $prix, $description, $categorie, ($idCollection == "") ? NULL : (int)$this->request->getPost($idCollection));
         }
 
@@ -130,15 +131,10 @@ class AdminController extends BaseController
                 mkdir("images/produits/" . (string)$idProduit);
                 mkdir("images/produits/" . (string)$idProduit . "/images");
                 mkdir("images/produits/" . (string)$idProduit . "/couleurs");
-
-                // Count total files
-                $countfiles = count($_FILES['images']['name']);
                 
-                // Looping all files
                 for($i=0;$i<$countfiles;$i++){
                     $filename = $_FILES['images']['tmp_name'][$i];
             
-                    // Upload file
                     //move_uploaded_file($filename, "images/produits/" . (string)$idProduit . "/images/image_"  . (string)$i . "." . $_FILES['images']['type'][$i]);
                     move_uploaded_file($filename, "images/produits/" . (string)$idProduit . "/images/image_" . (string)($i + 1) . "." . str_replace("image/", "", $_FILES['images']['type'][$i]));
                     //rename("images/produits/" . (string)$idProduit . "/images/" . $filename, site_url() . "images/produits/" . (string)$idProduit . "/images/image_" . (string)$i . "." . $_FILES['images']['type'][$i]);
@@ -184,9 +180,11 @@ class AdminController extends BaseController
         $produit->categorie = $this->request->getPost('categorie');
         $produit->reduction = $this->request->getPost('reduction');
 
-        try{
-            $this->ModeleProduit->save($produit);
-        } catch (\Exception $e) {}
+        if ($produit->nom != "" && $produit->prix > 0) {
+            try{
+                $this->ModeleProduit->save($produit);
+            } catch (\Exception $e) {}
+        }
 
         return $this->returnAdminView('produits');
     }
@@ -373,14 +371,39 @@ class AdminController extends BaseController
         if (!$this->estAdmin()) {
             return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
         }
+
         $idProduit = $this->request->getPost('id_produit');
         $couleur = $this->request->getPost('couleur');
         $taille = $this->request->getPost('taille');
         $quantite = (int)$this->request->getPost('quantite');
 
+        $produit = $this->ModeleProduit->find($idProduit);
+
+        if ($produit == NULL || $couleur == "" || $taille == "") {
+            return $this->returnAdminView('exemplaires');
+        }
+
         if ($quantite == null || $quantite <= 0)
         {
             $quantite = 1;
+        }
+
+        $tailleEnum = Taille::tryFrom($taille);
+
+        if ($tailleEnum == NULL) {
+            return $this->returnAdminView('exemplaires');
+        }
+
+        // on s'assure que la taille choisie pour l'exemplaire correspond bien à une taille possible en fonction de la catégorie du produit
+        if ($produit->categorie == "posters") {
+            if (!$tailleEnum->estPoster()) {
+                return $this->returnAdminView('exemplaires');
+            }
+        }
+        else {
+            if (!$tailleEnum->estVetement()) {
+                return $this->returnAdminView('exemplaires');
+            }
         }
         
         $this->ModeleExemplaire->creerExemplaire($idProduit, $couleur, $taille, $quantite);
@@ -416,22 +439,27 @@ class AdminController extends BaseController
             return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
         }
 
-        $idExemplaire = $this->ModeleExemplaire
-            ->where('id_produit', $idProduit)
-            ->where('taille', $taille)
-            ->where('couleur', $couleur)
-            ->where('est_disponible', true)
-            ->first();
+        $exemplairesDispoParProduitCouleurTaille = $this->ModeleExemplaire->getExemplairesDispoParProduitCouleurTaille($idProduit, $couleur, $taille);
+        $exemplaire = NULL;
+
+        if (count($exemplairesDispoParProduitCouleurTaille) > 0) {
+            $exemplaire = $exemplairesDispoParProduitCouleurTaille[0];
+        }
+
+        $exemplaire->quantite = (int)$exemplaire->quantite;
 
         if ($exemplaire != NULL)
         {
-            try {
+            if ($exemplaire->quantite <= 1) {
+                $this->ModeleExemplaire->delete($exemplaire->id_exemplaire);
+            }
+            else {
                 $exemplaire->quantite -=  1;
                 $this->ModeleExemplaire->save($exemplaire);
-            } catch (\Exception) {}
+            }
         }
 
-        // on supprimer l'image de la couleur s'il n'y a plus d'exemplaire avec la couleur donnée
+        // on supprime l'image de la couleur s'il n'y a plus d'exemplaire avec la couleur donnée
         if (count($this->ModeleExemplaire
             ->where('id_produit', $idProduit)
             ->where('couleur', $couleur)
@@ -461,7 +489,13 @@ class AdminController extends BaseController
             return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
         }
 
-        $exemplaire = $this->ModeleExemplaire->getExemplairesDispoParProduitCouleurTaille($idProduit, $couleur, $taille);
+        $exemplairesDispoParProduitCouleurTaille = $this->ModeleExemplaire->getExemplairesDispoParProduitCouleurTaille($idProduit, $couleur, $taille);
+        $exemplaire = NULL;
+
+        if (count($exemplairesDispoParProduitCouleurTaille) > 0) {
+            $exemplaire = $exemplairesDispoParProduitCouleurTaille[0];
+        }
+
         if ($exemplaire != NULL)
         {
             try {

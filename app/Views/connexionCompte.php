@@ -53,7 +53,7 @@
 						<input type="password" name="password" id="password" placeholder=" " minlength="8" maxlength="64" required/>
 
 						<div class="toggle_password_visibility" onclick="togglePasswordVisibilty()">
-								<img src="https://cdn-icons-png.flaticon.com/512/65/65000.png" alt="Logo">
+								<img src="<?= site_url() . "images/icons/eye.png"?>" alt="Logo">
 						</div>
 					</div>
 

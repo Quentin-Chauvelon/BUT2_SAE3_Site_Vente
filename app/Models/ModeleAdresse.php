@@ -16,8 +16,8 @@ class ModeleAdresse extends Model
     protected $validationRules  = [
         'id_adresse'    => 'required|numeric|is_unique[Adresse.id_adresse]',
         'code_postal' => 'required|numeric|greater_than[9999]|less_than[100000]',
-        'ville'       => 'required|alpha_space',
-        'rue'         => 'required|alpha_dash',
+        'ville'       => 'required',
+        'rue'         => 'required',
     ];
 
     private function __construct()

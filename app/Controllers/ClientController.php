@@ -766,10 +766,10 @@ class ClientController extends BaseController
 // validation rules dans les modeles comme pour adresse
 
 // image collection
-// modifier collection (si on a le temps à la fin)
-// modifier image exemplaire
-// changer foreach en haut d'admin view.php pour que ce soit plus élégant et mieux fait
+// déplacer modifierProduitVue script dans un fichier js et le link
 // envoyer facture à email après livraison
+// s'assurer que les inputs sont sécurisés (appels du bon type, non vide...) surtout les posts, vérifier les appels à la bd...
+// changer foreach en haut d'admin view.php pour que ce soit plus élégant et mieux fait
 // custom 404
 // désactiver les erreurs + page spéciale ?
 // activation compte par email (rajouter base de données -> bool estVerifie et code activation surement)

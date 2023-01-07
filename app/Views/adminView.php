@@ -249,7 +249,13 @@
                         }
                     ?>
 
-                    <h1><?= $produit->nom ?> (<?= ($produit->prix / 100) ?>€ · <?= ucfirst($produit->categorie) ?>) :</h1>
+                    <div class="produit_exemplaire">
+                        <h1><?= $produit->nom ?> (<?= ($produit->prix / 100) ?>€ · <?= ucfirst($produit->categorie) ?>) :</h1>
+
+                        <a href="<?= url_to('AdminController::modifierExemplaireImagesVue', $idProduit) ?>">
+                            <div class="button exemplaire_images">Modifier images</div>
+                        </a>
+                    </div>
 
                     <div class="exemplaires_tailles_container">
 
@@ -369,7 +375,7 @@
                     <th>Nom</th>
                     <th>Parution</th>
                     <th>Date limite</th>
-                    <!-- <th style="width: 280px;">Modifier collection</th> -->
+                    <th style="width: 280px;">Modifier collection</th>
                     <th style="width: 280px;">Supprimer collection</th>
                 </tr>
 
@@ -379,6 +385,12 @@
                         <td><?= $collection->nom ?></td>
                         <td><?= $collection->parution ?></td>
                         <td><?= $collection->date_limite ?></td>
+
+                        <td>
+                            <a href="<?= url_to('AdminController::modifierCollection', $collection->id_collection) ?>">
+                                <div class="button">Modifier collection</div>
+                            </a>
+                        </td>
 
                         <td>
                             <a href="<?= url_to('AdminController::supprimerCollection', $collection->id_collection) ?>">

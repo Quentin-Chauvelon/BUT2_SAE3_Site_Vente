@@ -432,6 +432,65 @@ class AdminController extends BaseController
         return $this->returnAdminView('exemplaires');
     }
 
+    public function modifierExemplaireImagesVue(int $idProduit) {
+        
+        if (!$this->estAdmin()) {
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+        }
+
+        return view('modifierExemplaireImagesVue', array("idProduit" => $idProduit, "session" => $this->getDonneesSession()));
+    }
+
+
+    public function modifierImageExemplaire() {
+        
+        if (!$this->estAdmin()) {
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+        }
+
+        $idProduit = $this->request->getPost("id_produit");
+        $couleur = $this->request->getPost("couleur");
+        $filename = $_FILES['image']['tmp_name'];
+
+        // si l'utilisateur a annulé la sélection d'image, ça envoie une image vide
+        if ($filename != "") {
+
+            if ($idProduit == NULL) {
+                return $this->adminView();
+            }
+
+            if ($couleur == "") {
+                return $this->modifierExemplaireImagesVue($idProduit);
+            }
+
+            $extensionImage = "";
+
+            // on détemine l'extension de l'image
+            if (file_exists("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".jpg")) {
+                $extensionImage = ".jpg";
+            }
+
+            if (file_exists("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".jpeg")) {
+                $extensionImage = ".jpeg";
+            }
+
+            if (file_exists("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".png")) {
+                $extensionImage = ".png";
+            }
+
+
+            if ($extensionImage != "") {
+                // on supprime l'ancienne image
+                unlink("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . $extensionImage);
+
+                // on la remplace par la nouvelle
+                move_uploaded_file($filename, "images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . "." . str_replace("image/", "", $_FILES['image']['type']));
+            }
+        }
+
+        return $this->modifierExemplaireImagesVue($idProduit);
+    }
+
 
     public function supprimer1Exemplaire(int $idProduit, string $taille, string $couleur) {
         
@@ -551,6 +610,48 @@ class AdminController extends BaseController
 
         if ($date_limite > $today) {
             $this->ModeleCollection->update($this->ModeleCollection->getCollectionParNom($nom)->id_collection, array('date_limite' => $date_limite));
+        }
+
+        return $this->returnAdminView('collections');
+    }
+
+
+    public function modifierCollectionVue($idCollection)
+    {
+        if (!$this->estAdmin())
+        {
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+        }
+
+        $collection = $this->ModeleCollection->find($idCollection);
+
+        return view('modifierCollectionVue', array("collection" => $collection, "collections" => $this->ModeleCollection->findAll(), "session" => $this->getDonneesSession()));
+    }
+    
+
+    public function modifierCollection() {
+
+        if (!$this->estAdmin()) {
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+        }
+
+        $collection = $this->ModeleCollection->find($this->request->getPost('id_collection'));
+        
+        if ($collection == null) {
+            return $this->returnAdminView('collections');
+        }
+
+        $idCollection = $this->request->getPost('id_collection');
+
+        $collection->id_collection = ($idCollection == "") ? NULL : (int)$idCollection;
+        $collection->nom = $this->request->getPost('nom');
+        $collection->parution = $this->request->getPost('parution');
+        $collection->date_limite = $this->request->getPost('date_limite');
+
+        if ($collection->id_collection != NULL && $collection->nom != "" && $collection->parution < date("Y-m-d") && $collection->date_limite >= date("Y-m-d")) {
+            try{
+                $this->ModeleCollection->save($collection);
+            } catch (\Exception $e) {}
         }
 
         return $this->returnAdminView('collections');

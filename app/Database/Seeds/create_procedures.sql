@@ -461,6 +461,7 @@ END;
 
 CREATE OR REPLACE PROCEDURE AjouterExemplaireCommande(IN _id_commande INT, IN _id_exemplaire INT, IN _quantite INT)
 BEGIN
+    LOCK TABLES Exemplaire WRITE CONCURRENT;
     DECLARE cou VARCHAR(20) DEFAULT '';
     DECLARE tai VARCHAR(50) DEFAULT '';
     DECLARE id_prod INT DEFAULT 0;

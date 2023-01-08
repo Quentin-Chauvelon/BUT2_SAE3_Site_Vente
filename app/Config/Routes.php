@@ -50,6 +50,7 @@ $routes->get('/', 'Home::index');
  * You will have access to the $routes object within that file without
  * needing to reload it.
  */
+
 if (is_file(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
     require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
 }
@@ -100,3 +101,7 @@ $routes->post('creerExemplaire', 'AdminController::creerExemplaire');
 $routes->post('creerCollection', 'AdminController::creerCollection');
 $routes->post('ajouterImageProduit', 'AdminController::ajouterImageProduit');
 $routes->post('reordonnerImagesProduits', 'AdminController::reordonnerImagesProduits');
+
+$routes->get('motDePasseOublie', 'ClientController::motDePasseOublie');
+$routes->post('envoyerMailChangementMDP', 'ClientController::envoyerMailChangementMDP');
+$routes->get('ChangerMotDePasse/(:any)', 'ClientController::ChangerMotDePasse/$1');

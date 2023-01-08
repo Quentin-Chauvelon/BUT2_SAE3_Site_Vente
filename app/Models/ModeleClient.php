@@ -4,8 +4,9 @@ namespace App\Models;
 
 use App\Entities\Client;
 use CodeIgniter\Model;
+use CodeIgniter\SafeModel;
 
-class ModeleClient extends Model
+class ModeleClient extends SafeModel
 {
     private static ModeleClient $instance;
 
@@ -36,5 +37,15 @@ class ModeleClient extends Model
         } catch (\Exception) {
             return null;
         }
+    }
+
+    public function getClientParCodeMDPOublie($codeMDPOublie): ?Client
+    {
+        foreach ($this->findAll() as $client) {
+            if (password_verify($codeMDPOublie, $client->password)) {
+                return $client;
+            }
+        }
+        return null;
     }
 }

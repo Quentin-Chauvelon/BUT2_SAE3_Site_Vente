@@ -59,6 +59,7 @@
 
 					<h5>Votre mot de passe doit faire entre 8 et 64 caractères</h5>
 				</div>
+                <a href="<?= url_to('ClientController::motDePasseOublie') ?>">Mot de passe oublié ?</a>
 
 				<div>
 					<div class="rester_connecte">

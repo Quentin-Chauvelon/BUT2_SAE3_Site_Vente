@@ -4,8 +4,9 @@ namespace App\Models;
 
 use App\Entities\Coupon;
 use CodeIgniter\Model;
+use CodeIgniter\SafeModel;
 
-class ModeleCoupon extends Model
+class ModeleCoupon extends SafeModel
 {
     private static ModeleCoupon $instance;
 

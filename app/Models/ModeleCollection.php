@@ -4,8 +4,9 @@ namespace App\Models;
 
 use App\Entities\Collection;
 use CodeIgniter\Model;
+use CodeIgniter\SafeModel;
 
-class ModeleCollection extends Model
+class ModeleCollection extends SafeModel
 {
 
     private static ModeleCollection $instance;

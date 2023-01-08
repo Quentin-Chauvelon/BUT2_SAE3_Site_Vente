@@ -29,4 +29,9 @@ class Client extends Entity
     {
         return password_verify($pass, $this->attributes['password']);
     }
+
+    public function getCodeMDPOublie(): string
+    {
+        return password_hash($this->attributes['password'], PASSWORD_BCRYPT);
+    }
 }

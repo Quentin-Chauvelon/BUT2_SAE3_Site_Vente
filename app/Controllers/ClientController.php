@@ -700,6 +700,41 @@ class ClientController extends BaseController
 
         return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
     }
+
+    public function envoyerMailChangementMDP()
+    {
+        $client = $this->ModeleClient->getClientParEmail($this->request->getPost('email'));
+        if ($client == NULL){
+            return view('motDePasseOublie', ['compteNonExistant' => true]);
+        }
+        $lien = url_to("ClientController::ChangerMotDePasse", $client->getCodeMDPOublie());
+        $to = $client->email;
+        $subject = "Hotgenre : Changement de mot de passe";
+        $message = "Bonjour " . $client->prenom . " " . $client->nom. ". \n"
+        . "Vous avez demandé à changer votre mot de passe sur notre site. \n" .
+        "Veuillez cliquer sur ce lien pour le réinitialiser :\n<a href='" .
+        $lien . "'>Réinitialiser mon mot de passe</a>\n" . "Si vous n'avez pas demandé à changer votre mot de passe, veuillez ignorer ce mail.\n" .
+        "Merci de la confiance que vous accordez à nos services, \n" . "L'équipe Hotgenre.";
+        if (mail($to, $subject, $message))
+        {
+            return view('motDePasseOublie', ['compteNonExistant' => false]);
+        }
+    }
+
+    public function ChangerMotDePasse($codeMDPOublie)
+    {
+        $client = $this->ModeleClient->getClientParCodeMDPOublie($codeMDPOublie);
+        if ($client == NULL){
+            return view('motDePasseOublie', ['compteNonExistant' => true]);
+        }
+        $this->session->set('client', $client);
+        return view('motDePasseOublie', array("session" => $this->getDonneesSession()));
+    }
+
+    public function motDePasseOublie()
+    {
+        return view('motDePasseOublie');
+    }
 }
 
 // oberserver decorateur singleton

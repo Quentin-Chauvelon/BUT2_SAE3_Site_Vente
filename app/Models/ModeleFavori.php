@@ -4,8 +4,9 @@ namespace App\Models;
 
 use App\Entities\Favori;
 use CodeIgniter\Model;
+use CodeIgniter\SafeModel;
 
-class ModeleFavori extends Model
+class ModeleFavori extends SafeModel
 {
     private static ModeleFavori $instance;
 

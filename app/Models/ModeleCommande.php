@@ -4,8 +4,9 @@ namespace App\Models;
 
 use App\Entities\Commande;
 use CodeIgniter\Model;
+use CodeIgniter\SafeModel;
 
-class ModeleCommande extends Model
+class ModeleCommande extends SafeModel
 {
     private static ModeleCommande $instance;
 

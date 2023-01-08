@@ -4,8 +4,9 @@ namespace App\Models;
 
 use App\Entities\Exemplaire;
 use CodeIgniter\Model;
+use CodeIgniter\SafeModel;
 
-class ModeleExemplaire extends Model
+class ModeleExemplaire extends SafeModel
 {
     private static ModeleExemplaire $instance;
 

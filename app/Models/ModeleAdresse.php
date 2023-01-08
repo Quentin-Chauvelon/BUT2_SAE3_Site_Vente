@@ -14,6 +14,12 @@ class ModeleAdresse extends SafeModel
     protected $primaryKey       = 'id_adresse';
     protected $returnType       = Adresse::class;
     protected $allowedFields    = ['id_adresse', 'code_postal', 'ville', 'rue'];
+    protected $validationRules  = [
+        'id_adresse'    => 'required|numeric|is_unique[Adresse.id_adresse]',
+        'code_postal' => 'required|numeric|greater_than[9999]|less_than[100000]',
+        'ville'       => 'required',
+        'rue'         => 'required',
+    ];
 
     private function __construct()
     {

@@ -6,7 +6,7 @@
 	function ProduitAjoutePanier() {
 		setTimeout(() => {
 			AfficherProduitAjoutePanier();
-		}, 200)
+		}, 500)
 	}
 </script>
 
@@ -107,7 +107,7 @@
 
 			<?php foreach($productImages as $key=>$imageSrc) : ?>
 				<div class="<?php echo ($key == 0) ? 'selected' : '' ?>">
-					<img src= <?= $imageSrc ?>>
+					<img src= <?= $imageSrc . "?" . time() ?>>
 				</div>
 			<?php endforeach; ?>
 
@@ -117,7 +117,7 @@
 		</div>
 
 		<div class="product_image">
-			<img id="product_image" src=<?= (count($productImages) > 0) ? $productImages[0] : "" ?>>
+			<img id="product_image" src=<?= (count($productImages) > 0) ? $productImages[0] . "?" . time() : "" ?>>
 		</div>
 
 		<div class="product_details">

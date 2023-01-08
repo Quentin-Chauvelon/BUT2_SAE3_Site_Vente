@@ -54,86 +54,6 @@ header h3 {
     box-shadow: 0 0 15px 0 rgba(0,0,0,0.3);
 }
 
-.images_container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    column-gap: 20px;
-    row-gap: 40px;
-
-    margin: 60px 0 0 100px;
-}
-
-.valider_ordre {
-   width: 100%;
-}
-
-.image_container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-}
-
-.bin {
-    width: 30px;
-}
-
-.image {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
-    width: 160px;
-    height: 220px;
-    padding: 20px;
-    object-fit: contain;
-    
-    background-color: #e6e6e6;
-    border-radius: 5px;
-}
-
-.image img {
-    width: 100%;
-}
-
-.image_container select {
-    width: 50px;
-}
-
-.images_container form {
-    display: flex;
-    flex-wrap: wrap;
-    column-gap: 20px;
-    row-gap: 40px;
-}
-
-.image_container > div:last-child {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-}
-
-.add_image {
-    width: 200px;
-    height: 260px;
-
-    font-size: 150px;
-    font-weight: 900;
-    color: white;
-    border: none;
-}
-
-.add_image:hover {
-    background-color: #f2f2f2;
-}
-
-
-.hidden {
-    display: none;
-}
-
 a {
     text-decoration: none;
 }
@@ -161,12 +81,12 @@ a {
 }
 
 
-form.modifier_produit_form div {
+form.modifier_collection_form div {
     display: flex;
     flex-direction: column;
 }
 
-form.modifier_produit_form {
+form.modifier_collection_form {
 	width: 600px;
 	margin: 0;
 	display: flex;
@@ -175,34 +95,34 @@ form.modifier_produit_form {
 	margin-top: 40px;
 }
 
-form.modifier_produit_form label {
+form.modifier_collection_form label {
 	font-size: 18px;
 	text-align: left;
 }
 
-form.modifier_produit_form input {
+form.modifier_collection_form input {
     border: none;
 	border-bottom: solid 2px #e2e2e2;
     transition: border-bottom 0.2s;
 }
 
-form.modifier_produit_form input:hover {
+form.modifier_collection_form input:hover {
 	border: none;
 	border-bottom: solid 2px #b0b0b0;
 }
 
-form.modifier_produit_form input:focus {
+form.modifier_collection_form input:focus {
 	border: none;
 	border-bottom: solid 2px #808080;
     outline: none;
 }
 
-form.modifier_produit_form input:valid {
+form.modifier_collection_form input:valid {
 	border: none;
 	border-bottom: solid 2px green;
 }
 
-form.modifier_produit_form input:invalid:not(:placeholder-shown) {
+form.modifier_collection_form input:invalid:not(:placeholder-shown) {
 	border: none;
 	border-bottom: solid 2px red;
 }
@@ -216,10 +136,5 @@ form.modifier_produit_form input:invalid:not(:placeholder-shown) {
 
     form.modifier_collection_form {
         width: 80%;
-    }
-
-    .images_container {
-        justify-content: center;
-        margin: 60px 0 0 0;
     }
 }

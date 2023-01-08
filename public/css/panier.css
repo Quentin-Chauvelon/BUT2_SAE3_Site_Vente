@@ -47,7 +47,32 @@ body {
 	transition: background-color 0.2s, color 0.2s;
 }
 
-.panier_header .valider_panier:hover {
+.panier_header_boutons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center
+}
+
+.panier_header .vider_panier {
+    display: flex;
+	justify-content: center;
+	align-items: center;
+
+    background-color: #2e2e2e;
+	color: white;
+	border: solid 3px #2e2e2e;
+    width: 180px;
+	height: 40px;
+	border-radius: 12px;
+
+    font-weight: 600;
+    font-size: 25px;
+
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.panier_header .valider_panier:hover, .panier_header .vider_panier:hover {
 	background-color: white;
 	color: #2e2e2e;
 }

@@ -50,7 +50,6 @@ $routes->get('/', 'Home::index');
  * You will have access to the $routes object within that file without
  * needing to reload it.
  */
-
 if (is_file(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
     require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
 }
@@ -69,6 +68,8 @@ $routes->get('afficherPanier', 'ClientController::afficherPanier');
 $routes->get('afficherHistorique', 'ClientController::afficherHistorique');
 $routes->get('supprimerDuPanier/(:num)/(:any)/(:any)', 'ClientController::supprimerDuPanier/$1/$2/$3');
 $routes->get('validerPanier', 'ClientController::validerPanier');
+$routes->get('viderPanier', 'ClientController::viderPanier');
+$routes->get('annulerCommande/(:any)', 'ClientController::annulerCommande/$1');
 $routes->get('detailCommande/(:num)', 'ClientController::detailCommande/$1');
 $routes->get('cgu', 'ClientController::cgu');
 $routes->get('quiSommesNous', 'ClientController::quiSommesNous');
@@ -79,6 +80,8 @@ $routes->get('mettreAdmin/(:any)', 'AdminController::mettreAdmin/$1');
 $routes->get('enleverAdmin/(:any)', 'AdminController::enleverAdmin/$1');
 $routes->get('supprimerUtilisateur/(:any)', 'AdminController::supprimerUtilisateur/$1');
 $routes->get('modifierProduitVue/(:any)', 'AdminController::modifierProduitVue/$1');
+$routes->get('modifierExemplaireImagesVue/(:any)', 'AdminController::modifierExemplaireImagesVue/$1');
+$routes->get('modifierCollectionVue/(:any)', 'AdminController::modifierCollectionVue/$1');
 // $routes->get('modifierProduit', 'AdminController::modifierProduit');
 $routes->get('supprimerProduit/(:any)', 'AdminController::supprimerProduit/$1');
 $routes->get('supprimer1Exemplaire/(:any)/(:any)/(:any)', 'AdminController::supprimer1Exemplaire/$1/$2/$3');
@@ -97,6 +100,7 @@ $routes->post('messageContact', 'ClientController::messageContact');
 
 $routes->post('creerProduit', 'AdminController::creerProduit');
 $routes->post('modifierProduit', 'AdminController::modifierProduit');
+$routes->post('modifierCollection', 'AdminController::modifierCollection');
 $routes->post('creerExemplaire', 'AdminController::creerExemplaire');
 $routes->post('creerCollection', 'AdminController::creerCollection');
 $routes->post('ajouterImageProduit', 'AdminController::ajouterImageProduit');
@@ -105,3 +109,4 @@ $routes->post('reordonnerImagesProduits', 'AdminController::reordonnerImagesProd
 $routes->get('motDePasseOublie', 'ClientController::motDePasseOublie');
 $routes->post('envoyerMailChangementMDP', 'ClientController::envoyerMailChangementMDP');
 $routes->get('ChangerMotDePasse/(:any)', 'ClientController::ChangerMotDePasse/$1');
+$routes->post('modifierImageExemplaire', 'AdminController::modifierImageExemplaire');

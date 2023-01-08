@@ -57,11 +57,11 @@ class ModeleExemplaire extends SafeModel
         }
     }
 
-    function getExemplairesDispoParProduitCouleurTaille(int $id_produit, string $couleur, string $taille): ?Exemplaire
+    function getExemplairesDispoParProduitCouleurTaille(int $id_produit, string $couleur, string $taille)
     {
         $sql = "CALL GetExemplairesDispoParProduitCouleurTaille(?, ?, ?)";
         try {
-            return $this->db->query($sql, [$id_produit, $couleur, $taille])->getResult()[0];
+            return $this->db->query($sql, [$id_produit, $couleur, $taille])->getResult();
         } catch (\Exception) {return null;}
     }
 

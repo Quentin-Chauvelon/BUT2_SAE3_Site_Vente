@@ -1,3 +1,13 @@
+@font-face {
+font-family: "Agency_FB";
+
+src: url("../font/agency_fb.ttf");
+
+}
+*{
+font-family: 'Agency_FB', Arial, sans-serif;
+}
+
 /* FOOTER */
 footer {
     width: 100%;

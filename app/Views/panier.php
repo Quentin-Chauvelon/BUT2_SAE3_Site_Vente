@@ -26,20 +26,25 @@
 <body>
 
     <div class="panier_header">
-        <div>
-            <h1 class="total">Total : <?= $total / 100 ?>€</h1>
-            <h2 class="nombre_produits">Nombre de produits : <?= $nombreProduits ?></h2>
-        </div>
+        <form action=<?= url_to('ClientController::validerPanier') ?> method="post">
+            <div>
+                <h1 class="total">Total : <?= $total / 100 ?>€</h1>
+                <h2 class="nombre_produits">Nombre de produits : <?= $nombreProduits ?></h2>
 
-        <div class="panier_header_boutons">
-            <a href="<?= url_to('ClientController::validerPanier') ?>">
-                <div class="valider_panier">Valider et payer</div>
-            </a>
+                <div class="coupon_container">
+                    <h3>Coupon :</h3>
+                    <input id="coupon_input" class="coupon_input" name="coupon" type="text" placeholder=" ">
+                </div>
+            </div>
 
-            <a href="<?= url_to('ClientController::viderPanier') ?>">
-                <div class="vider_panier">Vider panier</div>
-            </a>
-        </div>
+            <div class="panier_header_boutons">
+                <button type="submit" class="valider_panier">Valider et payer</button>
+
+                <a href="<?= url_to('ClientController::viderPanier') ?>">
+                    <div class="vider_panier">Vider panier</div>
+                </a>
+            </div>
+        </form>
     </div>
 
     <div class="products_container">

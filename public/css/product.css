@@ -200,7 +200,7 @@ body {
 	align-items: center;
 	gap: 20px;
 
-	margin-top: 50px;
+	/* margin-top: 50px; */
 }
 
 .quantity_input {
@@ -210,6 +210,19 @@ body {
 .quantity_max {
 	font-size: 17px;
 	font-weight: 100;
+}
+
+
+.coupon_container {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+
+	margin-top: 50px;
+}
+
+.coupon_input {
+	height: 20px;
 }
 
 

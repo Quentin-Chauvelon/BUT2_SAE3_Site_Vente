@@ -195,13 +195,17 @@ class AdminController extends BaseController
         if (!$this->estAdmin()) {
             return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
         }
-
+	
+        
+        if (count($_FILES) == 0) {
+            return $this->adminView();
+        }
+        
         $filename = $_FILES['image']['tmp_name'];
-
+        $idProduit = $this->request->getPost("id_produit");
+        
         // si l'utilisateur a annulé la sélection d'image, ça envoie une image vide
         if ($filename != "") {
-            $idProduit = $this->request->getPost("id_produit");
-
             $nbImages = count(glob("images/produits/" . (string)$idProduit . "/images/" . "*"));
             //$nbImages = count(scandir("images/produits/" . $idProduit . "/images"))-2;
 
@@ -235,7 +239,7 @@ class AdminController extends BaseController
                 break;
             }
         }
-        
+
         $imagesDejaInversees = array();
 
         // on inverse les images si elles ont été réordonnées
@@ -250,6 +254,9 @@ class AdminController extends BaseController
                 if (file_exists("images/produits/" . (string)$idProduit . "/images/image_" . $i . ".jpg")) {
                     $extensionI = ".jpg";
                 }
+                else if (file_exists("images/produits/" . (string)$idProduit . "/images/image_" . $i . ".jpeg")) {
+                    $extensionI = ".jpeg";
+                }
                 else if (file_exists("images/produits/" . (string)$idProduit . "/images/image_" . $i . ".png")) {
                     $extensionI = ".png";
                 }
@@ -257,6 +264,9 @@ class AdminController extends BaseController
                 // on récupère l'extension de la deuxième image
                 if (file_exists("images/produits/" . (string)$idProduit . "/images/image_" . $ordre[$i] . ".jpg")) {
                     $extensionOrdreI = ".jpg";
+                }
+                else if (file_exists("images/produits/" . (string)$idProduit . "/images/image_" . $ordre[$i] . ".jpeg")) {
+                    $extensionOrdreI = ".jpeg";
                 }
                 else if (file_exists("images/produits/" . (string)$idProduit . "/images/image_" . $ordre[$i] . ".png")) {
                     $extensionOrdreI = ".png";

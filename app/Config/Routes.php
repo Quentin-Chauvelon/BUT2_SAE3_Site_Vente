@@ -67,7 +67,7 @@ $routes->get('ajouterFavori/(:num)/(:any)', 'ClientController::ajouterFavori/$1/
 $routes->get('afficherPanier', 'ClientController::afficherPanier');
 $routes->get('afficherHistorique', 'ClientController::afficherHistorique');
 $routes->get('supprimerDuPanier/(:num)/(:any)/(:any)', 'ClientController::supprimerDuPanier/$1/$2/$3');
-$routes->get('validerPanier', 'ClientController::validerPanier');
+// $routes->get('validerPanier', 'ClientController::validerPanier');
 $routes->get('viderPanier', 'ClientController::viderPanier');
 $routes->get('annulerCommande/(:any)', 'ClientController::annulerCommande/$1');
 $routes->get('detailCommande/(:num)', 'ClientController::detailCommande/$1');
@@ -94,6 +94,7 @@ $routes->post('creerCompte','ClientController::creerCompte');
 $routes->post('connexionCompte','ClientController::connexionCompte');
 $routes->post('modifierProfil','ClientController::modifierProfil');
 $routes->post('ajouterAuPanier', 'ClientController::ajouterAuPanier');
+$routes->post('validerPanier', 'ClientController::validerPanier');
 $routes->post('adresseCommande', 'ClientController::adresseCommande');
 $routes->post('avis', 'ClientController::avis');
 $routes->post('messageContact', 'ClientController::messageContact');

@@ -11,6 +11,12 @@ body {
     justify-content: space-between;
 }
 
+.panier_header form {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
 .panier_header a {
 	text-decoration: none;
 }

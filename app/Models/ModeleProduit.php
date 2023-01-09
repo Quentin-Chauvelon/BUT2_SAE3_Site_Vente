@@ -49,4 +49,15 @@ class ModeleProduit extends SafeModel
             return array();
         }
     }
+
+    public function SupprimerProduit(int $id_produit): bool
+    {
+        $sql = "CALL SupprimerProduit(?)";
+        try {
+            $this->db->query($sql, [$id_produit]);
+            return true;
+        } catch (\Exception) {
+            return false;
+        }
+    }
 }

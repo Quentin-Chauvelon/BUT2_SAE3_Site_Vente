@@ -278,7 +278,11 @@ END;
 
 CREATE OR REPLACE PROCEDURE SupprimerProduit(IN _id_produit INT)
 BEGIN
-    DELETE FROM Produit WHERE id_produit=_id_produit;
+    DELETE FROM Exemplaire WHERE id_produit=_id_produit AND id_commande IS NULL;
+    DELETE FROM Favori WHERE id_produit=_id_produit;
+    IF (SELECT COUNT(*) FROM Exemplaire WHERE id_produit=_id_produit) = 0 THEN
+        DELETE FROM Produit WHERE id_produit=_id_produit;
+    END IF;
 END;
 
 CREATE OR REPLACE PROCEDURE GetAllPantalons()

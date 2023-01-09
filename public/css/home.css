@@ -10,6 +10,11 @@ a {
 }
 
 
+#loader{
+    transition: opacity 1s ease-out;
+    opacity: 0;
+}
+
 svg {
     width: 33%;
     height : 50%;
@@ -86,7 +91,7 @@ svg {
 
     width: 100px;
     height: 100px;
-    border-radius: 50px;
+    border-radius: 90%	;
     background-color: #2e2e2e;
     color: white;
     font-size: 80px;
@@ -102,22 +107,16 @@ svg {
     color: #2e2e2e;
 }
 
-.arrowicon_carroussel{
-    width: 50px;
-    height:50px;
-}
-
 .arrow_carroussel {
-top : 5px;
-left : 10px;
-	border : solid white;
-    border-width: 0px 10px 10px 0px;
-    width: 100px;
-    height:100px;
+display: inline-block;
+	border : solid white;	
+    border-width: 0px 15px 15px 0px;
+    width: 45px;
+    height:45px;
 }
 
-.carrousel_button:hover > .arrow_carroussel {
-    border-color: rgba(67,67,67,1);
+.carrousel_button:hover .arrow_carroussel {
+    border-color: #2e2e2e;
 }
 
 
@@ -127,12 +126,16 @@ left : 10px;
     position: relative;
     transform: rotate(135deg);
     -webkit-transform: rotate(135deg);
+left : 10px;
+top : 5px;
 }
 
 .right {
     position: relative;
     transform: rotate(-45deg);
     -webkit-transform: rotate(-45deg);
+right : 10px;
+top : 5px;
 }
 
 

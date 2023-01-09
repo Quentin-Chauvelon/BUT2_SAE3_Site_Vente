@@ -55,7 +55,7 @@ header h3 {
     justify-content: center;
     align-items: center;
     gap: 3px;
-
+	cursor: pointer;
     margin-top: 80px;
 }
 
@@ -198,9 +198,14 @@ table tr:hover {
     margin-top: 50px;
 }
 
-form div {
+form div:not(.checkbox) {
     display: flex;
     flex-direction: column;
+}
+
+form div.checkbox {
+    display: flex;
+    gap: 5px;
 }
 
 form {

@@ -17,6 +17,16 @@ body {
     width: 100%;
 }
 
+.coupon_container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.coupon_container h3 {
+    margin: 0;
+}
+
 .panier_header a {
 	text-decoration: none;
 }
@@ -31,6 +41,39 @@ body {
     font-weight: 100;
 
     margin-bottom: 70px;
+}
+
+.coupon_container h3 {
+    width: 70px;
+}
+
+.coupon_input {
+    height: 17px;
+}
+
+.panier_header .appliquer_coupon {
+    display: flex;
+	justify-content: center;
+	align-items: center;
+
+	background-color: #2e2e2e;
+	color: white;
+	border: solid 1px #2e2e2e;
+    width: 80px;
+	height: 22px;
+	border-radius: 3px;
+
+	font-weight: 900;
+	font-size: 17px;
+
+	transition: background-color 0.2s, color 0.2s;
+}
+
+.coupon_etat {
+    margin: 0;
+    margin-top: 5px;
+    font-size: 16px;
+    font-weight: 100;
 }
 
 .panier_header .valider_panier {
@@ -78,7 +121,9 @@ body {
     transition: background-color 0.2s, color 0.2s;
 }
 
-.panier_header .valider_panier:hover, .panier_header .vider_panier:hover {
+.panier_header .valider_panier:hover,
+.panier_header .vider_panier:hover,
+.panier_header .appliquer_coupon:hover {
 	background-color: white;
 	color: #2e2e2e;
 }
@@ -207,4 +252,12 @@ body {
     .product > div {
         margin-top: calc(20% + 20px);
     }
+}
+
+.red {
+    color: red;
+}
+
+.green {
+    color: green;
 }

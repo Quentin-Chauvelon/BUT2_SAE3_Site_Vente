@@ -776,8 +776,8 @@ class ClientController extends BaseController
         if ($client == NULL){
             return view('motDePasseOublie', ['compteNonExistant' => true]);
         }
-
-        $lien = url_to("ClientController::ChangerMotDePasse", urlencode($client->getCodeMDPOublie()));
+        $code = $client->getCodeMDPOublie();
+        $lien = url_to("ClientController::ChangerMotDePasse", '') . urlencode($code);
         $to = $client->adresse_email;
         $subject = "Hotgenre : Changement de mot de passe";
         $headers = "MIME-Version: 1.0" . "\r\n";
@@ -790,7 +790,6 @@ class ClientController extends BaseController
         "Merci de la confiance que vous accordez à nos services, \n" . "L'équipe Hotgenre.";
 
         mail($to, $subject, $message, $headers);
-
         return view('motDePasseOublie', ['compteNonExistant' => false]);
     }
 

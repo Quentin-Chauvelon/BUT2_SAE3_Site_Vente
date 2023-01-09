@@ -43,8 +43,7 @@ class ModeleClient extends SafeModel
     {
         foreach ($this->findAll() as $client) {
             // var_dump("code", $codeMDPOublie);
-            var_dump(password_verify($client->password, $codeMDPOublie));
-            if (password_verify($codeMDPOublie, $client->password)) {
+            if (password_verify($client->password, $codeMDPOublie)) {
                 return $client;
             }
         }

@@ -4,6 +4,9 @@ namespace App\Entities;
 
 use CodeIgniter\Entity\Entity;
 
+/**
+ * L'entité pour l'adresse
+ */
 class Adresse extends Entity
 {
     protected $datamap = [];

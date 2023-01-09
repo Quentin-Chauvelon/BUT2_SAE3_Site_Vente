@@ -4,6 +4,9 @@ namespace App\Entities;
 
 use CodeIgniter\Entity\Entity;
 
+/**
+ * L'entité pour le coupon.
+ */
 class Coupon extends Entity
 {
     protected $datamap = [];

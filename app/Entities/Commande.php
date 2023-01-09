@@ -4,6 +4,9 @@ namespace App\Entities;
 
 use CodeIgniter\Entity\Entity;
 
+/**
+ * L'entité pour la commande.
+ */
 class Commande extends Entity
 {
     protected $datamap = [];

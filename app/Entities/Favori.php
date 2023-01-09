@@ -4,6 +4,9 @@ namespace App\Entities;
 
 use CodeIgniter\Entity\Entity;
 
+/**
+ * L'entité pour l'ajout en favori
+ */
 class Favori extends Entity
 {
     protected $datamap = [];

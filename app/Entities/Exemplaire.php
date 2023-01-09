@@ -4,6 +4,9 @@ namespace App\Entities;
 
 use CodeIgniter\Entity\Entity;
 
+/**
+ * L'entité pour l'exemplaire.
+ */
 class Exemplaire extends Entity
 {
     protected $datamap = [];

@@ -4,6 +4,9 @@ namespace App\Entities;
 
 use CodeIgniter\Entity\Entity;
 
+/**
+ * L'entité pour le client
+ */
 class Client extends Entity
 {
     protected $datamap = [];
@@ -30,6 +33,11 @@ class Client extends Entity
         return password_verify($pass, $this->attributes['password']);
     }
 
+    /**
+     * getCodeMDPOublie génère un code en encryptant le mot de passe déjà encrypté.
+     * Il sera utilisé dans le mail pour changer de mot de passe.
+     * @return string Un hash du mot de passe, lui-même un hash.
+     */
     public function getCodeMDPOublie(): string
     {
         return password_hash($this->attributes['password'], PASSWORD_BCRYPT);

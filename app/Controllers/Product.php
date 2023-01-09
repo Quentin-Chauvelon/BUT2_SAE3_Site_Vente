@@ -19,26 +19,22 @@ class Product extends BaseController
     }
     
 
-    public function display($idProduit)
+    public function display(int $idProduit)
     {
-        $product =  $this->ModeleProduit->find((int)$idProduit);
-        
-        $produitFavori = false;
+        $produit =  $this->ModeleProduit->find($idProduit);
 
-        if ($this->SessionExistante()) {
-            $favoris = $this->ModeleFavori->where('id_client', $this->getSessionId())->findAll();
-
-            // on regarde si le produit est en favori
-            foreach ($favoris as $favori) {
-                $idFavori = $favori->id_produit;
-
-                if ($idFavori == $idProduit) {
-                    $produitFavori = true;
-                }
-            }
+        if ($produit == NULL) {
+            return $this->displayAll();
         }
 
-        return view('product', array("product" => $product, "exemplaires" => $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll(), "ajouteAuPanier" => false, "produitFavori" => $produitFavori, "manqueExemplaire" => false, "session" => $this->getDonneesSession()));
+        return view('product', array(
+            "product" => $produit,
+            "exemplaires" => $this->ModeleExemplaire->getExemplairesDispoParProduit($idProduit),
+            "ajouteAuPanier" => false,
+            "produitFavori" => ($this->SessionExistante()) ? $this->estEnFavori($idProduit) : NULL,
+            "manqueExemplaire" => false,
+            "session" => $this->getDonneesSession()
+        ));
     }
 
 
@@ -73,17 +69,27 @@ class Product extends BaseController
         } catch (\Exception $e) {
             $products = array();
         }
-        return view('products', array("products" => $products, "produitsRuptureStock" => $this->getProduitsRuptureStock($products), "session" => $this->getDonneesSession()));
+
+        return view('products', array(
+            "products" => $products,
+            "produitsRuptureStock" => $this->getProduitsRuptureStock($products),
+            "session" => $this->getDonneesSession()
+        ));
     }
 
 
-    public function trouverToutDeCategorie($categorie)
+    public function trouverToutDeCategorie(string $categorie)
     {
         try {
             $products =  $this->ModeleProduit->where('categorie', $categorie)->findAll();
         } catch (\Exception $e) {
             $products = array();
         }
-        return view('products', array("products" => $products, "produitsRuptureStock" => $this->getProduitsRuptureStock($products), "session" => $this->getDonneesSession()));
+
+        return view('products', array(
+            "products" => $products,
+            "produitsRuptureStock" => $this->getProduitsRuptureStock($products),
+            "session" => $this->getDonneesSession()
+        ));
     }
 }

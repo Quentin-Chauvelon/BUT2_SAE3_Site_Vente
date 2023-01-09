@@ -31,17 +31,21 @@ class ClientController extends BaseController
     }
 
 
-    public function estEnFavori(int $idProduit) {
-        return $this->ModeleFavori->estEnFavori($this->getSessionId(), $idProduit);
-    }
-
-
     public function monCompte() {
         if ($this->SessionExistante()) {
-            return view("compte", array("compteAction" => "profil", "emailDejaUtilise" => false, "session" => $this->getDonneesSession()));
+            return view("compte", array(
+                "compteAction" => "profil",
+                "emailDejaUtilise" => false,
+                "session" => $this->getDonneesSession()
+            ));
         }
+
         else {
-            return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
+            return view("creerCompte", array(
+                "compteDejaExistant" => false,
+                "passwordsDifferents" => false,
+                "session" => $this->getDonneesSession()
+            ));
         }
     }
 
@@ -70,11 +74,18 @@ class ClientController extends BaseController
             return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => true, "session" => $this->getDonneesSession()));
         }
 
+        $prenom = $this->request->getPost('prenom');
+        $nom = $this->request->getPost('nom');
+
+        if ($prenom == "" || $nom == "") {
+
+        }
+
         // si les deux mot de passe sont égaux, on crée le compte
         $client = new Client();
         $client->adresse_email = $email;
-        $client->nom = $this->request->getPost('nom');
-        $client->prenom = $this->request->getPost('prenom');
+        $client->nom = $nom;
+        $client->prenom = $prenom;
         $client->password = $password;
 
         // on ajoute le client à la base de donnée
@@ -89,6 +100,7 @@ class ClientController extends BaseController
             setcookie("idClient", (int)$idClient, time() + 60 * 60 * 24 * 30);
             setcookie("password", $password, time() + 60 * 60 * 24 * 30);
         }
+
         $this->setDonneesSession($idClient, $client->prenom, $client->nom, $email);
 
         return view("succesCreationCompteClient");
@@ -115,7 +127,6 @@ class ClientController extends BaseController
         if (!$result->checkPassword($password)) {
             return view("connexionCompte", array("compteNonExistant" => false, "passwordFaux" => true, "session" => $this->getDonneesSession()));
         }
-
 
         $id = $result->id_client;
         $prenom = $result->prenom;
@@ -761,17 +772,20 @@ class ClientController extends BaseController
     public function envoyerMailChangementMDP()
     {
         $client = $this->ModeleClient->getClientParEmail($this->request->getPost('email'));
+
         if ($client == NULL){
             return view('motDePasseOublie', ['compteNonExistant' => true]);
         }
+
         $lien = url_to("ClientController::ChangerMotDePasse", $client->getCodeMDPOublie());
-        $to = $client->email;
+        $to = $client->adresse_email;
         $subject = "Hotgenre : Changement de mot de passe";
         $message = "Bonjour " . $client->prenom . " " . $client->nom. ". \n"
         . "Vous avez demandé à changer votre mot de passe sur notre site. \n" .
         "Veuillez cliquer sur ce lien pour le réinitialiser :\n<a href='" .
         $lien . "'>Réinitialiser mon mot de passe</a>\n" . "Si vous n'avez pas demandé à changer votre mot de passe, veuillez ignorer ce mail.\n" .
         "Merci de la confiance que vous accordez à nos services, \n" . "L'équipe Hotgenre.";
+
         if (mail($to, $subject, $message))
         {
             return view('motDePasseOublie', ['compteNonExistant' => false]);
@@ -794,6 +808,11 @@ class ClientController extends BaseController
     }
 }
 
+// vérifier les strings vides et les tailles dans les posts
+// regrouper les controllers et delegate ou instancier un controller dans un autre pour utiliser les méthodes
+// sauter ligne pour les return view array pour que ce soit plus lisible ?
+// au lieu de faire plusieurs return view, en avoir un seul dans un controller et appeler la méthode
+
 // oberserver decorateur singleton
 // composite ou delegate pour le decouper le clientController
 
@@ -801,7 +820,6 @@ class ClientController extends BaseController
 // validation rules dans les modeles comme pour adresse
 
 // image collection
-// déplacer modifierProduitVue script dans un fichier js et le link
 // envoyer facture à email après livraison
 // s'assurer que les inputs sont sécurisés (appels du bon type, non vide...) surtout les posts, vérifier les appels à la bd...
 // changer foreach en haut d'admin view.php pour que ce soit plus élégant et mieux fait

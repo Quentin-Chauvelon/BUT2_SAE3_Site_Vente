@@ -104,21 +104,36 @@ svg {
 
 .arrowicon_carroussel{
     position: relative;
-    right : 15px;
     border-color: rgba(67,67,67,1);
-    z-index: 100;
-    width: 100px;
-    height:100px;
-    padding-right : 6px;
+
+<<<<<<< Updated upstream
+    width: 50px;
+    height:50px;
+}
+.carrousel_button:hover > .arrow_carroussel {
+    border-color: rgba(67,67,67,1);
 }
 
 .arrow_carroussel {
-left : 20px;
+top : 5px;
+left : 10px;
+	width : 50px;
+	height : 50px;
+	border : solid white;
+    border-width: 0px 10px 10px 0px;
+=======
+    width: 100px;
+    height:100px;
+}
+
+.arrow_carroussel {
 	width : 20px;
 	height : 20px;
-    border: rgba(67,67,67,1);
-    border-width: 0 10px 10px 0;
+    border : white;
+    border-width: 10px 10px 10px 0;
+>>>>>>> Stashed changes
     display: inline-block;
+        z-index: 999;
   }
 
 .left {

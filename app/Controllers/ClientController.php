@@ -889,15 +889,19 @@ class ClientController extends BaseController
 // au lieu de faire plusieurs return view, en avoir un seul dans un controller et appeler la méthode
 
 // tester coupon
-// on peut pas commander de posters et accessoires car pas de couleurs
-// séparer bouton inscription et connexion (ergonomie)
-// envoyer mail pour dire bravo t'es inscrit + autre ?
-// ajouter pour les images .jpeg
+// supprimer les images des produits que si le produit a bien été supprimé
 // appeler procédure supprimer produit
 // regler css mdp oublie
-// supprimer les images des produits que si le produit a bien été supprimé
-// max utilisations coupon ?
 // préciser (en centimes) pour les inputs
+// ajouter pour les images .jpeg
+// séparer bouton inscription et connexion (ergonomie)
+
+// on peut pas commander de posters et accessoires car pas de couleurs
+// envoyer mail pour dire bravo t'es inscrit + autre ?
+
+// max utilisations coupon ?
+// pas commenter modele produit ?
+// mpd oublie réinitialise pas le mot de passe ? + session set client marche ? + comment je recupère l'argument à passer à la fonction ? + reçoit 2 mails ?
 
 // reordonner empêche de cache les images sinon quand on les change parfois elles restent les mêmes et il faut force reload la page (pareil pour l'affichage du produit), meileure solution est donc d'ajouter ?randomNumber mais les images sont archi longues à charger du coup
 // validation rules dans les modeles comme pour adresse

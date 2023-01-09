@@ -335,6 +335,10 @@ nav a {
   background: #474747; 
 }
 
+.hidden {
+    display: none;
+}
+
 
 /* .not_admin {
     display: none;

@@ -519,7 +519,7 @@
                 </div>
 
                 <div>
-                    <label for="nom">Montant * (en centimes)</label>
+                    <label for="nom">Montant (en centimes) *</label>
                     <input type="number" name="montant" id="montant" placeholder=" " value="0" min="0" required/>
                 </div>
 

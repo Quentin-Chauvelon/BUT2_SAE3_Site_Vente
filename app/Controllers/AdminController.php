@@ -256,10 +256,10 @@ class AdminController extends BaseController
                 if (file_exists("images/produits/" . (string)$idProduit . "/images/image_" . $i . ".jpg")) {
                     $extensionI = ".jpg";
                 }
-                else if (file_exists("images/produits/" . (string)$idProduit . "/images/image_" . $i . ".jpeg")) {
+                elseif (file_exists("images/produits/" . (string)$idProduit . "/images/image_" . $i . ".jpeg")) {
                     $extensionI = ".jpeg";
                 }
-                else if (file_exists("images/produits/" . (string)$idProduit . "/images/image_" . $i . ".png")) {
+                elseif (file_exists("images/produits/" . (string)$idProduit . "/images/image_" . $i . ".png")) {
                     $extensionI = ".png";
                 }
 
@@ -267,10 +267,10 @@ class AdminController extends BaseController
                 if (file_exists("images/produits/" . (string)$idProduit . "/images/image_" . $ordre[$i] . ".jpg")) {
                     $extensionOrdreI = ".jpg";
                 }
-                else if (file_exists("images/produits/" . (string)$idProduit . "/images/image_" . $ordre[$i] . ".jpeg")) {
+                elseif (file_exists("images/produits/" . (string)$idProduit . "/images/image_" . $ordre[$i] . ".jpeg")) {
                     $extensionOrdreI = ".jpeg";
                 }
-                else if (file_exists("images/produits/" . (string)$idProduit . "/images/image_" . $ordre[$i] . ".png")) {
+                elseif (file_exists("images/produits/" . (string)$idProduit . "/images/image_" . $ordre[$i] . ".png")) {
                     $extensionOrdreI = ".png";
                 }
 
@@ -308,11 +308,11 @@ class AdminController extends BaseController
             unlink("images/produits/" . $idProduit . "/images/image_" . $numeroImage . ".jpg");
         }
 
-        if (file_exists("images/produits/" . $idProduit . "/images/image_" . $numeroImage . ".png")) {
+        elseif (file_exists("images/produits/" . $idProduit . "/images/image_" . $numeroImage . ".png")) {
             unlink("images/produits/" . $idProduit . "/images/image_" . $numeroImage . ".png");
         }
 
-        if (file_exists("images/produits/" . $idProduit . "/images/image_" . $numeroImage . ".jpeg")) {
+        elseif (file_exists("images/produits/" . $idProduit . "/images/image_" . $numeroImage . ".jpeg")) {
             unlink("images/produits/" . $idProduit . "/images/image_" . $numeroImage . ".jpeg");
         }
 
@@ -322,11 +322,11 @@ class AdminController extends BaseController
                 rename("images/produits/" . $idProduit . "/images/image_" . $i . ".jpg", "images/produits/" . $idProduit . "/images/image_" . ($i - 1) . ".jpg");
             }
 
-            if (file_exists("images/produits/" . $idProduit . "/images/image_" . $i . ".png")) {
+            elseif (file_exists("images/produits/" . $idProduit . "/images/image_" . $i . ".png")) {
                 rename("images/produits/" . $idProduit . "/images/image_" . $i . ".png", "images/produits/" . $idProduit . "/images/image_" . ($i - 1) . ".png");
             }
 
-            if (file_exists("images/produits/" . $idProduit . "/images/image_" . $i . ".jpeg")) {
+            elseif (file_exists("images/produits/" . $idProduit . "/images/image_" . $i . ".jpeg")) {
                 rename("images/produits/" . $idProduit . "/images/image_" . $i . ".jpeg", "images/produits/" . $idProduit . "/images/image_" . ($i - 1) . ".jpeg");
             }
         }
@@ -365,11 +365,12 @@ class AdminController extends BaseController
             return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
         }
 
-        $test = $produit = $this->ModeleProduit->find($idProduit);
-        $this->ModeleProduit->delete((int)$idProduit);
+        $this->ModeleProduit->SupprimerProduit((int)$idProduit);
 
-        if(is_dir("images/produits/" . (string)$idProduit)) {
-		    $this->deleteDirectory("images/produits/" . (string)$idProduit);
+        if (!$this->ModeleProduit->find((int)$idProduit)) {
+            if(is_dir("images/produits/" . (string)$idProduit)) {
+                $this->deleteDirectory("images/produits/" . (string)$idProduit);
+            }
         }
 
         return $this->returnAdminView('produits');
@@ -433,7 +434,7 @@ class AdminController extends BaseController
 
         // $this->ModeleExemplaire->insert($exemplaire);
 
-        if (!file_exists("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".jpg") && !file_exists("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".png")) {
+        if (!file_exists("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".jpg") && !file_exists("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".png") && !file_exists("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".jpeg")) {
             $filename = $_FILES['image']['tmp_name'];
 
             move_uploaded_file($filename, "images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . "." . str_replace("image/", "", $_FILES['image']['type']));
@@ -480,11 +481,11 @@ class AdminController extends BaseController
                 $extensionImage = ".jpg";
             }
 
-            if (file_exists("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".jpeg")) {
+            elseif (file_exists("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".jpeg")) {
                 $extensionImage = ".jpeg";
             }
 
-            if (file_exists("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".png")) {
+            elseif (file_exists("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".png")) {
                 $extensionImage = ".png";
             }
 
@@ -540,11 +541,11 @@ class AdminController extends BaseController
                 unlink("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".jpg");
             }
 
-            if (file_exists("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".png")) {
+            elseif (file_exists("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".png")) {
                 unlink("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".png");
             }
 
-            if (file_exists("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".jpeg")) {
+            elseif (file_exists("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".jpeg")) {
                 unlink("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".jpeg");
             }
         }
@@ -584,11 +585,11 @@ class AdminController extends BaseController
                 unlink("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".jpg");
             }
 
-            if (file_exists("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".png")) {
+            elseif (file_exists("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".png")) {
                 unlink("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".png");
             }
 
-            if (file_exists("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".jpeg")) {
+            elseif (file_exists("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".jpeg")) {
                 unlink("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".jpeg");
             }
         }

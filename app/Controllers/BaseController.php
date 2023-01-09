@@ -139,11 +139,17 @@ abstract class BaseController extends Controller
         }
     }
 
+    
     public function ProduitsPlusPopulaires() {
         $produits = $this->ModeleProduit->getAllProduitsPlusVendus();
         if (count($produits) > 3) {
             return array_slice($produits, 0, 3);
         }
         return $produits;
+    }
+
+
+    public function estEnFavori(int $idProduit) {
+        return $this->ModeleFavori->estEnFavori($this->getSessionId(), $idProduit);
     }
 }

@@ -777,23 +777,26 @@ class ClientController extends BaseController
             return view('motDePasseOublie', ['compteNonExistant' => true]);
         }
 
-        $lien = url_to("ClientController::ChangerMotDePasse", $client->getCodeMDPOublie());
+        $lien = url_to("ClientController::ChangerMotDePasse", urlencode($client->getCodeMDPOublie()));
         $to = $client->adresse_email;
         $subject = "Hotgenre : Changement de mot de passe";
+        $headers = "MIME-Version: 1.0" . "\r\n";
+        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+        $headers .= 'From: <hotgenre@ne-pas-repondre.fr>' . "\r\n";
         $message = "Bonjour " . $client->prenom . " " . $client->nom. ". \n"
         . "Vous avez demandé à changer votre mot de passe sur notre site. \n" .
         "Veuillez cliquer sur ce lien pour le réinitialiser :\n<a href=" .
         $lien . ">Réinitialiser mon mot de passe</a>\n" . "Si vous n'avez pas demandé à changer votre mot de passe, veuillez ignorer ce mail.\n" .
         "Merci de la confiance que vous accordez à nos services, \n" . "L'équipe Hotgenre.";
 
-        mail($to, $subject, $message);
+        mail($to, $subject, $message, $headers);
 
         return view('motDePasseOublie', ['compteNonExistant' => false]);
     }
 
     public function ChangerMotDePasse($codeMDPOublie)
     {
-        $client = $this->ModeleClient->getClientParCodeMDPOublie($codeMDPOublie);
+        $client = $this->ModeleClient->getClientParCodeMDPOublie(urldecode($codeMDPOublie));
 
         if ($client == NULL){
             return view('motDePasseOublie', array('compteNonExistant' => true));

@@ -89,6 +89,12 @@
                 <h4>COMMANDES</h4>
             </div>
         </a>
+
+        <a onclick="CouponsClicked()">
+            <div class="nav_element">
+                <h4>COUPONS</h4>
+            </div>
+        </a>
     </div>
 
     <section class="compte_action">
@@ -454,6 +460,91 @@
                     <?php endforeach; ?>
                 </table>
             <?php endforeach; ?>
+        </div>
+
+
+        <div id="coupons" class="coupons <?= ($notHidden == "coupons") ? "" : "hidden" ?>">
+
+            <a href="#creer_coupon">
+                <div class="button creer_bouton">Créer coupon</div>
+            </a>
+
+            <table>
+                <tr>
+                    <th>ID coupon</th>
+                    <th>nom</th>
+                    <th>montant</th>
+                    <th>est Valable</th>
+                    <th>Date limite</th>
+                    <th>Utilisations max</th>
+                    <th style="width: 280px;">Modifier produit</th>
+                    <th style="width: 280px;">Supprimer produit</th>
+                </tr>
+                
+                <?php foreach($coupons as $coupon) : ?>
+                    <tr>
+                        <td><?= $coupon->id_coupon ?></td>
+                        <td><?= $coupon->nom ?></td>
+                        <td><?= ($coupon->est_pourcentage) ? $coupon->montant : $coupon->montant / 100 ?><?= ($coupon->est_pourcentage) ? "%" : "€" ?></td>
+                        <td><?= $coupon->est_valable ?></td>
+                        <td><?= $coupon->date_limite ?></td>
+                        <td><?= $coupon->utilisations_max ?></td>
+
+                        <td>
+                            <a href="<?= url_to('AdminController::modifierCouponVue', $coupon->id_coupon) ?>">
+                                <div class="button">Modifier coupon</div>
+                            </a>
+                        </td>
+
+                        <td>
+                            <a href="<?= url_to('AdminController::supprimerCoupon', $coupon->id_coupon) ?>">
+                                <div class="button">Supprimer coupon</div>
+                            </a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </table>
+
+            <form id="creer_coupon" class="creer_coupon_form" action=<?= url_to('AdminController::creerCoupon') ?> method="post">
+                <h1>Créer un coupon :</h1>
+
+                <div>
+                    <label for="nom">Nom *</label>
+                    <input type="text" name="nom" id="nom" placeholder=" " maxlength="50" required/>
+                </div>
+
+                <div>
+                    <label for="code_promo">Code promo *</label>
+                    <input type="text" name="code_promo" id="code_promo" placeholder=" " maxlength="20" required/>
+                </div>
+
+                <div>
+                    <label for="nom">Montant * (en centimes)</label>
+                    <input type="number" name="montant" id="montant" placeholder=" " value="0" min="0" required/>
+                </div>
+
+                <div class="checkbox">
+                    <input type="checkbox" name="est_pourcentage" id="est_pourcentage" value="est_pourcentage" placeholder=" "/>
+                    <label>Est un pourcentage</label>
+                </div>
+
+                <div class="checkbox">
+                    <input type="checkbox" name="est_valable" id="est_valable" value="est_valable" checked placeholder=" "/>
+                    <label>Est valable</label>
+                </div>
+
+                <div>
+                    <label for="date_limite">Date limite *</label>
+                    <input type="date" name="date_limite" id="date_limite" required/>
+                </div>
+
+                <div>
+                    <label for="utilisations_max">Nombre d'utilisations maximum *</label>
+                    <input type="number" name="utilisations_max" id="utilisations_max" placeholder=" " value="0" min="0" maxlength="20" required/>
+                </div>
+
+                <button type="submit" class="button">Créer coupon</button>
+            </form>
         </div>
 
     </section>

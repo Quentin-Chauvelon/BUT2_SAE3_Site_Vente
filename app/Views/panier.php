@@ -22,23 +22,55 @@
     }
 ?>
 
+<?php
+    $etatCouponTexte = "";
+    $etatCouponCouleur = "";
+
+    if ($etatCoupon == "invalide") {
+        $etatCouponTexte = "Ce code promo est invalide.";
+        $etatCouponCouleur = "red";
+    }
+    else if ($etatCoupon == "perime") {
+        $etatCouponTexte = "Ce coupon est périmé.";
+        $etatCouponCouleur = "red";
+    }
+    else if ($etatCoupon == "valide") {
+        $etatCouponTexte = "Coupon appliqué avec succès !";
+        $etatCouponCouleur = "green";
+
+        // on calcule le nouveau montant de la commande en fonction du coupon appliqué
+        if ($coupon->est_pourcentage) {
+            $total = $total * (1 - ($coupon->montant / 100));
+        }
+        else {
+            $total = $total - $coupon->montant;
+        }
+    }
+?>
 
 <body>
 
     <div class="panier_header">
-        <form action=<?= url_to('ClientController::validerPanier') ?> method="post">
             <div>
-                <h1 class="total">Total : <?= $total / 100 ?>€</h1>
+                <h1 class="total">Total : <?= substr($total / 100, 0, 5) ?>€</h1>
                 <h2 class="nombre_produits">Nombre de produits : <?= $nombreProduits ?></h2>
 
                 <div class="coupon_container">
                     <h3>Coupon :</h3>
-                    <input id="coupon_input" class="coupon_input" name="coupon" type="text" placeholder=" ">
+    
+                    <form action=<?= url_to('ClientController::appliquerCoupon') ?> method="post">
+                        <input id="code_promo" class="coupon_input" name="code_promo" type="text" placeholder=" ">
+                        <button type="submit" class="appliquer_coupon">APPLIQUER</button>
+                    </form>
                 </div>
+
+                <h4 class="coupon_etat <?= $etatCouponCouleur ?>"><?= $etatCouponTexte ?></h4>
             </div>
 
             <div class="panier_header_boutons">
-                <button type="submit" class="valider_panier">Valider et payer</button>
+                <a href="<?= url_to('ClientController::validerPanier', ($coupon != NULL) ? $coupon->id_coupon : "") ?>">
+                    <div class="valider_panier">Valider et payer</div>
+                </a>
 
                 <a href="<?= url_to('ClientController::viderPanier') ?>">
                     <div class="vider_panier">Vider panier</div>

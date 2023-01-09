@@ -3,6 +3,7 @@ let produits = null;
 let exemplaires = null;
 let collections = null;
 let commandes = null;
+let coupons = null;
 
 window.addEventListener('DOMContentLoaded', (event) => {
     utilisateurs = document.getElementById('utilisateurs');
@@ -10,6 +11,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     exemplaires = document.getElementById('exemplaires');
     collections = document.getElementById('collections');
     commandes = document.getElementById('commandes');
+    coupons = document.getElementById('coupons');
 });
 
 function UtilisateursClicked() {
@@ -18,6 +20,7 @@ function UtilisateursClicked() {
     exemplaires.classList.add("hidden");
     collections.classList.add("hidden");
     commandes.classList.add("hidden");
+    coupons.classList.add("hidden");
 }
 
 function ProduitsClicked() {
@@ -26,6 +29,7 @@ function ProduitsClicked() {
     exemplaires.classList.add("hidden");
     collections.classList.add("hidden");
     commandes.classList.add("hidden");
+    coupons.classList.add("hidden");
 }
 
 function ExemplairesClicked() {
@@ -34,6 +38,7 @@ function ExemplairesClicked() {
     exemplaires.classList.remove("hidden");
     collections.classList.add("hidden");
     commandes.classList.add("hidden");
+    coupons.classList.add("hidden");
 }
 
 function CollectionsClicked() {
@@ -42,6 +47,7 @@ function CollectionsClicked() {
     exemplaires.classList.add("hidden");
     collections.classList.remove("hidden");
     commandes.classList.add("hidden");
+    coupons.classList.add("hidden");
 }
 
 function CommandesClicked() {
@@ -50,4 +56,14 @@ function CommandesClicked() {
     exemplaires.classList.add("hidden");
     collections.classList.add("hidden");
     commandes.classList.remove("hidden");
+    coupons.classList.add("hidden");
+}
+
+function CouponsClicked() {
+    utilisateurs.classList.add("hidden");
+    produits.classList.add("hidden");
+    exemplaires.classList.add("hidden");
+    collections.classList.add("hidden");
+    commandes.classList.add("hidden");
+    coupons.classList.remove("hidden");
 }

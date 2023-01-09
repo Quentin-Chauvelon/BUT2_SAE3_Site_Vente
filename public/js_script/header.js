@@ -18,14 +18,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
   let headerNotSticky = document.getElementById("header_not_sticky");
   let headerSticky = document.getElementById("header_sticky");
 
+window.addEventListener("load", (event) => {
   // Quand l'élément sticky_detection touche le haut de la page, on inverse le header a afficher
   const observer = new IntersectionObserver( 
-    ([e]) => isStickyHeader(headerNotSticky, headerSticky),
+    ([e]) => isStickyHeader(headerSticky,headerNotSticky),
     { threshold: [1] }
   );
 
   observer.observe(el);
-
+}, false);
   // isStickyHeader(headerNotSticky, headerSticky);
 
   // Si l'utilisateur n'est pas en haut de la page, on affiche le petit header (si on ne fait pas ça, les headers peuvent s'inverser)
@@ -37,18 +38,17 @@ document.addEventListener("DOMContentLoaded", function(event) {
   document.onreadystatechange = function sticky() {
 
     if(document.readyState == "complete"){
-      
-      setTimeout(() => {},50);
 
-      if ( window.scrollY > 65) {
+      if ( window.scrollY < 65) {
         headerNotSticky.classList.add("isSticky");
         headerSticky.classList.remove("isSticky");
       } else {
         headerNotSticky.classList.remove("isSticky");
         headerSticky.classList.add("isSticky");
-      }
+}
     }
 
   }
   
 });
+

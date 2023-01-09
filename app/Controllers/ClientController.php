@@ -10,6 +10,7 @@ use App\Models\ModeleFavori;
 use App\Models\ModeleExemplaire;
 use App\Models\ModeleCommande;
 use App\Models\ModeleAdresse;
+use App\Models\ModeleCoupon;
 
 class ClientController extends BaseController
 {
@@ -23,6 +24,7 @@ class ClientController extends BaseController
         $this->ModeleExemplaire = ModeleExemplaire::getInstance();
         $this->ModeleCommande = ModeleCommande::getInstance();
         $this->ModeleAdresse = ModeleAdresse::getInstance();
+        $this->ModeleCoupon = ModeleCoupon::getInstance();
 
         // $this->session = \Config\Services::session();
         // $this->session->start();
@@ -219,7 +221,7 @@ class ClientController extends BaseController
     }
 
 
-    public function afficherPanier() {
+    public function afficherPanierCoupon($coupon, string $etatCoupon) {
 
         // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
         if (!$this->SessionExistante()) {
@@ -269,7 +271,20 @@ class ClientController extends BaseController
             }
         }
 
-        return view("compte", array("compteAction" => "panier", "panier" => $exemplairesUnique, "quantitesExemplaires" => $quantitesExemplaires, "produits" => $produits, "session" => $this->getDonneesSession()));
+        return view("compte", array(
+            "compteAction" => "panier",
+            "panier" => $exemplairesUnique,
+            "quantitesExemplaires" => $quantitesExemplaires,
+            "produits" => $produits,
+            "coupon" => $coupon,
+            "etatCoupon" => $etatCoupon,
+            "session" => $this->getDonneesSession()
+        ));
+    }
+
+
+    public function afficherPanier() {
+        return $this->afficherPanierCoupon(NULL, "");
     }
 
 
@@ -435,7 +450,38 @@ class ClientController extends BaseController
     }
 
 
-    public function validerPanier() {
+    public function appliquerCoupon() {
+        
+        // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
+        if (!$this->SessionExistante()) {
+            return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
+        }
+
+        $codePromo = $this->request->getPost('code_promo');
+        $coupon = $this->ModeleCoupon->find($codePromo);
+
+        if ($coupon == NULL) {
+            return $this->afficherPanierCoupon(NULL, "invalide");
+        } 
+        else {
+            $etatCoupon = "";
+
+            if (!$coupon->est_valable) {
+                $etatCoupon = "invalide";
+            }
+            else if ($coupon->date_limite < date("Y-m-d")) {
+                $etatCoupon = "perime";
+            }
+            else {
+                $etatCoupon = "valide";
+            }
+
+            return $this->afficherPanierCoupon($coupon, $etatCoupon);
+        }
+    }
+
+
+    public function validerPanier($idCoupon) {
 
         // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
         if (!$this->SessionExistante()) {
@@ -444,8 +490,6 @@ class ClientController extends BaseController
 
         $idClient = $this->getSessionId();
         $panier = $this->session->get("panier");
-
-        $coupon = $this->request->getPost('coupon');
 
         $nombreArticles = 0;
 
@@ -468,6 +512,8 @@ class ClientController extends BaseController
             }
         }
 
+        $coupon = $this->ModeleCoupon->find($idCoupon);
+
         // si l'utilisateur n'a pas de commande en cours, on en crée une
         if ($idCommande == NULL) {
             $commande = array(
@@ -475,7 +521,7 @@ class ClientController extends BaseController
                 'date_commande' => date("Ymd"),
                 'date_livraison_estimee' => date("Ymd", mktime(0, 0, 0, date("m"), date("d")+15, date("Y"))),
                 'date_livraison' => NULL,
-                'id_coupon' => NULL,
+                'id_coupon' => ($coupon != NULL) ? $coupon->id_coupon : "",
                 'est_validee' => false,
                 'montant' => 0,
                 'id_adresse' => NULL
@@ -485,6 +531,11 @@ class ClientController extends BaseController
 
             // on récupère l'id de la commande qui vient d'être crée
             $idCommande = $this->ModeleCommande->getInsertID();
+        }
+
+        // on applique le nouveau coupon à la commande si elle existait déjà
+        else if ($coupon != NULL) {
+            $this->ModeleCommande->update($idCommande, array("id_coupon" => $coupon->id_coupon));
         }
 
         // on enlève tous les exemplaires de la commande au cas où la commande aurait été annulée et certains articles enlevés ou ajoutés
@@ -537,19 +588,37 @@ class ClientController extends BaseController
             $this->ModeleExemplaire->ajouterExemplaireCommande($idCommande, $exemplaireCommande->id_exemplaire, $exemplaire->quantite);
         }
 
+        // on s'assure que le coupon est valide (valable, non périmé)
+        $coupon = "";
+        $idCoupon = $this->ModeleCommande
+            ->where('id_commande', $idCommande)
+            ->first();
+        var_dump($idCoupon->id_coupon);
+
+        if ($idCoupon != NULL && $idCoupon != "") {
+            $coupon = $this->ModeleCoupon->find($idCoupon->id_coupon);
+
+            if ($coupon != NULL) {
+                if (!$coupon->est_valable || $coupon->date_limite < date("Y-m-d")) {
+                    $this->ModeleCommande->update($idCommande, array("id_coupon" => ""));
+                }
+            }
+        }
+
         // on calcule le montant de la commande
         $this->ModeleCommande->CalculerMontant($idCommande);
 
-        $montant = $this->ModeleCommande
+        $commande = $this->ModeleCommande
             ->where('id_commande', $idCommande)
             ->where('est_validee', false)
             ->first();
 
-        if ($montant == NULL) {
+        if ($commande == NULL) {
             return $this->afficherPanier();
         }
 
-        $montant = $montant->montant;
+        $montant = $commande->montant;
+        var_dump($montant);
 
         return view("compte", array("compteAction" => "validerCommandeAdresse", "montant" => $montant, "nombreArticles" => $nombreArticles, "idCommande" => $idCommande, "adressesPrecendentes" => $this->ModeleAdresse->getAdressesParClient($idClient), "session" => $this->getDonneesSession()));
     }
@@ -819,8 +888,16 @@ class ClientController extends BaseController
 // sauter ligne pour les return view array pour que ce soit plus lisible ?
 // au lieu de faire plusieurs return view, en avoir un seul dans un controller et appeler la méthode
 
-// oberserver decorateur singleton
-// composite ou delegate pour le decouper le clientController
+// tester coupon
+// on peut pas commander de posters et accessoires car pas de couleurs
+// séparer bouton inscription et connexion (ergonomie)
+// envoyer mail pour dire bravo t'es inscrit + autre ?
+// ajouter pour les images .jpeg
+// appeler procédure supprimer produit
+// regler css mdp oublie
+// supprimer les images des produits que si le produit a bien été supprimé
+// max utilisations coupon ?
+// préciser (en centimes) pour les inputs
 
 // reordonner empêche de cache les images sinon quand on les change parfois elles restent les mêmes et il faut force reload la page (pareil pour l'affichage du produit), meileure solution est donc d'ajouter ?randomNumber mais les images sont archi longues à charger du coup
 // validation rules dans les modeles comme pour adresse

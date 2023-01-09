@@ -64,11 +64,13 @@
 <script>
 
   document.onreadystatechange = function showPage() {
-  if(document.readyState == "loading"){
+console.log(document.readyState);  
+if(document.readyState == "loading" ){
     document.getElementById("loader").style.display = "block";
     document.getElementById("myDiv").style.display = "none";
+
   }else{
-    document.getElementById("loader").style.display = "none";
+    document.getElementById("loader").style.opacity = 0;
     document.getElementById("myDiv").style.display = "block";
   }
 }
@@ -227,7 +229,7 @@
  <div class="accessoires">
  <a href="<?= url_to('Product::trouverToutDeCategorie', 'accessoire') ?>"> 
   <div class="accessoires_image">
-   <img src="<?= site_url() . "images/home/categories/accessoire.jpeg" ?>" alt="Accessoires">
+   <img src="<?= site_url() . "images/home/categories/accessoire.jpg" ?>" alt="Accessoires">
   </div>
   </a>
   <h2>Accessoires</h2>

@@ -7,6 +7,7 @@ use App\Models\ModeleProduit;
 use App\Models\ModeleExemplaire;
 use App\Models\ModeleCollection;
 use App\Models\ModeleCommande;
+use App\Models\ModeleCoupon;
 use App\Entities\Taille;
 require_once APPPATH  . 'Entities' . DIRECTORY_SEPARATOR . 'Taille.php';
 
@@ -21,6 +22,7 @@ class AdminController extends BaseController
         $this->ModeleExemplaire = ModeleExemplaire::getInstance();
         $this->ModeleCollection = ModeleCollection::getInstance();
         $this->ModeleCommande = ModeleCommande::getInstance();
+        $this->ModeleCoupon = ModeleCoupon::getInstance();
         
         $this->request = \Config\Services::request();
     }
@@ -45,7 +47,7 @@ class AdminController extends BaseController
             $taillesPosters[] = $taille->value;
         }
 
-        return view("adminView", array("notHidden" => $notHidden, "utilisateurs" => $this->ModeleClient->findAll(), "produits" => $this->ModeleProduit->findAll(), "collections"=> $this->ModeleCollection->findAll(), "exemplaires" => $exemplaires, "taillesVetements" => $taillesVetements, "taillesPosters" => $taillesPosters, "commandes" => $this->ModeleCommande->findAll()));
+        return view("adminView", array("notHidden" => $notHidden, "utilisateurs" => $this->ModeleClient->findAll(), "produits" => $this->ModeleProduit->findAll(), "collections"=> $this->ModeleCollection->findAll(), "exemplaires" => $exemplaires, "taillesVetements" => $taillesVetements, "taillesPosters" => $taillesPosters, "commandes" => $this->ModeleCommande->findAll(), "coupons" => $this->ModeleCoupon->findAll()));
     }
 
     /** adminView : Redirige vers la vue admin.
@@ -363,10 +365,8 @@ class AdminController extends BaseController
             return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
         }
 
-        try {
-            $this->ModeleProduit->delete($idProduit);
-        } catch (\Exception $e) {}
-        $this->ModeleProduit->delete($idProduit);
+        $test = $produit = $this->ModeleProduit->find($idProduit);
+        $this->ModeleProduit->delete((int)$idProduit);
 
         if(is_dir("images/produits/" . (string)$idProduit)) {
 		    $this->deleteDirectory("images/produits/" . (string)$idProduit);
@@ -603,10 +603,11 @@ class AdminController extends BaseController
             return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
         }
 
-        $today = date("Ymd");
+        $today = date("Y-m-d");
         $date_limite = $this->request->getPost('date_limite');
         $nom = $this->request->getPost('nom');
         $this->ModeleCollection->creerCollection($nom);
+
         $dateLimiteArray = explode("-", $this->request->getPost('date_limite'));
 
         $dateLimite = $dateLimiteArray[0] . $dateLimiteArray[1] . $dateLimiteArray[2];
@@ -635,7 +636,7 @@ class AdminController extends BaseController
 
         $collection = $this->ModeleCollection->find($idCollection);
 
-        return view('modifierCollectionVue', array("collection" => $collection, "collections" => $this->ModeleCollection->findAll(), "session" => $this->getDonneesSession()));
+        return view('modifierCollectionVue', array("collection" => $collection, "session" => $this->getDonneesSession()));
     }
     
 
@@ -645,7 +646,13 @@ class AdminController extends BaseController
             return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
         }
 
-        $collection = $this->ModeleCollection->find($this->request->getPost('id_collection'));
+        $idCollection = $this->request->getPost('id_collection');
+
+        if ($idCollection == NULL || $idCollection == "") {
+            return $this->adminView();
+        }
+
+        $collection = $this->ModeleCollection->find($idCollection);
         
         if ($collection == null) {
             return $this->returnAdminView('collections');
@@ -679,5 +686,104 @@ class AdminController extends BaseController
         } catch (\Exception $e) {
         }
         return $this->returnAdminView('collections');
+    }
+
+
+    public function creerCoupon() {
+
+        if (!$this->estAdmin()) {
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+        }
+
+        $today = date("Y-m-d");
+        $date_limite = $this->request->getPost('date_limite');
+        $idCoupon = $this->request->getPost('code_promo');
+        $nom = $this->request->getPost('nom');
+        $codePromo = $this->request->getPost('code_promo');
+        $montant = $this->request->getPost('montant');
+        $estPourcentage = ($this->request->getPost('est_pourcentage') == "est_pourcentage") ? true : false;
+        $estValable = ($this->request->getPost('est_valable') == "est_valable") ? true : false;
+        $utilisationsMax = $this->request->getPost('utilisations_max');
+
+        $dateLimiteArray = explode("-", $this->request->getPost('date_limite'));
+        $dateLimite = $dateLimiteArray[0] . $dateLimiteArray[1] . $dateLimiteArray[2];
+
+        $coupon = array(
+            "id_coupon" => $codePromo,
+            "nom" => $nom,
+            "montant" => (int)$montant,
+            "est_pourcentage" => $estPourcentage,
+            "est_valable" => $estValable,
+            "date_limite" => $dateLimite,
+            "utilisations_max" => (int)$utilisationsMax
+        );
+
+        if ($date_limite > $today && $idCoupon != "" && $utilisationsMax >= 0 && $montant >= 0) {
+            $this->ModeleCoupon->insert($coupon);
+        }
+
+        return $this->returnAdminView('coupons');
+    }
+
+
+    public function modifierCouponVue($idCoupon) {
+
+        if (!$this->estAdmin())
+        {
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+        }
+
+        $coupon = $this->ModeleCoupon->find($idCoupon);
+
+        return view('modifierCouponVue', array("coupon" => $coupon, "session" => $this->getDonneesSession()));
+    }
+
+
+    public function modifierCoupon() {
+
+        if (!$this->estAdmin()) {
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+        }
+
+        $idCoupon = $this->request->getPost('id_coupon');
+
+        if ($idCoupon == NULL || $idCoupon == "") {
+            return $this->returnAdminView('coupons');
+        }
+        
+        $coupon = $this->ModeleCoupon->find($idCoupon);
+        
+        if ($coupon == null) {
+            return $this->returnAdminView('coupons');
+        }
+
+        $coupon->id_coupon = $idCoupon;
+        $coupon->nom = $this->request->getPost('nom');
+        $coupon->montant = $this->request->getPost('montant');
+        $coupon->est_pourcentage = $this->request->getPost('est_pourcentage') == "est_pourcentage";
+        $coupon->est_valable = $this->request->getPost('est_valable') == "est_valable";
+        $coupon->date_limite = $this->request->getPost('date_limite');
+        $coupon->utilisations_max = $this->request->getPost('utilisations_max');
+
+        if ($coupon->id_coupon != NULL && $coupon->montant >= 0 && $coupon->date_limite >= date("Y-m-d") && $coupon->utilisations_max >= 0) {
+            try{
+                $this->ModeleCoupon->save($coupon);
+            } catch (\Exception $e) {}
+        }
+
+        return $this->returnAdminView('coupons');
+    }
+
+
+    public function supprimerCoupon($idCoupon) {
+        if (!$this->estAdmin()) {
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+        }
+
+        try {
+            $this->ModeleCoupon->delete($idCoupon);
+        } catch (\Exception $e) {
+        }
+        return $this->returnAdminView('coupons');
     }
 }

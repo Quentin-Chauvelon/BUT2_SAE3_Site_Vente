@@ -1,6 +1,15 @@
 * {
 	color: #2e2e2e;
-	font-family: Arial, Helvetica, sans-serif;
+}
+
+@font-face {
+font-family: "Agency_FB";
+
+src: url("../font/agency_fb.ttf");
+
+}
+*{
+font-family: 'Agency_FB', Arial, sans-serif;
 }
 
 html, body {

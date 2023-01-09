@@ -445,6 +445,8 @@ class ClientController extends BaseController
         $idClient = $this->getSessionId();
         $panier = $this->session->get("panier");
 
+        $coupon = $this->request->getPost('coupon');
+
         $nombreArticles = 0;
 
         foreach ($panier as $exemplaire) {

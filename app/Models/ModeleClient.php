@@ -28,7 +28,7 @@ class ModeleClient extends SafeModel
         }
         return self::$instance;
     }
-
+    
     function getClientParEmail(string $email): ?Client
     {
         $sql = "CALL GetClientParEmail(?)";
@@ -42,6 +42,8 @@ class ModeleClient extends SafeModel
     public function getClientParCodeMDPOublie($codeMDPOublie): ?Client
     {
         foreach ($this->findAll() as $client) {
+            // var_dump("code", $codeMDPOublie);
+            var_dump(password_verify($client->password, $codeMDPOublie));
             if (password_verify($codeMDPOublie, $client->password)) {
                 return $client;
             }

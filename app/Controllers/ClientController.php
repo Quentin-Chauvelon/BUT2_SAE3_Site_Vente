@@ -782,24 +782,26 @@ class ClientController extends BaseController
         $subject = "Hotgenre : Changement de mot de passe";
         $message = "Bonjour " . $client->prenom . " " . $client->nom. ". \n"
         . "Vous avez demandé à changer votre mot de passe sur notre site. \n" .
-        "Veuillez cliquer sur ce lien pour le réinitialiser :\n<a href='" .
-        $lien . "'>Réinitialiser mon mot de passe</a>\n" . "Si vous n'avez pas demandé à changer votre mot de passe, veuillez ignorer ce mail.\n" .
+        "Veuillez cliquer sur ce lien pour le réinitialiser :\n<a href=" .
+        $lien . ">Réinitialiser mon mot de passe</a>\n" . "Si vous n'avez pas demandé à changer votre mot de passe, veuillez ignorer ce mail.\n" .
         "Merci de la confiance que vous accordez à nos services, \n" . "L'équipe Hotgenre.";
 
-        if (mail($to, $subject, $message))
-        {
-            return view('motDePasseOublie', ['compteNonExistant' => false]);
-        }
+        mail($to, $subject, $message);
+
+        return view('motDePasseOublie', ['compteNonExistant' => false]);
     }
 
     public function ChangerMotDePasse($codeMDPOublie)
     {
         $client = $this->ModeleClient->getClientParCodeMDPOublie($codeMDPOublie);
+
         if ($client == NULL){
-            return view('motDePasseOublie', ['compteNonExistant' => true]);
+            return view('motDePasseOublie', array('compteNonExistant' => true));
         }
+
         $this->session->set('client', $client);
-        return view('motDePasseOublie', array("session" => $this->getDonneesSession()));
+
+        return view('changerMotDePasse', array("passwordsDifferents" => false, "session" => $this->getDonneesSession()));
     }
 
     public function motDePasseOublie()

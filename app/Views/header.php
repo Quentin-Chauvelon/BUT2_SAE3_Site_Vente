@@ -55,7 +55,20 @@
             </a>
 
             <a href="<?= url_to('ClientController::monCompte') ?>">
-              <h3 class="underline_animation"><?= ($session["prenom"] != NULL) ? $session["prenom"] : "Mon Compte" ?></h3>
+              <h3 class="underline_animation"><?= ($session["prenom"] != NULL) ? $session["prenom"] : "Inscription" ?></h3>
+            </a>
+          </div>
+
+          <div class="icon_container <?= ($session["prenom"] != NULL) ? "hidden" : "" ?>">
+            <a href="<?= url_to('ClientController::connexion') ?>">
+              <div class="icon_logo_background">
+                <img class="icon_logo" src="<?= site_url() . "images/icons/account.png"?>">
+                <img class="hover_image" src="<?= site_url() . "images/icons/account_blanc.png"?>">
+              </div>
+            </a>
+
+            <a href="<?= url_to('ClientController::connexion') ?>">
+              <h3 class="underline_animation">Connexion</h3>
             </a>
           </div>
         </div>

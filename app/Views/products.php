@@ -21,18 +21,23 @@
                         <!-- <div class="rupture_stock <?= (array_search($product->id_produit, $produitsRuptureStock) !== false) ? "en_rupture" : "" ?>">RUPTURE DE STOCK</div> -->
                         <div class="rupture_stock2 <?= (array_search($product->id_produit, $produitsRuptureStock) !== false) ? "en_rupture" : "" ?>">RUPTURE DE STOCK</div>
 
-                        <?php 
-                            $imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $product->id_produit . DIRECTORY_SEPARATOR . "images/image_1.png";
+                        <?php
+                            $extension = "";
+                            
+                            if (file_exists("images/produits/" . $product->id_produit . "/images/image_1.jpg")) {
+                                $extension = ".jpg";
+                            }
 
-                            $headers = @get_headers($imageURL);
+                            elseif (file_exists("images/produits/" . $product->id_produit . "/images/image_1.png")) {
+                                $extension = ".png";
+                            }
 
-                            // On vérifie si l'url existe
-                            if(!$headers  || strpos($headers[0], '404')) {
-                                $imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $product->id_produit . DIRECTORY_SEPARATOR . "images/image_1.jpeg";
+                            elseif (file_exists("images/produits/" . $product->id_produit . "/images/image_1.jpeg")) {
+                                $extension = ".jpeg";
                             }
                         ?>
 
-                        <img src=<?= $imageURL ?>>
+                        <img src=<?= site_url() . "images/produits" . DIRECTORY_SEPARATOR . $product->id_produit . DIRECTORY_SEPARATOR . "images/image_1" . $extension ?>>
 
                         <div class="<?= (array_search($product->id_produit, $produitsRuptureStock) !== false) ? "rupture_stock_grise" : "" ?>"></div>
                     </div>

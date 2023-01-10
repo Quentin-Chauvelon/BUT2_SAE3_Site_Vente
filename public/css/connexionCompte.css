@@ -89,9 +89,9 @@ form label {
 	text-align: left;
 }
 
-form > div:last-of-type {
+/* form > div:last-of-type {
 	margin-top: -10px;
-}
+} */
 
 
 

@@ -53,13 +53,18 @@
 	$imageURLParCouleurs = [];
 
 	foreach ($couleurs as $couleur) {
-		$imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $product->id_produit . DIRECTORY_SEPARATOR . "couleurs/" . $couleur . ".png";
-		
-		$headers = @get_headers($imageURL);
-		
-		// On vérifie si l'url existe
-		if(!$headers  || strpos($headers[0], '404')) {
+		$imageURL = "";
+                            
+		if (file_exists("images/produits" . DIRECTORY_SEPARATOR . $product->id_produit . DIRECTORY_SEPARATOR . "couleurs/" . $couleur . ".jpg")) {
 			$imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $product->id_produit . DIRECTORY_SEPARATOR . "couleurs/" . $couleur . ".jpg";
+		}
+
+		elseif (file_exists("images/produits" . DIRECTORY_SEPARATOR . $product->id_produit . DIRECTORY_SEPARATOR . "couleurs/" . $couleur . ".png")) {
+			$imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $product->id_produit . DIRECTORY_SEPARATOR . "couleurs/" . $couleur . ".png";
+		}
+
+		elseif (file_exists("images/produits" . DIRECTORY_SEPARATOR . $product->id_produit . DIRECTORY_SEPARATOR . "couleurs/" . $couleur . ".jpeg")) {
+			$imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $product->id_produit . DIRECTORY_SEPARATOR . "couleurs/" . $couleur . ".jpeg";
 		}
 
 		$imageURLParCouleurs[$couleur] = $imageURL;

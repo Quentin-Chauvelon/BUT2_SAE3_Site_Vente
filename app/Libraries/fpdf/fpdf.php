@@ -7,6 +7,8 @@
 * Author:  Olivier PLATHEY                                                     *
 *******************************************************************************/
 
+namespace App\Libraries\fpdf;
+
 class FPDF
 {
 const VERSION = '1.85';

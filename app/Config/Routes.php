@@ -68,12 +68,14 @@ $routes->get('afficherPanier', 'ClientController::afficherPanier');
 $routes->get('afficherHistorique', 'ClientController::afficherHistorique');
 $routes->get('supprimerDuPanier/(:num)/(:any)/(:any)', 'ClientController::supprimerDuPanier/$1/$2/$3');
 $routes->get('validerPanier/(:any)', 'ClientController::validerPanier/$1');
+$routes->get('validerPanier', 'ClientController::validerPanier/ ');
 $routes->get('viderPanier', 'ClientController::viderPanier');
 $routes->get('annulerCommande/(:any)', 'ClientController::annulerCommande/$1');
 $routes->get('detailCommande/(:num)', 'ClientController::detailCommande/$1');
 $routes->get('cgu', 'ClientController::cgu');
 $routes->get('quiSommesNous', 'ClientController::quiSommesNous');
 $routes->get('contact', 'ClientController::contact');
+$routes->get('facture/(:any)', 'ClientController::facture/$1');
 
 $routes->get('adminView', 'AdminController::adminView');
 $routes->get('mettreAdmin/(:any)', 'AdminController::mettreAdmin/$1');
@@ -112,5 +114,6 @@ $routes->post('modifierCoupon', 'AdminController::modifierCoupon');
 
 $routes->get('motDePasseOublie', 'ClientController::motDePasseOublie');
 $routes->post('envoyerMailChangementMDP', 'ClientController::envoyerMailChangementMDP');
+$routes->post('reinitialiserMotDePasse', 'ClientController::reinitialiserMotDePasse');
 $routes->get('ChangerMotDePasse/(:any)', 'ClientController::ChangerMotDePasse/$1');
 $routes->post('modifierImageExemplaire', 'AdminController::modifierImageExemplaire');

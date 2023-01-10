@@ -11,10 +11,13 @@ use App\Models\ModeleExemplaire;
 use App\Models\ModeleCommande;
 use App\Models\ModeleAdresse;
 use App\Models\ModeleCoupon;
+use App\Libraries\fpdf\fpdf;
+
+require (APPPATH  . 'Libraries' . DIRECTORY_SEPARATOR . 'fpdf' . DIRECTORY_SEPARATOR . 'fpdf.php');
+
 
 class ClientController extends BaseController
 {
-
 
     public function __construct()
     {
@@ -80,7 +83,7 @@ class ClientController extends BaseController
         $nom = $this->request->getPost('nom');
 
         if ($prenom == "" || $nom == "") {
-
+            return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
         }
 
         // si les deux mot de passe sont égaux, on crée le compte
@@ -481,7 +484,7 @@ class ClientController extends BaseController
     }
 
 
-    public function validerPanier($idCoupon) {
+    public function validerPanier($idCoupon = "") {
 
         // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
         if (!$this->SessionExistante()) {
@@ -521,7 +524,7 @@ class ClientController extends BaseController
                 'date_commande' => date("Ymd"),
                 'date_livraison_estimee' => date("Ymd", mktime(0, 0, 0, date("m"), date("d")+15, date("Y"))),
                 'date_livraison' => NULL,
-                'id_coupon' => ($coupon != NULL) ? $coupon->id_coupon : "",
+                'id_coupon' => ($coupon != NULL) ? $coupon->id_coupon : NULL,
                 'est_validee' => false,
                 'montant' => 0,
                 'id_adresse' => NULL
@@ -534,7 +537,7 @@ class ClientController extends BaseController
         }
 
         // on applique le nouveau coupon à la commande si elle existait déjà
-        else if ($coupon != NULL) {
+        elseif ($coupon != NULL) {
             $this->ModeleCommande->update($idCommande, array("id_coupon" => $coupon->id_coupon));
         }
 
@@ -559,7 +562,7 @@ class ClientController extends BaseController
                 ->set(['quantite' => (int)$exemplaireAvecProduitCouleurTaille->quantite + (int)$exemplaire->quantite])
                 ->update();
             }
-            else {
+            elseif ($exemplaire->quantite > 0) {
                 $this->ModeleExemplaire->creerExemplaire($exemplaire->id_produit, $exemplaire->couleur, $exemplaire->taille, $exemplaire->quantite);
             }
 
@@ -589,20 +592,25 @@ class ClientController extends BaseController
         }
 
         // on s'assure que le coupon est valide (valable, non périmé)
-        $coupon = "";
-        $idCoupon = $this->ModeleCommande
-            ->where('id_commande', $idCommande)
-            ->first();
-        var_dump($idCoupon->id_coupon);
 
-        if ($idCoupon != NULL && $idCoupon != "") {
-            $coupon = $this->ModeleCoupon->find($idCoupon->id_coupon);
+        if ($coupon != NULL) {
+            $coupon = "";
+            $idCoupon = $this->ModeleCommande
+                ->where('id_commande', $idCommande)
+                ->first();
 
-            if ($coupon != NULL) {
-                if (!$coupon->est_valable || $coupon->date_limite < date("Y-m-d")) {
-                    $this->ModeleCommande->update($idCommande, array("id_coupon" => ""));
+            if ($idCoupon != NULL && $idCoupon->id_coupon != NULL && $idCoupon != "") {
+                $coupon = $this->ModeleCoupon->find($idCoupon->id_coupon);
+
+                if ($coupon != NULL) {
+                    if (!$coupon->est_valable || $coupon->date_limite < date("Y-m-d")) {
+                        $this->ModeleCommande->update($idCommande, array("id_coupon" => ""));
+                    }
                 }
             }
+        }
+        else {
+            $this->ModeleCommande->update($idCommande, array("id_coupon" => NULL));
         }
 
         // on calcule le montant de la commande
@@ -618,7 +626,6 @@ class ClientController extends BaseController
         }
 
         $montant = $commande->montant;
-        var_dump($montant);
 
         return view("compte", array("compteAction" => "validerCommandeAdresse", "montant" => $montant, "nombreArticles" => $nombreArticles, "idCommande" => $idCommande, "adressesPrecendentes" => $this->ModeleAdresse->getAdressesParClient($idClient), "session" => $this->getDonneesSession()));
     }
@@ -654,7 +661,7 @@ class ClientController extends BaseController
                 ->set(['quantite' => (int)$exemplaireAvecProduitCouleurTaille->quantite + (int)$exemplaire->quantite])
                 ->update();
             }
-            else {
+            elseif ($exemplaire->quantite > 0) {
                 $this->ModeleExemplaire->creerExemplaire($exemplaire->id_produit, $exemplaire->couleur, $exemplaire->taille, $exemplaire->quantite);
             }
 
@@ -872,45 +879,184 @@ class ClientController extends BaseController
             return view('motDePasseOublie', array('compteNonExistant' => true));
         }
 
-        $this->session->set('client', $client);
-
-        return view('changerMotDePasse', array("passwordsDifferents" => false, "session" => $this->getDonneesSession()));
+        return view('changerMotDePasse', array("idClient" => $client->id_client, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
     }
+
+
+    public function reinitialiserMotDePasse() {
+        // on récupère les deux mots de passe pour s'assurer qu'ils sont égaux
+        $idClient = $this->request->getPost('id_client');
+        $password = $this->request->getPost('password');
+        $passwordRepetition = $this->request->getPost('passwordRepetition');
+
+        $client = $this->ModeleClient->find($idClient);
+
+        if ($client == NULL || $idClient == NULL) {
+            return view("connexionCompte", array("compteNonExistant" => false, "passwordFaux" => false, "session" => $this->getDonneesSession()));
+        }
+
+        // si les deux mot de passe sont différents, on retourne une erreur
+        if ($password != $passwordRepetition || strlen($password) <= 8 || strlen($password) > 64) {        
+            return view('changerMotDePasse', array("idClient" => $idClient, "passwordsDifferents" => true, "session" => $this->getDonneesSession()));
+        }
+
+        $client->password = $password;
+        $this->ModeleClient->save($client);
+
+        $this->setDonneesSession($client->id_client, $client->prenom, $client->nom, $client->adresse_email);
+
+        return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+    }
+
 
     public function motDePasseOublie()
     {
         return view('motDePasseOublie');
     }
+
+
+    public function facture(int $idCommande) {
+
+        // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
+        if (!$this->SessionExistante()) {
+            return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
+        }
+
+        $commande = $this->ModeleCommande->find($idCommande);
+
+        if ($commande == NULL) {
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+        }
+
+        $idFacture = substr("0000" . (string)$idCommande, -5);
+        $prenom = $this->session->get("prenom");
+        $nom = $this->session->get("nom");
+
+        $adresse = $this->ModeleAdresse->find($commande->id_adresse);
+
+        if ($adresse == NULL || $commande->id_adresse == NULL) {
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+        }
+
+        $rue = $adresse->rue;
+        $codePostal = $adresse->code_postal;
+        $ville = $adresse->ville;
+
+        $total = 0;
+
+        $exemplaires = $this->ModeleExemplaire
+            ->where('id_commande', $idCommande)
+            ->findAll();
+
+        if ($exemplaires == NULL) {
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+        }
+
+        $pdf = new FPDF();
+        $pdf->AddPage();
+
+        $pdf->SetTextColor(46);
+        $pdf->SetFont('Helvetica','B',30);
+        $pdf->Ln(10);
+        $pdf->Cell(40,10,'Hot Genre');
+        $pdf->Ln(30);
+
+        // $pdf->Image(site_url() . "images/logos/logo hg noir.png", 20, 160, 30, 30, "png", "http://172.26.82.56");
+        $pdf->SetFont('Helvetica','B',15);
+        $pdf->Cell(0, 10, iconv('UTF-8', 'windows-1252', "Envoyé à"));
+        $pdf->SetFont('Helvetica','B',15);
+        $pdf->Cell(0, 10, iconv('UTF-8', 'windows-1252', " N° de facture                       "), 0, 0, "R");
+        $pdf->SetFont('Helvetica','',14);
+        $pdf->Cell(0, 10, $idCommande, 0, 0, "R");
+        $pdf->Ln(8);
+
+        $pdf->SetFont('Helvetica','',14);
+        $pdf->Cell(0, 10, iconv('UTF-8', 'windows-1252', $prenom . " " . $nom));
+        $pdf->SetFont('Helvetica','B',15);
+        $pdf->Cell(0, 10, iconv('UTF-8', 'windows-1252', "          Date                       "), 0, 0, "R");
+        $pdf->SetFont('Helvetica','',14);
+        $pdf->Cell(0, 10, date("d/m/Y"), 0, 0, "R");
+        $pdf->Ln(7);
+
+        $pdf->Cell(0, 10, iconv('UTF-8', 'windows-1252', $rue));
+        $pdf->Ln(1);
+        $pdf->SetFont('Helvetica','B',15);
+        $pdf->Cell(0, 10, iconv('UTF-8', 'windows-1252', "N° de commande                       "), 0, 0, "R");
+        $pdf->SetFont('Helvetica','',14);
+        $pdf->Cell(0, 10, $idCommande, 0, 0, "R");
+
+        $pdf->Ln(6);
+        $pdf->Cell(0,10, iconv('UTF-8', 'windows-1252', (string)$codePostal . ", " . $ville));
+
+        $pdf->Ln(1);
+        $pdf->SetFont('Helvetica','B',15);
+        $pdf->Cell(0, 10, iconv('UTF-8', 'windows-1252', "      Echéance                       "), 0, 0, "R");
+        $pdf->SetFont('Helvetica','',14);
+        $pdf->Cell(0, 10, date("d/m/Y", mktime(0, 0, 0, date("m") + 4, date("d"), date("Y"))), 0, 0, "R");
+
+        $pdf->Ln(20);
+        $pdf->SetFillColor(100);
+        $pdf->SetTextColor(255);
+        $pdf->SetFont('Helvetica','B',14);
+        $pdf->Cell(35, 12, iconv('UTF-8', 'windows-1252', "    Quantité"), 0, 0, "C", true);
+        $pdf->Cell(85, 12, "Nom", 0, 0, "C", true);
+        $pdf->Cell(35, 12, "Prix unitaire", 0, 0, "C", true);
+        $pdf->Cell(35, 12, "Prix", 0, 0, "C", true);
+
+
+        $i = 0;
+
+        foreach ($exemplaires as $exemplaire) {
+
+            if ($i % 2 == 0) {
+                $pdf->SetFillColor(255);
+            } else {
+                $pdf->SetFillColor(242);
+            }
+
+            $i += 1;
+
+            $produit = $this->ModeleProduit->find((int)$exemplaire->id_produit);
+
+            if ($produit == NULL) {
+                continue;
+            }
+
+            $pdf->Ln(12);
+            $pdf->SetTextColor(46);
+            $pdf->SetFont('Helvetica','',14);
+            $pdf->Cell(35, 12, $exemplaire->quantite, 0, 0, "C", true);
+            $pdf->Cell(85, 12, $produit->nom . "(couleur : " . $exemplaire->couleur . ", taille : " . $exemplaire->taille . ")" , 0, 0, "L", true);
+            $pdf->Cell(35, 12, ($produit->prix / 100) . chr(128), 0, 0, "C", true);
+            $pdf->Cell(35, 12, (($produit->prix * $exemplaire->quantite) / 100) . chr(128), 0, 0, "C", true);
+
+            $total += $produit->prix * $exemplaire->quantite;
+        }
+
+        $pdf->Ln(14);
+        $pdf->SetFont('Helvetica','B',14);
+        $pdf->Cell(120, 10, "", 0, 0, "C");
+        $pdf->Cell(35, 10, "Total", 0, 0, "C");
+        $pdf->Cell(35, 10, ($total / 100) . chr(128), 0, 0, "C");
+
+        header('Content-Type: application/pdf');
+        return $pdf->Output("D", 'facture_' . $idCommande . '.pdf');
+    }
 }
 
 // vérifier les strings vides et les tailles dans les posts
-// regrouper les controllers et delegate ou instancier un controller dans un autre pour utiliser les méthodes
 // sauter ligne pour les return view array pour que ce soit plus lisible ?
 // au lieu de faire plusieurs return view, en avoir un seul dans un controller et appeler la méthode
 
 // tester coupon
-// supprimer les images des produits que si le produit a bien été supprimé
-// appeler procédure supprimer produit
-// regler css mdp oublie
-// préciser (en centimes) pour les inputs
 // ajouter pour les images .jpeg
-// séparer bouton inscription et connexion (ergonomie)
 
-// on peut pas commander de posters et accessoires car pas de couleurs
 // envoyer mail pour dire bravo t'es inscrit + autre ?
 
 // max utilisations coupon ?
 // pas commenter modele produit ?
-// mpd oublie réinitialise pas le mot de passe ? + session set client marche ? + comment je recupère l'argument à passer à la fonction ? + reçoit 2 mails ?
-
-// reordonner empêche de cache les images sinon quand on les change parfois elles restent les mêmes et il faut force reload la page (pareil pour l'affichage du produit), meileure solution est donc d'ajouter ?randomNumber mais les images sont archi longues à charger du coup
-// validation rules dans les modeles comme pour adresse
 
 // image collection
-// envoyer facture à email après livraison
 // s'assurer que les inputs sont sécurisés (appels du bon type, non vide...) surtout les posts, vérifier les appels à la bd...
-// changer foreach en haut d'admin view.php pour que ce soit plus élégant et mieux fait
 // custom 404
 // désactiver les erreurs + page spéciale ?
-// activation compte par email (rajouter base de données -> bool estVerifie et code activation surement)
-// + - pour les quantités du panier (caché quand min et max)

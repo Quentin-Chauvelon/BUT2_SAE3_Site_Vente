@@ -151,7 +151,7 @@
 
 			<div id="sizes_container" class="sizes_container">
 				<?php foreach($tailles as $key=>$taille) : ?>
-					<div class="<?php echo ($key == 0) ? 'selected' : '' ?>" data-taille="<?= $taille ?>"><?= $taille ?></div>
+					<div class="<?php echo ($key == 0) ? 'selected' : '' ?>" data-taille="<?= $taille ?>"><?= ($taille != NULL) ? $taille : "Standard" ?></div>
 				<?php endforeach; ?>
 			</div>
 

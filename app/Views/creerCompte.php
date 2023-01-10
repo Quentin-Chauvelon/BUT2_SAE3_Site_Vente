@@ -1,3 +1,7 @@
+<?php
+require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.php');
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,7 +43,7 @@
 
 			<h5 class="erreur_texte"><?= ($erreurTexte != "") ? $erreurTexte : "" ?></h5>
 
-			<form action=<?= url_to('ClientController::creerCompte') ?> method="post">
+			<form action=<?= url_to("ClientController::creerCompte") ?> method="post">
 				<div>
 					<label for="prenom">Prénom *</label>
 					<input type="text" name="prenom" id="prenom" placeholder=" " maxlength="64" required/>

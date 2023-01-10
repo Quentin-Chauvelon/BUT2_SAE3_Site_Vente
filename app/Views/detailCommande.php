@@ -61,9 +61,13 @@
             <h2 class="nombre_produits">Nombre de produits : <?= $nombreProduits ?></h2>
         </div>
 
-        <h1 class="date_commande">Commande du <?= $commande->date_commande ?></h1>
+        <h1 class="date_commande">Commande N°<?= $commande->id_commande ?> du <?= $commande->date_commande ?></h1>
 
-        <h1 class="numero_commande">Commande N°<?= $commande->id_commande ?></h1>
+        <div>
+            <a class="telecharger_facture" href="<?= url_to('ClientController::facture', $commande->id_commande) ?>">
+                <div>Télécharger ma facture</div>
+            </a>
+        </div>
     </div>
 
     <p class="etat_commande <?= $etatCommandeCouleur ?>"><?= $etatCommande ?></p>
@@ -78,13 +82,18 @@
                 <a href="<?= url_to('Product::display', $exemplaire["id_produit"]) ?>">
                     <div class="image_container">
                         <?php 
-                            $imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $exemplaire["id_produit"] . DIRECTORY_SEPARATOR . "couleurs" . DIRECTORY_SEPARATOR . $exemplaire["couleur"] . ".png";
-
-                            $headers = @get_headers($imageURL);
-
-                            // On vérifie si l'url existe
-                            if(!$headers  || strpos($headers[0], '404')) {
-                                $imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $exemplaire["id_produit"] . DIRECTORY_SEPARATOR . "couleurs" . DIRECTORY_SEPARATOR . $exemplaire["couleur"] . ".jpg";
+                            $imageURL = "";
+                            
+                            if (file_exists("images/produits" . DIRECTORY_SEPARATOR . $exemplaire["id_produit"] . DIRECTORY_SEPARATOR . "couleurs/" . $exemplaire["couleur"] . ".jpg")) {
+                                $imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $exemplaire["id_produit"] . DIRECTORY_SEPARATOR . "couleurs/" . $exemplaire["couleur"] . ".jpg";
+                            }
+                    
+                            elseif (file_exists("images/produits" . DIRECTORY_SEPARATOR . $exemplaire["id_produit"] . DIRECTORY_SEPARATOR . "couleurs/" . $exemplaire["couleur"] . ".png")) {
+                                $imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $exemplaire["id_produit"] . DIRECTORY_SEPARATOR . "couleurs/" . $exemplaire["couleur"] . ".png";
+                            }
+                    
+                            elseif (file_exists("images/produits" . DIRECTORY_SEPARATOR . $exemplaire["id_produit"] . DIRECTORY_SEPARATOR . "couleurs/" . $exemplaire["couleur"] . ".jpeg")) {
+                                $imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $exemplaire["id_produit"] . DIRECTORY_SEPARATOR . "couleurs/" . $exemplaire["couleur"] . ".jpeg";
                             }
                         ?>
 

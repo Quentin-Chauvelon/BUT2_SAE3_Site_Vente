@@ -1,7 +1,7 @@
 <?php
 namespace App\Entities;
 /**
- * Énumération des tailles possibles des vêtements et des posters.
+ * Énumération des tailles possibles des vêtements, des accessoires et des posters.
  * Est une classe fille de string.
  */
 enum Taille : string
@@ -16,6 +16,7 @@ enum Taille : string
     case A1 = 'A1';
     case A2 = 'A2';
     case A3 = 'A3';
+    case Standard = 'Standard';
 
     /**
      * Retourne le nom de la catégorie de la taille.
@@ -26,6 +27,9 @@ enum Taille : string
         if (in_array($this, self::posters())) {
             return 'poster';
         }
+        elseif (in_array($this, self::accessoires())) {
+            return 'accessoire';
+        }
         return 'vetement';
     }
 
@@ -35,6 +39,11 @@ enum Taille : string
     public function estPoster(): bool
     {
         return $this->categorie() == 'poster';
+    }
+
+    public function estAccessoire(): bool
+    {
+        return $this->categorie() == 'accessoire';
     }
 
     /**
@@ -70,6 +79,16 @@ enum Taille : string
             self::L,
             self::XL,
             self::XXL,
+        ];
+    }
+
+    /**
+     * @return Taille[] Toutes les tailles d'accessoires disponibles.
+     */
+    public static function accessoires(): array
+    {
+        return [
+            self::Standard,
         ];
     }
 }

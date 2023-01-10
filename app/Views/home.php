@@ -11,20 +11,25 @@
 </head>
 
 <?php
-  $carrouselProduits = array(7, 8, 9);
+  $carrouselProduits = array(19, 25, 29);
   $carrouselImages = array();
 
 	foreach ($carrouselProduits as $idProduit) {
-		$imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $idProduit . DIRECTORY_SEPARATOR . "images/image_1.png";
-		
-		$headers = @get_headers($imageURL);
-		
-		// On vérifie si l'url existe
-		if(!$headers  || strpos($headers[0], '404')) {
-			$imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $idProduit . DIRECTORY_SEPARATOR . "images/image_1.jpg";
-		}
+		$extension = "";
+                            
+    if (file_exists("images/produits/" . $idProduit . "/images/image_1.jpg")) {
+      $extension = ".jpg";
+    }
 
-		$carrouselImages[] = $imageURL;
+    elseif (file_exists("images/produits/" . $idProduit . "/images/image_1.png")) {
+      $extension = ".png";
+    }
+
+    elseif (file_exists("images/produits/" . $idProduit . "/images/image_1.jpeg")) {
+      $extension = ".jpeg";
+    }
+
+		$carrouselImages[] = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $idProduit . DIRECTORY_SEPARATOR . "images/image_1" . $extension;
 	}
 
 
@@ -32,17 +37,43 @@
 
 	foreach ($produitsPlusPopulaires as $produit) {
     $idProduit = $produit->id_produit;
+    $extension = "";
+                            
+    if (file_exists("images/produits/" . $idProduit . "/images/image_1.jpg")) {
+      $extension = ".jpg";
+    }
 
-		$imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $idProduit . DIRECTORY_SEPARATOR . "images/image_1.png";
-		
-		$headers = @get_headers($imageURL);
-		
-		// On vérifie si l'url existe
-		if(!$headers  || strpos($headers[0], '404')) {
-			$imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $idProduit . DIRECTORY_SEPARATOR . "images/image_1.jpg";
-		}
+    elseif (file_exists("images/produits/" . $idProduit . "/images/image_1.png")) {
+      $extension = ".png";
+    }
 
-		$produitsPlusVendusImages[$idProduit] = $imageURL;
+    elseif (file_exists("images/produits/" . $idProduit . "/images/image_1.jpeg")) {
+      $extension = ".jpeg";
+    }
+
+		$produitsPlusVendusImages[$idProduit] = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $idProduit . DIRECTORY_SEPARATOR . "images/image_1" . $extension;
+
+
+    $collectionProduitsId = array(25, 19, 20, 22, 31, 21, 28, 19);
+
+    foreach ($collectionProduitsId as $idProduit) {
+      $extension = "";
+                              
+      if (file_exists("images/produits/" . $idProduit . "/images/image_1.jpg")) {
+        $extension = ".jpg";
+      }
+  
+      elseif (file_exists("images/produits/" . $idProduit . "/images/image_1.png")) {
+        $extension = ".png";
+      }
+  
+      elseif (file_exists("images/produits/" . $idProduit . "/images/image_1.jpeg")) {
+        $extension = ".jpeg";
+      }
+  
+      $collectionIdProduits[] = $idProduit;
+      $collectionProduits[] = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $idProduit . DIRECTORY_SEPARATOR . "images/image_1" . $extension;
+    }
 	}
 ?>
 
@@ -72,6 +103,7 @@ if(document.readyState == "loading" ){
   }else{
     document.getElementById("loader").style.opacity = 0;
     document.getElementById("myDiv").style.display = "block";
+    document.getElementById("eTs4f9PrBm11").style.display = "none";
   }
 }
 
@@ -285,14 +317,14 @@ if(document.readyState == "loading" ){
     console.log(element.clientHeight)
   </script> -->
 
-  <a href="<?= url_to('Product::display', '1') ?>" style="grid-column: 1; grid-row: 1 / 3"><div class="one"></div></a>
-  <a href="<?= url_to('Product::display', '1') ?>" style="grid-column: 2 / 4; grid-row: 1 / 3"><div class="two"></div></a>
-  <a href="<?= url_to('Product::display', '1') ?>" style="grid-column: 4 / 5; grid-row: 1"><div class="three"></div></a>
-  <a href="<?= url_to('Product::display', '1') ?>" style="grid-column: 5 / 6; grid-row: 1 / 3"><div class="four"></div></a>
-  <a href="<?= url_to('Product::display', '1') ?>" style="grid-column: 1 / 3; grid-row: 3"><div class="five"></div></a>
-  <a href="<?= url_to('Product::display', '1') ?>" style="grid-column: 3 / 4; grid-row: 3"><div class="six"></div></a>
-  <a href="<?= url_to('Product::display', '1') ?>" style="grid-column: 4 / 5; grid-row: 2 / 4"><div class="seven"></div></a>
-  <a href="<?= url_to('Product::display', '1') ?>" style="grid-column: 5 / 6; grid-row: 3"><div class="eight"></div></a>
+  <a href="<?= url_to('Product::display', $collectionIdProduits[0]) ?>" style="grid-column: 1; grid-row: 1 / 3"><img src="<?= $collectionProduits[0] ?>" class="one"/></a>
+  <a href="<?= url_to('Product::display', $collectionIdProduits[1]) ?>" style="grid-column: 2 / 4; grid-row: 1 / 3"><img  src="<?= $collectionProduits[1] ?>"class="two"/></a>
+  <a href="<?= url_to('Product::display', $collectionIdProduits[2]) ?>" style="grid-column: 4 / 5; grid-row: 1"><img src="<?= $collectionProduits[2] ?>" class="three"/></a>
+  <a href="<?= url_to('Product::display', $collectionIdProduits[3]) ?>" style="grid-column: 5 / 6; grid-row: 1 / 3"><img src="<?= $collectionProduits[3] ?>" class="four"/></a>
+  <a href="<?= url_to('Product::display', $collectionIdProduits[4]) ?>" style="grid-column: 1 / 3; grid-row: 3"><img src="<?= $collectionProduits[4] ?>" class="five"/></a>
+  <a href="<?= url_to('Product::display', $collectionIdProduits[5]) ?>" style="grid-column: 3 / 4; grid-row: 3"><img src="<?= $collectionProduits[5] ?>" class="six"/></a>
+  <a href="<?= url_to('Product::display', $collectionIdProduits[6]) ?>" style="grid-column: 4 / 5; grid-row: 2 / 4"><img src="<?= $collectionProduits[6] ?>" class="seven"/></a>
+  <a href="<?= url_to('Product::display', $collectionIdProduits[7]) ?>" style="grid-column: 5 / 6; grid-row: 3"><img src="<?= $collectionProduits[7] ?>" class="eight"/></a>
  </div>
 </div>
 <?php include 'footer.php';?>

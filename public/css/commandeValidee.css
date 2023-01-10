@@ -46,6 +46,10 @@ body {
     font-size: 25px;
 }
 
+.facture {
+    margin-top: 30px;
+}
+
 .bottom_container div {
 	display: flex;
     justify-content: center;

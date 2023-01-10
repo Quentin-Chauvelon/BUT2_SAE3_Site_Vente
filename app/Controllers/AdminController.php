@@ -9,6 +9,7 @@ use App\Models\ModeleCollection;
 use App\Models\ModeleCommande;
 use App\Models\ModeleCoupon;
 use App\Entities\Taille;
+
 require_once APPPATH  . 'Entities' . DIRECTORY_SEPARATOR . 'Taille.php';
 
 
@@ -406,8 +407,13 @@ class AdminController extends BaseController
         }
 
         // on s'assure que la taille choisie pour l'exemplaire correspond bien à une taille possible en fonction de la catégorie du produit
-        if ($produit->categorie == "posters") {
+        if ($produit->categorie == "poster") {
             if (!$tailleEnum->estPoster()) {
+                return $this->returnAdminView('exemplaires');
+            }
+        }
+        elseif ($produit->categorie == "accessoire") {
+            if (!$tailleEnum->estAccessoire()) {
                 return $this->returnAdminView('exemplaires');
             }
         }
@@ -416,8 +422,12 @@ class AdminController extends BaseController
                 return $this->returnAdminView('exemplaires');
             }
         }
-        
-        $this->ModeleExemplaire->creerExemplaire($idProduit, $couleur, $taille, $quantite);
+
+        if ($taille == "Standard") {
+            $taille = NULL;
+        }
+
+        $this->ModeleExemplaire->creerExemplaire((int)$idProduit, $couleur, $taille, $quantite);
 
         // $idProduit = $this->request->getPost('id_produit');
         // $couleur = $this->request->getPost('couleur');

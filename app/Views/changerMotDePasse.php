@@ -34,8 +34,10 @@
 
 			<h5 class="erreur_texte"><?= ($erreurTexte != "") ? $erreurTexte : "" ?></h5>
 
-			<form action=<?= url_to('ClientController::ChangerMotDePasse', "") ?> method="post">
-				
+			<form action=<?= url_to('ClientController::reinitialiserMotDePasse') ?> method="post">
+			
+				<input type="hidden" name="id_client" id="id_client" placeholder=" " value="<?= $idClient ?>" required/>
+
 				<div>
 					<label for="password">Nouveau mot de passe *</label>
 

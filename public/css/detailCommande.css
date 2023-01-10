@@ -9,26 +9,54 @@ body {
 .panier_header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .panier_header a {
 	text-decoration: none;
 }
 
-.panier_header .total, .panier_header .numero_commande{
+.panier_header .total, .panier_header .telecharger_facture{
     font-size: 25px;
     font-weight: 900;
 }
 
-.panier_header > div, .panier_header .numero_commande {
+.panier_header > div {
     width: 30%;
 }
 
-.panier_header .numero_commande {
-    text-align: right
+.panier_header > div:last-child {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.panier_header .telecharger_facture {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    margin: 20px;
+
+    background-color: #2e2e2e;
+    color: white;
+    border: solid 3px #2e2e2e;
+    width: 280px;
+    height: 50px;
+    border-radius: 20px;
+
+    font-weight: 600;
+    font-size: 30px;
+
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.panier_header .telecharger_facture:hover {
+    background-color: white;
+    color: #2e2e2e;
 }
 
 .panier_header .date_commande {
+    margin: 0;
     font-size: 34px;
     font-weight: 900;
 }
@@ -220,7 +248,7 @@ body {
         text-align: center;
     }
 
-    .panier_header .numero_commande {
+    .panier_header .telecharger_facture {
         width: 100%;
         text-align: center;
     }

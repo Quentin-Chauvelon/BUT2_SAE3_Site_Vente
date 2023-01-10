@@ -20,17 +20,22 @@
                 <a href="<?= url_to('Product::display', $favori->id_produit) ?>">
                     <div class="image_container">
                         <?php 
-                            $imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $favori->id_produit . DIRECTORY_SEPARATOR . "images/image_1.png";
+                            $extension = "";
+                            
+                            if (file_exists("images/produits/" . $favori->id_produit . "/images/image_1.jpg")) {
+                                $extension = ".jpg";
+                            }
 
-                            $headers = @get_headers($imageURL);
+                            elseif (file_exists("images/produits/" . $favori->id_produit . "/images/image_1.png")) {
+                                $extension = ".png";
+                            }
 
-                            // On vérifie si l'url existe
-                            if(!$headers  || strpos($headers[0], '404')) {
-                                $imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $favori->id_produit . DIRECTORY_SEPARATOR . "images/image_1.jpg";
+                            elseif (file_exists("images/produits/" . $favori->id_produit . "/images/image_1.jpeg")) {
+                                $extension = ".jpeg";
                             }
                         ?>
 
-                        <img src=<?= $imageURL ?>>
+                        <img src=<?= site_url() . "images/produits" . DIRECTORY_SEPARATOR . $favori->id_produit . DIRECTORY_SEPARATOR . "images/image_1" . $extension ?>>
                     </div>
                 </a>
 

@@ -293,7 +293,7 @@
                                 }
                             ?>
 
-                            <h3><?= ($taille != NULL) ? $taille : "Standard" ?> : <span class="green"><?= $quantiteTotal ?> disponibles</span></h3>
+                            <h3><?= $taille ?> : <span class="green"><?= $quantiteTotal ?> disponibles</span></h3>
 
                             <div class="exemplaires_couleurs_container">
 
@@ -415,9 +415,7 @@
             <form id="creer_collection" class="creer_collection_form" action=<?= url_to('AdminController::creerCollection') ?> method="post">
                 <h1>Créer une collection :</h1>
 
-                <div>
-                    <label for="nom">Nom *</label>
-                    <input type="text" name="nom" id="nom" placeholder=" " maxlength="50" required/>
+                <div> <label for="nom">Nom *</label> <input type="text" name="nom" id="nom" placeholder=" " maxlength="50" required/>
                 </div>
 
                 <div>

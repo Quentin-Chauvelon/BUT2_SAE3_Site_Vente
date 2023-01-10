@@ -29,11 +29,11 @@ class ModeleExemplaire extends SafeModel
      * Si un exemplaire similaire existé déjà alors il sera ajouté au stock.
      * @param $id_produit int L'id du produit auquel l'exemplaire est associé.
      * @param $couleur  string La couleur des exemplaires.
-     * @param $taille Taille La taille des exemplaires. Doit correspondre aux tailles de l'énumération
+     * @param $taille string La taille des exemplaires. Doit correspondre aux tailles de l'énumération
      * @param $quantite int Le nombre d'exemplaires à ajouter.
      * @return bool True si la création a réussi, false sinon.
      */
-    function creerExemplaire(int $id_produit, string $couleur, Taille $taille, int $quantite): bool
+    function creerExemplaire(int $id_produit, string $couleur, ?string $taille, int $quantite): bool
     {
         $sql = "CALL CreerExemplaire(?, ?, ?, ?)";
         try {

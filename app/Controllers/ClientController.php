@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Entities\Exemplaire;
+use App\Entities\Favori;
 use App\Models\ModeleClient;
 use App\Entities\Client;
 use App\Models\ModeleProduit;
@@ -11,7 +12,11 @@ use App\Models\ModeleExemplaire;
 use App\Models\ModeleCommande;
 use App\Models\ModeleAdresse;
 use App\Models\ModeleCoupon;
+use Exception;
 
+/**
+ * ClientController est le contrôleur utilisé pour la majorité des actions faites par les utilisateurs lambda du site.
+ */
 class ClientController extends BaseController
 {
 
@@ -25,15 +30,17 @@ class ClientController extends BaseController
         $this->ModeleCommande = ModeleCommande::getInstance();
         $this->ModeleAdresse = ModeleAdresse::getInstance();
         $this->ModeleCoupon = ModeleCoupon::getInstance();
-
-        // $this->session = \Config\Services::session();
-        // $this->session->start();
-        
         $this->request = \Config\Services::request();
     }
 
-
-    public function monCompte() {
+    /**
+     * Retourne la page quand on appuie sur le bouton monCompte.
+     * Se connecter si on n'est pas connecté, sinon affiche la page monCompte.
+     * @return string
+     */
+    public function monCompte(): string
+    {
+        // La vue du compte de l'utilisateur.
         if ($this->SessionExistante()) {
             return view("compte", array(
                 "compteAction" => "profil",
@@ -41,26 +48,35 @@ class ClientController extends BaseController
                 "session" => $this->getDonneesSession()
             ));
         }
-
-        else {
-            return view("creerCompte", array(
-                "compteDejaExistant" => false,
-                "passwordsDifferents" => false,
-                "session" => $this->getDonneesSession()
-            ));
-        }
+        // La vue de connexion
+        return view("creerCompte", array(
+            "compteDejaExistant" => false,
+            "passwordsDifferents" => false,
+            "session" => $this->getDonneesSession()
+        ));
     }
 
-
-    public function inscription() {
+    /**
+     * @return string La vue pour créer un compte.
+     */
+    public function inscription(): string
+    {
         return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
     }
 
-
-    public function creerCompte()
+    /**
+     * Crée un compte à partir des paramètres en post.
+     * @return string La vue suivante.
+     */
+    public function creerCompte(): string
     {
         $email = $this->request->getPost('email');
-        $result =  $this->ModeleClient->where('adresse_email', $email)->first();
+        try {
+            $result =  $this->ModeleClient->where('adresse_email', $email)->first();
+        } catch (Exception) {
+            return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
+        }
+
         
         // si l'utilisateur a déjà un compte, on lui suggère de se connecter plutôt
         if ($result != NULL) {
@@ -71,7 +87,7 @@ class ClientController extends BaseController
         $password = $this->request->getPost('password');
         $passwordRepetition = $this->request->getPost('passwordRepetition');
 
-        // si les deux mot de passe sont différents, on retourne une erreur
+        // si les deux mots de passe sont différents, on retourne une erreur
         if ($password != $passwordRepetition) {        
             return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => true, "session" => $this->getDonneesSession()));
         }
@@ -79,11 +95,7 @@ class ClientController extends BaseController
         $prenom = $this->request->getPost('prenom');
         $nom = $this->request->getPost('nom');
 
-        if ($prenom == "" || $nom == "") {
-
-        }
-
-        // si les deux mot de passe sont égaux, on crée le compte
+        // si les deux mots de passe sont égaux, on crée le compte
         $client = new Client();
         $client->adresse_email = $email;
         $client->nom = $nom;
@@ -91,11 +103,14 @@ class ClientController extends BaseController
         $client->password = $password;
 
         // on ajoute le client à la base de donnée
-        $this->ModeleClient->insert($client);
+        try {
+            $this->ModeleClient->insert($client);
+        } catch (Exception) {
+            return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
+        }
         
         // on récupère l'id du client qui vient d'être créé
         $idClient = $this->ModeleClient->getInsertID();
-        // $idClient = $this->ModeleClient->where('adresse_email', $email)->first()->id_client;
         
         // on sauvegarde certaines données dans la session
         if ($this->request->getPost("rester_connecte") == "rester_connecte") {
@@ -105,16 +120,22 @@ class ClientController extends BaseController
 
         $this->setDonneesSession($idClient, $client->prenom, $client->nom, $email);
 
-        return view("succesCreationCompteClient");
+        return view("successCreationCompteClient");
     }
 
-
-    public function connexion() {
+    /**
+     * Retourne la page de connexion.
+     * @return string La page de connexion
+     */
+    public function connexion(): string {
         return view("connexionCompte", array("compteNonExistant" => false, "passwordFaux" => false, "session" => $this->getDonneesSession()));
     }
 
-
-    public function connexionCompte() {
+    /**
+     * Connecte un utilisateur qui a rentré son identifiant et son mot de passe, puis le redirige vers Home.
+     * @return string
+     */
+    public function connexionCompte(): string {
         $email = $this->request->getPost('email');
         $password = $this->request->getPost('password');
         $result =  $this->ModeleClient->getClientParEmail($email);
@@ -145,7 +166,11 @@ class ClientController extends BaseController
     }
 
 
-    public function deconnexion() {
+    /**
+     * Déconnecte un utilisateur.
+     * @return string La vue Home
+     */
+    public function deconnexion(): string {
         $this->session->destroy();
 
         // on supprime le cookie de rester connecte s'il est présent
@@ -159,13 +184,20 @@ class ClientController extends BaseController
         return view('home', array("estAdmin" => false, "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => array('panier' => array(), 'id'  => NULL, 'prenom' => NULL, 'nom' => NULL, 'email' => NULL)));
     }
 
-
+    /**
+     * Retourne la liste des favoris de l'utilisateur actuel.
+     * @return Favori[] Les favoris de l'utilisateur connecté
+     */
     public function getAllFavorisClient(): array {
         return $this->ModeleFavori->getFavorisClient($this->session->get('id'));
     }
 
-
-    public function afficherFavoris() {
+    /**
+     * Retourne la page des favoris de l'utilisateur actuel.
+     * @return string La vue des favoris
+     */
+    public function afficherFavoris(): string
+    {
 
         // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
         if (!$this->SessionExistante()) {
@@ -181,7 +213,7 @@ class ClientController extends BaseController
             try{
                 $produit = $this->ModeleProduit->find($idFavori);
             }
-            catch (\Exception $e) {
+            catch (Exception) {
                 continue;
             }
             $produits[] = $produit;
@@ -190,7 +222,12 @@ class ClientController extends BaseController
         return view("compte", array("compteAction" => "favoris", "favoris" => $produits, "session" => $this->getDonneesSession()));
     }
 
-
+    /**
+     * Ajoute un produit aux favoris de l'utilisateur actuel.
+     * @param int $idProduit L'id du produit à ajouter aux favoris
+     * @param int $returnProduit 0 si on retourne la page des favoris, 1 si on retourne la page du produit
+     * @return string La vue des favoris
+     */
     public function ajouterFavori(int $idProduit, int $returnProduit) {
 
         // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
@@ -203,6 +240,7 @@ class ClientController extends BaseController
         {
             $this->ModeleFavori->ajouterFavori($this->session->get('id'), $idProduit);
         }
+        // Rediriger sur la page des produits si $returnProduit == 1, sinon sur la page de tous les favoris.
         if ($returnProduit == 1) {
             return view('product', array("product" => $this->ModeleProduit->find($idProduit), "exemplaires" => $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll(), "ajouteAuPanier" => false, "produitFavori" => $this->estEnFavori($idProduit), "manqueExemplaire" => false, "session" => $this->getDonneesSession()));
         } else {
@@ -210,18 +248,29 @@ class ClientController extends BaseController
         }
     }
 
-
-    public function supprimerFavori(int $idProduit) {
+    /**
+     * Retire un produit des favoris de l'utilisateur actuel.
+     * @param int $idProduit L'id du produit
+     * @return void
+     */
+    public function supprimerFavori(int $idProduit): void
+    {
         try {
             $this->ModeleFavori->where('id_client', $this->getSessionId())->where('id_produit', $idProduit)->delete();
         }
-        catch (\Exception $e) {
+        catch (Exception) {
             return;
         }
     }
 
-
-    public function afficherPanierCoupon($coupon, string $etatCoupon) {
+    /**
+     * Affiche la vue du panier de l'utilisateur actuel.
+     * @param int|null $coupon L'id du coupon utilisé ou nul.
+     * @param string $etatCoupon L'état du coupon utilisé ou vide.
+     * @return string La vue
+     */
+    public function afficherPanierCoupon(?int $coupon, string $etatCoupon): string
+    {
 
         // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
         if (!$this->SessionExistante()) {
@@ -238,7 +287,7 @@ class ClientController extends BaseController
 
             // on compte la quantite de chaque exemplaire en fonction du produit, de la couleur et de la taille
             foreach ($panier as $exemplaire) {
-                $exemplaireCle = (string)$exemplaire->id_produit . $exemplaire->couleur . $exemplaire->taille;
+                $exemplaireCle = $exemplaire->id_produit . $exemplaire->couleur . $exemplaire->taille;
 
                 if (array_key_exists($exemplaireCle, $quantitesExemplaires)) {
                     $quantitesExemplaires[$exemplaireCle] += $exemplaire->quantite;
@@ -254,7 +303,12 @@ class ClientController extends BaseController
 
             foreach ($panier as $exemplaire) {
                 $idProduit = $exemplaire->id_produit;
-                $produit = $this->ModeleProduit->where('id_produit', $idProduit)->first();
+                try{
+                    $produit = $this->ModeleProduit->find($idProduit);
+                }
+                catch (Exception) {
+                    continue;
+                }
 
                 // si le produit n'a pas été trouvée, on renvoie sur la page d'accueil
                 if ($produit == NULL) {
@@ -282,30 +336,30 @@ class ClientController extends BaseController
         ));
     }
 
-
-    public function afficherPanier() {
+    /**
+     * Affiche la vue du panier sans coupon de réduction.
+     * @return string La vue du panier
+     */
+    public function afficherPanier(): string
+    {
         return $this->afficherPanierCoupon(NULL, "");
     }
 
 
     public function afficherHistorique() {
-        $commandes = $this->ModeleCommande->findAll();
-
-        $commandesClient = array();
-        $idClient = $this->getSessionId();
-
-        foreach($commandes as $commande) {
-            $idCommande = $commande->id_client;
-
-            if ($idCommande == $idClient) {
-                $commandesClient[] = $commande;
-            }
+        try{
+            $commandes = $this->ModeleCommande->where('id_client', $this->getSessionId())->findAll();
         }
-
-        return view("compte", array("compteAction" => "historique", "commandes" => $commandesClient, "exemplaires" => $this->ModeleExemplaire->findAll(), "session" => $this->getDonneesSession()));
+        catch (Exception) {
+            $commandes = array();
+        }
+        return view("compte", array("compteAction" => "historique", "commandes" => $commandes, "exemplaires" => $this->ModeleExemplaire->findAll(), "session" => $this->getDonneesSession()));
     }
 
-
+    /**
+     * Affiche la vue du compte de l'utilisateur actuel.
+     * @return string La vue du compte
+     */
     public function modifierProfil() {
         $email = $this->request->getPost('email');
 
@@ -313,9 +367,11 @@ class ClientController extends BaseController
         if ($this->SessionExistante() && $this->session->get('email') == $email) {
             $email = "";
         }
-
-        $result =  $this->ModeleClient->where('adresse_email', $email)->first();
-
+        try{
+            $result =  $this->ModeleClient->where('adresse_email', $email)->first();
+        } catch (Exception) {
+            $result = null;
+        }
         // s'il existe déjà un autre compte avec l'adresse mail indiquée ou que la variable de session n'est pas définie, on renvoie une erreur
         if ($result != NULL || !$this->SessionExistante()) {
             return view("compte", array("compteAction" => "profil", "emailDejaUtilise" => true, "session" => $this->getDonneesSession()));
@@ -324,7 +380,11 @@ class ClientController extends BaseController
         $prenom = $this->request->getPost('prenom');
         $nom = $this->request->getPost('nom');
 
-        $clientAvant = $this->ModeleClient->where('adresse_email', $this->session->get("email"))->first();
+        try {
+            $clientAvant = $this->ModeleClient->where('adresse_email', $this->session->get("email"))->first();
+        } catch (Exception) {
+            $clientAvant = null;
+        }
 
         if ($clientAvant != NULL) {
             $idClientAvant = $clientAvant->id_client;
@@ -335,58 +395,45 @@ class ClientController extends BaseController
                 'nom' => ($nom != "") ? $nom : $clientAvant->nom
                 // 'password' => $clientAvant->password
             );
+            try {
+                $this->ModeleClient->update($idClientAvant, $client);
+                $this->setDonneesSession($idClientAvant, $client['prenom'], $client['nom'], $client['adresse_email']);
+            } catch (Exception) {}
 
-            $this->ModeleClient->update($idClientAvant, $client);
-
-            $this->setDonneesSession($idClientAvant, $client['prenom'], $client['nom'], $client['adresse_email']);
         }
-
         return view("compte", array("compteAction" => "profil", "emailDejaUtilise" => false, "session" => $this->getDonneesSession()));
     }
 
-
-    public function ajouterAuPanier() {
-        // $idProduit = $this->request->getPost('idProduit');
+    /**
+     * Ajoute des produits au panier puis va sur la vue.
+     * @return string
+     */
+    public function ajouterAuPanier(): string {
 
         if (!$this->SessionExistante()) {
             return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
         }
-        
-        // $commandes = $this->ModeleCommande->findAll();
-        // $idCommandeClient = NULL;
-
-        // $idClient = $this->getSessionId();
-
-        // foreach($commandes as $commande) {
-        //     $idCommande = $commande->id_client;
-
-        //     if ($idCommande == $idClient) {
-        //         $idCommandeClient = $idCommande;
-        //     }
-        // }
-
-        // s'il n'existe pas de commande pour l'utilisateur, on en crée une
-        // if (!$idCommandeClient) {
-        //     $commandes = $this->ModeleCommande->insert(array('id_client' => $idClient));
-        // }
-
         $idProduit = $this->request->getPost('idProduit');
         $quantite = $this->request->getPost('quantite');
         $couleur = $this->request->getPost('couleur');
         $taille = $this->request->getPost('taille');
 
-        $exemplaire = $this->ModeleExemplaire
-            ->where('est_disponible', true)
-            ->where('id_produit', $idProduit)
-            ->where('couleur', $couleur)
-            ->where('taille', $taille)
-            ->first();
+        try {
+            $exemplaire = $this->ModeleExemplaire
+                ->where('est_disponible', true)
+                ->where('id_produit', $idProduit)
+                ->where('couleur', $couleur)
+                ->where('taille', $taille)
+                ->first();
+        } catch (Exception) {
+            $exemplaire = null;
+        }
 
         if ($exemplaire == NULL) {
             return view('product', array("product" => $this->ModeleProduit->find($idProduit), "exemplaires" => $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll(), "ajouteAuPanier" => false, "produitFavori" => $this->estEnFavori($idProduit), "manqueExemplaire" => true, "session" => $this->getDonneesSession()));
         }
 
-        // on s'assure qu'il y assez d'exemplaires pour la couleur et la taille donnée
+        // on s'assure qu'il y a assez d'exemplaires pour la couleur et la taille donnée
         if ($exemplaire->quantite < $quantite) {
             return view('product', array("product" => $this->ModeleProduit->find($idProduit), "exemplaires" => $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll(), "ajouteAuPanier" => false, "produitFavori" => $this->estEnFavori($idProduit), "manqueExemplaire" => true, "session" => $this->getDonneesSession()));
         }
@@ -403,10 +450,10 @@ class ClientController extends BaseController
         ));
 
         $exemplaireDejaPresentDansPanier = false;
-
-        foreach($panier as $key=>$exemplaire) {
+        // Vérifier si on a déjà la même chose dans le panier.
+        foreach($panier as $exemplaire) {
             if ($exemplaire->id_produit == $exempl->id_produit && $exemplaire->couleur == $exempl->couleur && $exemplaire->taille == $exempl->taille) {
-                $panier[$key]->quantite = $panier[$key]->quantite + (int)$exempl->quantite; 
+                $exemplaire->quantite = $exemplaire->quantite + (int)$exempl->quantite;
                 $exemplaireDejaPresentDansPanier = true;
             }
         }
@@ -418,15 +465,16 @@ class ClientController extends BaseController
         // on sauvegarde le panier dans la session
         $this->session->set("panier", $panier);
 
-//        // si certains exemplaires n'étaient pas disponibles
-//        if ($quantite != 0) {
-//            return view('product', array("product" => $this->ModeleProduit->find($idProduit), "exemplaires" => $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll(), "ajouteAuPanier" => false, "produitFavori" => $this->estEnFavori($idProduit), "manqueExemplaire" => true, "session" => $this->getDonneesSession()));
-//        }
-
         return view('product', array("product" => $this->ModeleProduit->find($idProduit), "exemplaires" => $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll(), "ajouteAuPanier" => true, "produitFavori" => $this->estEnFavori($idProduit), "manqueExemplaire" => false, "session" => $this->getDonneesSession()));
     }
 
-
+    /**
+     * Retire un exemplaire du panier puis va sur la vue.
+     * @param int $idProduit L'id du produit à retirer du panier.
+     * @param string $couleur Sa couleur
+     * @param string $taille Sa taille
+     * @return string La vue
+     */
     public function supprimerDuPanier(int $idProduit, string $couleur, string $taille) {
 
         // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
@@ -450,7 +498,8 @@ class ClientController extends BaseController
     }
 
 
-    public function appliquerCoupon() {
+    public function appliquerCoupon(): string
+    {
         
         // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
         if (!$this->SessionExistante()) {
@@ -480,17 +529,21 @@ class ClientController extends BaseController
         }
     }
 
-
-    public function validerPanier($idCoupon) {
+    /**
+     * Valide un panier et en fait une commande.
+     * @param string $idCoupon L'identifiant du potentiel coupon à appliquer.
+     * @return string
+     */
+    public function validerPanier(string $idCoupon) {
 
         // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
         if (!$this->SessionExistante()) {
             return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
         }
 
-        $idClient = $this->getSessionId();
         $panier = $this->session->get("panier");
 
+        // Vérifier si le panier est vide.
         $nombreArticles = 0;
 
         foreach ($panier as $exemplaire) {
@@ -500,19 +553,27 @@ class ClientController extends BaseController
         if ($nombreArticles == 0) {
             return $this->afficherPanier();
         }
+        try{
+            $commandes = $this->ModeleCommande->findAll();
+        } catch(Exception){
+            $commandes = array();
+        }
 
-        $commandes = $this->ModeleCommande->findAll();
         $idClient = $this->getSessionId();
         $idCommande = NULL;
 
-        // on regarde si l'utiliateur n'a pas déjà une commande en cours, sinon en crée une
+        // on regarde si l'utilisateur n'a pas déjà une commande en cours, sinon en crée une
         foreach($commandes as $commande) {
             if ($commande->id_client == $idClient && $commande->id_adresse == NULL && !$commande->est_validee) {
                 $idCommande = $commande->id_commande;
             }
         }
+        try{
+            $coupon = $this->ModeleCoupon->find($idCoupon);
+        } catch (Exception){
+            $coupon = NULL;
+        }
 
-        $coupon = $this->ModeleCoupon->find($idCoupon);
 
         // si l'utilisateur n'a pas de commande en cours, on en crée une
         if ($idCommande == NULL) {
@@ -526,60 +587,39 @@ class ClientController extends BaseController
                 'montant' => 0,
                 'id_adresse' => NULL
             );
+            try {
+                $this->ModeleCommande->insert($commande);
 
-            $this->ModeleCommande->insert($commande);
+                // on récupère l'id de la commande qui vient d'être crée
+                $idCommande = $this->ModeleCommande->getInsertID();
+            } catch(Exception){}
 
-            // on récupère l'id de la commande qui vient d'être crée
-            $idCommande = $this->ModeleCommande->getInsertID();
         }
 
         // on applique le nouveau coupon à la commande si elle existait déjà
         else if ($coupon != NULL) {
-            $this->ModeleCommande->update($idCommande, array("id_coupon" => $coupon->id_coupon));
+            try{
+                $this->ModeleCommande->update($idCommande, array("id_coupon" => $coupon->id_coupon));
+            }
+            catch (Exception){}
         }
 
         // on enlève tous les exemplaires de la commande au cas où la commande aurait été annulée et certains articles enlevés ou ajoutés
-        $exemplaire = $this->ModeleExemplaire->where('id_commande', $idCommande)->first();
-
-        while ($exemplaire != NULL) {
-            $this->ModeleExemplaire->delete($exemplaire->id_exemplaire);
-
-            $exemplaireAvecProduitCouleurTaille = $this->ModeleExemplaire
-                ->where('id_commande', $idCommande)
-                ->where('est_disponible', true)
-                ->where('id_produit', $exemplaire->id_produit)
-                ->where('couleur', $exemplaire->couleur)
-                ->where('taille', $exemplaire->taille)
-                ->first();
-
-            // s'il y a déjà un exemplaire du même produit avec la même couleur et la même taille, on augmente la quantité, sinon on en crée un
-            if ($exemplaireAvecProduitCouleurTaille != NULL) {
-                $this->ModeleExemplaire
-                ->where('id_exemplaire', $exemplaireAvecProduitCouleurTaille->id_exemplaire)
-                ->set(['quantite' => (int)$exemplaireAvecProduitCouleurTaille->quantite + (int)$exemplaire->quantite])
-                ->update();
-            }
-            else {
-                $this->ModeleExemplaire->creerExemplaire($exemplaire->id_produit, $exemplaire->couleur, $exemplaire->taille, $exemplaire->quantite);
-            }
-
-            $exemplaire = $this->ModeleExemplaire->where('id_commande', $idCommande)->first();
-        }
-
-        // on ajoute tous les articles à la commande
-        // $exemplaireModifiee = array(
-        //     'id_commande' => $idCommande,
-        //     'est_disponible' => false
-        // );
+        $this->enleverExemplairesCommande($idCommande);
 
         // on trouve un exemplaire disponible correspondant à l'exemplaire et on modifie id_commande et est_disponible
         foreach ($panier as $exemplaire) {
-            $exemplaireCommande = $this->ModeleExemplaire
-                ->where('est_disponible', true)
-                ->where('id_produit', $exemplaire->id_produit)
-                ->where('couleur', $exemplaire->couleur)
-                ->where('taille', $exemplaire->taille)
-                ->first();
+            try {
+                $exemplaireCommande = $this->ModeleExemplaire
+                    ->where('est_disponible', true)
+                    ->where('id_produit', $exemplaire->id_produit)
+                    ->where('couleur', $exemplaire->couleur)
+                    ->where('taille', $exemplaire->taille)
+                    ->first();
+            } catch (Exception){
+                $exemplaireCommande = NULL;
+            }
+
 
             if ($exemplaireCommande == NULL) {
                 return $this->afficherPanier();
@@ -587,86 +627,82 @@ class ClientController extends BaseController
 
             $this->ModeleExemplaire->ajouterExemplaireCommande($idCommande, $exemplaireCommande->id_exemplaire, $exemplaire->quantite);
         }
-
-        // on s'assure que le coupon est valide (valable, non périmé)
-        $coupon = "";
-        $idCoupon = $this->ModeleCommande
-            ->where('id_commande', $idCommande)
-            ->first();
-        var_dump($idCoupon->id_coupon);
+        try {
+            $idCoupon = $this->ModeleCommande
+                ->where('id_commande', $idCommande)
+                ->first();
+        }
+        catch (Exception){
+            $idCoupon = NULL;
+        }
 
         if ($idCoupon != NULL && $idCoupon != "") {
-            $coupon = $this->ModeleCoupon->find($idCoupon->id_coupon);
+            try{
+                $coupon = $this->ModeleCoupon->find($idCoupon->id_coupon);
+            } catch (Exception){
+                $coupon = NULL;
+            }
+
 
             if ($coupon != NULL) {
                 if (!$coupon->est_valable || $coupon->date_limite < date("Y-m-d")) {
-                    $this->ModeleCommande->update($idCommande, array("id_coupon" => ""));
+                    try {
+                        $this->ModeleCommande->update($idCommande, array("id_coupon" => NULL));
+                    } catch (Exception){}
+                    }
                 }
             }
-        }
 
         // on calcule le montant de la commande
         $this->ModeleCommande->CalculerMontant($idCommande);
 
-        $commande = $this->ModeleCommande
-            ->where('id_commande', $idCommande)
-            ->where('est_validee', false)
-            ->first();
+        try{
+            $commande = $this->ModeleCommande
+                ->where('id_commande', $idCommande)
+                ->where('est_validee', false)
+                ->first();
+        } catch (Exception){
+            $commande = NULL;
+        }
+
 
         if ($commande == NULL) {
             return $this->afficherPanier();
         }
 
         $montant = $commande->montant;
-        var_dump($montant);
 
         return view("compte", array("compteAction" => "validerCommandeAdresse", "montant" => $montant, "nombreArticles" => $nombreArticles, "idCommande" => $idCommande, "adressesPrecendentes" => $this->ModeleAdresse->getAdressesParClient($idClient), "session" => $this->getDonneesSession()));
     }
 
-
-    public function viderPanier() {
+    /**
+     * Vide le panier et va sur la vue panier.
+     * @return string La vue panier
+     */
+    public function viderPanier(): string {
         $this->session->set("panier", array());
 
         return $this->afficherPanier();
     }
 
-
-    public function annulerCommande($idCommande) {
+    /** Annule une commande et retourne sur le panier.
+     * @param int $idCommande
+     * @return string
+     */
+    public function annulerCommande(int $idCommande): string
+    {
 
         // on enlève tous les exemplaires de la commande au cas où la commande aurait été annulée et certains articles enlevés ou ajoutés
-        $exemplaire = $this->ModeleExemplaire->where('id_commande', $idCommande)->first();
-
-        while ($exemplaire != NULL) {
-            $this->ModeleExemplaire->delete($exemplaire->id_exemplaire);
-
-            $exemplaireAvecProduitCouleurTaille = $this->ModeleExemplaire
-                ->where('id_commande', $idCommande)
-                ->where('est_disponible', true)
-                ->where('id_produit', $exemplaire->id_produit)
-                ->where('couleur', $exemplaire->couleur)
-                ->where('taille', $exemplaire->taille)
-                ->first();
-
-            // s'il y a déjà un exemplaire du même produit avec la même couleur et la même taille, on augmente la quantité, sinon on en crée un
-            if ($exemplaireAvecProduitCouleurTaille != NULL) {
-                $this->ModeleExemplaire
-                ->where('id_exemplaire', $exemplaireAvecProduitCouleurTaille->id_exemplaire)
-                ->set(['quantite' => (int)$exemplaireAvecProduitCouleurTaille->quantite + (int)$exemplaire->quantite])
-                ->update();
-            }
-            else {
-                $this->ModeleExemplaire->creerExemplaire($exemplaire->id_produit, $exemplaire->couleur, $exemplaire->taille, $exemplaire->quantite);
-            }
-
-            $exemplaire = $this->ModeleExemplaire->where('id_commande', $idCommande)->first();
-        }
+        $this->enleverExemplairesCommande($idCommande);
 
         return $this->afficherPanier();
     }
 
-
+    /**
+     * Lit l'adresse renseignée par l'utilisateur lors de la commande.
+     * @return string
+     */
     public function adresseCommande() {
-        $idClient = $this->getSessionId();
         $idCommande = $this->request->getPost('idCommande');
 
         $rue = $this->request->getPost('rue');
@@ -678,11 +714,16 @@ class ClientController extends BaseController
         }
 
         // on regarde si le client a réutilisé une adresse
-        $idAdresse = $this->ModeleAdresse
-            ->where('rue', $rue)
-            ->where('code_postal', $codePostal)
-            ->where('ville', $ville)
-            ->first();
+        try {
+            $idAdresse = $this->ModeleAdresse
+                ->where('rue', $rue)
+                ->where('code_postal', $codePostal)
+                ->where('ville', $ville)
+                ->first();
+        } catch (Exception){
+            $idAdresse = NULL;
+        }
+
 
         if ($idAdresse != NULL) {
             $idAdresse = $idAdresse->id_adresse;
@@ -698,10 +739,12 @@ class ClientController extends BaseController
             );
 
             // on ajoute l'adresse dans la table
-            $this->ModeleAdresse->insert($adresse);
-
-            // // on récupère l'id de l'adresse qui vient d'être crée
-            $idAdresse = $this->ModeleAdresse->getInsertID();
+            try {
+                $this->ModeleAdresse->insert($adresse);
+                $idAdresse = $this->ModeleAdresse->getInsertID();
+            } catch (Exception){
+                $idAdresse = NULL;
+            }
         }
 
         if ($idAdresse != NULL) {
@@ -710,9 +753,10 @@ class ClientController extends BaseController
                 'id_adresse' => $idAdresse,
                 'est_validee' => true
             );
-
-            $this->ModeleCommande->update((int)$idCommande, $commandeModifiee);
-        }
+            try{
+                $this->ModeleCommande->update($idCommande, $commandeModifiee);
+            } catch (Exception){}
+            }
 
         // on vide le panier
         $this->session->set("panier", array());
@@ -720,11 +764,20 @@ class ClientController extends BaseController
         return view("commandeValidee", array("commande" => $this->ModeleCommande->where('id_commande', $idCommande)->first()));
     }
 
-
-    public function detailCommande($idCommande) {
-        $commande = $this->ModeleCommande
-            ->where('id_commande', $idCommande)
-            ->first();
+    /**
+     * Affiche la page d'une commande.
+     * @param $idCommande int
+     * @return string
+     */
+    public function detailCommande(int $idCommande) {
+        try {
+            $commande = $this->ModeleCommande
+                ->where('id_commande', $idCommande)
+                ->first();
+        }
+        catch (Exception){
+            $commande = NULL;
+        }
 
         // si la commande n'a pas été trouvée, on renvoie sur la page d'accueil
         if ($commande == NULL) {
@@ -760,7 +813,7 @@ class ClientController extends BaseController
 
         // on compte la quantite de chaque exemplaire en fonction du produit, de la couleur et de la taille
         foreach ($exemplaires as $exemplaire) {
-            $exemplaireCle = (string)$exemplaire->id_produit . $exemplaire->couleur . $exemplaire->taille;
+            $exemplaireCle = $exemplaire->id_produit . $exemplaire->couleur . $exemplaire->taille;
 
             if (array_key_exists($exemplaireCle, $quantitesExemplaires)) {
                 $quantitesExemplaires[$exemplaireCle] += $exemplaire->quantite;
@@ -773,10 +826,15 @@ class ClientController extends BaseController
                 );
             }
         }
-
+        // Rajouter les produits.
         foreach ($exemplaires as $exemplaire) {
             $idProduit = $exemplaire->id_produit;
-            $produit = $this->ModeleProduit->where('id_produit', $idProduit)->first();
+            try {
+                $produit = $this->ModeleProduit->where('id_produit', $idProduit)->first();
+            } catch (Exception){
+                $produit = NULL;
+            }
+
 
             // si le produit n'a pas été trouvée, on renvoie sur la page d'accueil
             if ($produit == NULL) {
@@ -795,23 +853,33 @@ class ClientController extends BaseController
         return view("compte", array("compteAction" => "detailCommande", "commande" => $commande, "adresse" => $adresse, "exemplaires" => $exemplairesUnique, "quantitesExemplaires" => $quantitesExemplaires, "produits" => $produits, "session" => $this->getDonneesSession()));
     }
 
-
+    /**
+     * @return string La page cgu
+     */
     public function cgu() {
         return view("cgu", array("session" => $this->getDonneesSession()));
     }
 
-
+    /**
+     * @return string La page qui sommes nous
+     */
     public function quiSommesNous() {
         return view("quiSommesNous", array("session" => $this->getDonneesSession()));
     }
 
-
+    /**
+     * @return string La page contact
+     */
     public function contact() {
         return view("contact", array("session" => $this->getDonneesSession()));
     }
 
-
-    public function avis() {
+    /**
+     * Utilise la barre en bas de la page pour envoyer un mail d'avis sur le site.
+     * @return string Home
+     */
+    public function avis(): string
+    {
         $to = "quentin.chauvelon@etu.univ-nantes.fr";
         $subject = "Avis du " . date("d/m/Y \a H:i:s");
         $message = wordwrap($this->request->getPost('avis'), 70, "\n", true);
@@ -824,7 +892,10 @@ class ClientController extends BaseController
         return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
     }
 
-
+    /**
+     * Envoie un mail.
+     * @return string Home
+     */
     public function messageContact() {
         $from = $this->request->getPost('from');
         $to = "quentin.chauvelon@etu.univ-nantes.fr";
@@ -840,6 +911,10 @@ class ClientController extends BaseController
         return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
     }
 
+    /**
+     * Envoie un mail permettant de réinitialiser son mot de passe.
+     * @return string La page mdp oublié
+     */
     public function envoyerMailChangementMDP()
     {
         $client = $this->ModeleClient->getClientParEmail($this->request->getPost('email'));
@@ -864,6 +939,10 @@ class ClientController extends BaseController
         return view('motDePasseOublie', ['compteNonExistant' => false]);
     }
 
+    /**
+     * Reçoit le lien du mail de changement de mdp et va sur la page pour le réinitialiser.
+     * @return string La page de réinitialisation de mot de passe
+     */
     public function ChangerMotDePasse($codeMDPOublie)
     {
         $client = $this->ModeleClient->getClientParCodeMDPOublie(urldecode($codeMDPOublie));
@@ -880,6 +959,56 @@ class ClientController extends BaseController
     public function motDePasseOublie()
     {
         return view('motDePasseOublie');
+    }
+
+    /**
+     * Enlève tous les exemplaires d'une commande.
+     * @param $idCommande
+     * @return void
+     */
+    public function enleverExemplairesCommande($idCommande): void
+    {
+        try {
+            $exemplaire = $this->ModeleExemplaire->where('id_commande', $idCommande)->first();
+        } catch (Exception) {
+            $exemplaire = NULL;
+        }
+        //
+        while ($exemplaire != NULL) {
+            try {
+                $this->ModeleExemplaire->delete($exemplaire->id_exemplaire);
+            } catch (Exception) {
+            }
+            try {
+                $exemplaireAvecProduitCouleurTaille = $this->ModeleExemplaire
+                    ->where('id_commande', $idCommande)
+                    ->where('est_disponible', true)
+                    ->where('id_produit', $exemplaire->id_produit)
+                    ->where('couleur', $exemplaire->couleur)
+                    ->where('taille', $exemplaire->taille)
+                    ->first();
+            } catch (Exception) {
+                $exemplaireAvecProduitCouleurTaille = NULL;
+            }
+
+            // s'il y a déjà un exemplaire du même produit avec la même couleur et la même taille, on augmente la quantité, sinon on en crée un
+            if ($exemplaireAvecProduitCouleurTaille != NULL) {
+                try {
+                    $this->ModeleExemplaire
+                        ->where('id_exemplaire', $exemplaireAvecProduitCouleurTaille->id_exemplaire)
+                        ->set(['quantite' => (int)$exemplaireAvecProduitCouleurTaille->quantite + (int)$exemplaire->quantite])
+                        ->update();
+                } catch (Exception) {
+                }
+            } else {
+                $this->ModeleExemplaire->creerExemplaire($exemplaire->id_produit, $exemplaire->couleur, $exemplaire->taille, $exemplaire->quantite);
+            }
+            try {
+                $exemplaire = $this->ModeleExemplaire->where('id_commande', $idCommande)->first();
+            } catch (Exception) {
+                $exemplaire = NULL;
+            }
+        }
     }
 }
 

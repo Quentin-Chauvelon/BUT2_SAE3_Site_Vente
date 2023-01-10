@@ -2,11 +2,16 @@
 
 namespace App\Controllers;
 
+use App\Entities\Produit;
 use App\Models\ModeleProduit;
 use App\Models\ModeleClient;
 use App\Models\ModeleFavori;
 use App\Models\ModeleExemplaire;
+use Exception;
 
+/**
+ * Product est le contrôleur utilisé pour afficher les produits sur la partie client du site.
+ */
 class Product extends BaseController
 {
 
@@ -19,7 +24,12 @@ class Product extends BaseController
     }
     
 
-    public function display(int $idProduit)
+    /**
+     * Affiche la page d'un produit
+     * @param int $idProduit L'identifiant de ce produit
+     * @return string La vue à afficher.
+     */
+    public function display(int $idProduit): string
     {
         $produit =  $this->ModeleProduit->find($idProduit);
 
@@ -38,7 +48,13 @@ class Product extends BaseController
     }
 
 
-    public function getProduitsRuptureStock($products) {
+    /**
+     * getProduitsRuptureStock retourne les produits en rupture de stock parmi une liste de produits
+     * @param Produit[] $products
+     * @return Produit[] Les produits parmi ceux au-dessus qui n'ont plus d'exemplaires en stock.
+     */
+    public function getProduitsRuptureStock($products): array
+    {
         $produitSansExemplaires = array();
 
         // on regarde quels produits n'ont pas d'exemplaires (sont en rupture de stock)
@@ -62,11 +78,15 @@ class Product extends BaseController
     }
 
 
-    public function displayAll()
+    /**
+     * Affiche la page de tous les produits
+     * @return string La vue à afficher.
+     */
+    public function displayAll(): string
     {
         try {
             $products =  $this->ModeleProduit->findAll();
-        } catch (\Exception $e) {
+        } catch (Exception) {
             $products = array();
         }
 
@@ -77,12 +97,16 @@ class Product extends BaseController
         ));
     }
 
-
-    public function trouverToutDeCategorie(string $categorie)
+    /**
+     * Affiche la page avec tous les produits d'une catégorie.
+     * @param string $categorie La catégorie du vêtement
+     * @return string
+     */
+    public function trouverToutDeCategorie(string $categorie): string
     {
         try {
             $products =  $this->ModeleProduit->where('categorie', $categorie)->findAll();
-        } catch (\Exception $e) {
+        } catch (Exception) {
             $products = array();
         }
 

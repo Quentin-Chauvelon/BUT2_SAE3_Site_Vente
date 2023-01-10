@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Entities\Produit;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\IncomingRequest;
@@ -101,7 +102,8 @@ abstract class BaseController extends Controller
     }
 
 
-    public function getDonneesSession() {
+    public function getDonneesSession(): array
+    {
         return array(
             'panier'  => $this->session->get("panier"),
             'id'  => $this->session->get("id"),
@@ -111,15 +113,25 @@ abstract class BaseController extends Controller
         );
     }
 
-    public function getSessionId() {
+    /**
+     * Retourne l'id de la bd de l'utilisateur, NULL sans connexion.
+     * @return int|null L'identifiant de l'utilisateur connecté
+     */
+    public function getSessionId(): ?int {
         return $this->session->get('id');
     }
 
-    public function SessionExistante() {
+    /**
+     * @return bool True si quelqu'un est connecté, false sinon
+     */
+    public function SessionExistante(): bool
+    {
         return $this->session->has('id') && $this->session->get('id') != NULL;
     }
 
-
+    /**
+     * @return bool true si l'utilisateur actuel est admin
+     */
     public function estAdmin(): bool {
         if (!$this->SessionExistante()) {
             return false;
@@ -139,8 +151,11 @@ abstract class BaseController extends Controller
         }
     }
 
-    
-    public function ProduitsPlusPopulaires() {
+    /**
+     * Retourne les produits qui ont le plus de ventes.
+     * @return Produit[] Les trois produits les plus vendus.
+     */
+    public function ProduitsPlusPopulaires(): array {
         $produits = $this->ModeleProduit->getAllProduitsPlusVendus();
         if (count($produits) > 3) {
             return array_slice($produits, 0, 3);
@@ -148,8 +163,11 @@ abstract class BaseController extends Controller
         return $produits;
     }
 
-
-    public function estEnFavori(int $idProduit) {
+    /**
+     * estEnFavori retourne vrai si le produit est en favori pour l'utilisateur connecté.
+     * @return bool Vrai si le produit est en favori pour l'utilisateur connecté.
+     */
+    public function estEnFavori(int $idProduit): bool {
         return $this->ModeleFavori->estEnFavori($this->getSessionId(), $idProduit);
     }
 }

@@ -8,6 +8,12 @@ use CodeIgniter\Exceptions\ModelException;
 use ReflectionException;
 use Closure;
 
+/**
+ * SafeModel est la classe mère de tous nos modèles
+ * Elle hérite du modèle de base de CI4, mais ajoute des try/catch autour des appels à la bd
+ * De cette façon, elle permet de gérer les erreurs de manière plus propre et plus rapide.
+ * C'est un design pattern decorator.
+ */
 class SafeModel extends Model
 {
     protected function doInsert(array $data)

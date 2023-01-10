@@ -272,11 +272,11 @@ class ClientController extends BaseController
 
     /**
      * Affiche la vue du panier de l'utilisateur actuel.
-     * @param int|null $coupon L'id du coupon utilisé ou nul.
+     * @param string|null $coupon L'id du coupon utilisé ou nul.
      * @param string $etatCoupon L'état du coupon utilisé ou vide.
      * @return string La vue
      */
-    public function afficherPanierCoupon(?int $coupon, string $etatCoupon): string
+    public function afficherPanierCoupon(?string $coupon, string $etatCoupon): string
     {
 
         // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
@@ -643,7 +643,7 @@ class ClientController extends BaseController
             $idCoupon = NULL;
         }
 
-        if ($idCoupon != NULL && $idCoupon != "") {
+        if ($idCoupon != NULL && $idCoupon != "" && $idCoupon->id_coupon) {
             try{
                 $coupon = $this->ModeleCoupon->find($idCoupon->id_coupon);
             } catch (Exception){
@@ -1183,6 +1183,9 @@ class ClientController extends BaseController
 // au lieu de faire plusieurs return view, en avoir un seul dans un controller et appeler la méthode
 // rajouter try catch sur le code que j'ai ajouté aux controllers
 
+// home.html, home.php.save, backup.php, adminView.php.save, adminView.php.save.1
+// coupon
+// captcha
 // tester coupon
 // ajouter pour les images .jpeg
 

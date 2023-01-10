@@ -1,3 +1,7 @@
+<?php
+require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.php');
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +14,7 @@
 <body>
     <header>
         <div>
-            <a href="<?= url_to('Home::index') ?>">
+            <a href="<?= url_to(getRoute("index")) ?>">
                 <img class="logo" src="<?= site_url() . "images/logos/logo hg noir.png"?>" alt="Logo">
             </a>
         </div>
@@ -18,14 +22,14 @@
         <h3 class="underline_animation"><?= "Bonjour, " . $session["prenom"] . "!" ?></h3>
 
         <div>
-            <a href="<?= url_to('ClientController::deconnexion') ?>">
+            <a href="<?= url_to(getRoute("deconnexion")) ?>">
                 <button class="deconnexion" type="submit">Déconnexion</button>
             </a>
         </div>
     </header>
 
     <div class="nav_container">
-        <a href="<?= url_to('Home::index') ?>">
+        <a href="<?= url_to(getRoute("index")) ?>">
             <div class="nav_element">
                 <img class="logo" src="<?= site_url() . "images/icons/compte/home_blanc.png"?>" alt="Logo">
                 <img class="hover_logo" src="<?= site_url() . "images/icons/compte/home.png"?>" alt="Logo">
@@ -43,7 +47,7 @@
             </div>
         </a>
 
-        <a href="<?= url_to('ClientController::afficherFavoris') ?>">
+        <a href="<?= url_to(getRoute("afficherFavoris")) ?>">
             <div class="nav_element <?= ($compteAction == "favoris" ? "selected" : "") ?>">
                 <img class="logo" src="<?= site_url() . "images/icons/compte/favoris_blanc_plein.png"?>" alt="Logo">
                 <img class="hover_logo" src="<?= site_url() . "images/icons/compte/favoris_plein.png"?>" alt="Logo">
@@ -52,7 +56,7 @@
             </div>
         </a>
 
-        <a href="<?= url_to('ClientController::afficherPanier') ?>">
+        <a href="<?= url_to(getRoute("afficherPanier")) ?>">
             <div class="nav_element <?= ($compteAction == "panier" ? "selected" : "") ?>">
                 <img class="logo" src="<?= site_url() . "images/icons/compte/cart_blanc_plein.png"?>" alt="Logo">
                 <img class="hover_logo" src="<?= site_url() . "images/icons/compte/cart_plein.png"?>" alt="Logo">
@@ -61,7 +65,7 @@
             </div>
         </a>
 
-        <a href="<?= url_to('ClientController::afficherHistorique') ?>">
+        <a href="<?= url_to(getRoute("afficherHistorique")) ?>">
             <div class="nav_element <?= ($compteAction == "historique" ? "selected" : "") ?>">
                 <img class="logo" src="<?= site_url() . "images/icons/compte/historique_blanc_plein.png"?>" alt="Logo">
                 <img class="hover_logo" src="<?= site_url() . "images/icons/compte/historique_plein.png"?>" alt="Logo">
@@ -70,7 +74,7 @@
             </div>
         </a>
         
-        <a href="<?= url_to('ClientController::deconnexion') ?>">
+        <a href="<?= url_to(getRoute("deconnexion")) ?>">
             <div class="nav_element">
                 <img class="logo" src="<?= site_url() . "images/icons/compte/deconnexion_blanc_plein.png"?>" alt="Logo">
                 <img class="hover_logo" src="<?= site_url() . "images/icons/compte/deconnexion_plein.png"?>" alt="Logo">

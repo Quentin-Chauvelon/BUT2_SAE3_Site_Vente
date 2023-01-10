@@ -12,8 +12,9 @@ function getRoute(string $routeName): string {
     $routes = $routes->getRoutes();
     foreach ($routes as $route) {
         if (str_contains($route, $routeName)) {
-            return substr($route, strpos($route, '/'));
+            $position = strpos("\App\Controllers\AdminController::adminView", '/');
+            return substr($route, 0, ($position != 0 ? $position : strlen($route)));
         }
     }
-    return 'Home::index';
+    return '\App\Controllers\Home::index';
 }

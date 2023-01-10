@@ -1,3 +1,7 @@
+<?php
+require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.php');
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,15 +18,15 @@
       <div class="cgu">
         <ul>
           <li>
-            <a href="<?= url_to('ClientController::cgu') ?>">Conditions générales d'utilisation</a>
+            <a href="<?= url_to(getRoute("cgu")) ?>">Conditions générales d'utilisation</a>
           </li>
 
           <li>
-            <a href="<?= url_to('ClientController::quiSommesNous') ?>">Qui sommes-nous ?</a>
+            <a href="<?= url_to(getRoute("quiSommesNous")) ?>">Qui sommes-nous ?</a>
           </li>
 
           <li>
-            <a href="<?= url_to('ClientController::contact') ?>">Contact</a>
+            <a href="<?= url_to(getRoute("contact")) ?>">Contact</a>
           </li>
 
           <!-- <li>

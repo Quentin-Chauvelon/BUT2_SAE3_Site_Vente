@@ -1,3 +1,7 @@
+<?php
+require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.php');
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -64,7 +68,7 @@
         <h1 class="date_commande">Commande N°<?= $commande->id_commande ?> du <?= $commande->date_commande ?></h1>
 
         <div>
-            <a class="telecharger_facture" href="<?= url_to('ClientController::facture', $commande->id_commande) ?>">
+            <a class="telecharger_facture" href="<?= url_to(getRoute("facture"), $commande->id_commande) ?>">
                 <div>Télécharger ma facture</div>
             </a>
         </div>
@@ -79,7 +83,7 @@
     <div class="products_container">
         <?php foreach($exemplaires as $exemplaire) : ?>
             <div class="product">
-                <a href="<?= url_to('Product::display', $exemplaire["id_produit"]) ?>">
+                <a href="<?= url_to(getRoute("display"), $exemplaire["id_produit"]) ?>">
                     <div class="image_container">
                         <?php 
                             $imageURL = "";

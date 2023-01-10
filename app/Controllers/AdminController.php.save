@@ -11,7 +11,6 @@ use App\Models\ModeleCoupon;
 use App\Entities\Taille;
 use Config\Services;
 use Exception;
-
 require_once APPPATH  . 'Entities' . DIRECTORY_SEPARATOR . 'Taille.php';
 
 
@@ -60,7 +59,6 @@ class AdminController extends BaseController
         if (!$this->estAdmin()) { // Retourner sur la page d'accueil si l'utilisateur n'est pas admin
             return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
         }
-        
         return $this->returnAdminView('utilisateurs');
     }
 
@@ -676,7 +674,7 @@ class AdminController extends BaseController
         $collection = $this->ModeleCollection->find($idCollection);
 
         return view('modifierCollectionVue', array("collection" => $collection, "session" => $this->getDonneesSession()));
-    }
+vv    }
 
     /**
      * modifierCollection change les données d'une collection.
@@ -777,10 +775,10 @@ class AdminController extends BaseController
 
     /**
      * modifierCouponVue retourne la vue de modification d'un coupon.
-     * @param string $idCoupon L'id du coupon désiré.
+     * @param int $idCoupon L'id du coupon désiré.
      * @return string La vue.
      */
-    public function modifierCouponVue(string $idCoupon): string {
+    public function modifierCouponVue(int $idCoupon): string {
 
         if (!$this->estAdmin())
         {

@@ -1,3 +1,7 @@
+<?php
+require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.php');
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,7 +30,7 @@
 		<div class="right_side_container">
 			<div class="form">
 
-            <a href="<?= url_to('Home::index') ?>">
+            <a href="<?= url_to(getRoute("index")) ?>">
                 <img src="<?= site_url() . "images/logos/logo hg noir.png" ?>" alt="Logo">
             </a>
 

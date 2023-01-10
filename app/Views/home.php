@@ -1,3 +1,7 @@
+<?php
+require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.php');
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -54,8 +58,7 @@
 		$produitsPlusVendusImages[$idProduit] = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $idProduit . DIRECTORY_SEPARATOR . "images/image_1" . $extension;
 
 
-    $collectionProduitsId = array(25, 19, 20, 22, 31, 21, 28, 19);
-
+    $collectionProduitsId = array(25, 19, 34, 39, 31, 21, 40, 33); 
     foreach ($collectionProduitsId as $idProduit) {
       $extension = "";
                               
@@ -181,7 +184,7 @@ if(document.readyState == "loading" ){
 
   <div class="icon_container admin <?= ($estAdmin == true) ? "" : "not_admin" ?>">
     <!-- <a onclick="passwordPrompt()"> -->
-    <a href="<?= url_to('AdminController::adminView') ?>">
+    <a href="<?= url_to(getRoute("adminView")) ?>">
       <div class="icon_logo_background">
 
         <img class="icon_logo" src="<?= site_url() . "images/icons/admin.png" ?>">
@@ -190,7 +193,7 @@ if(document.readyState == "loading" ){
     </a>
 
     <!-- <a onclick="passwordPrompt()"> -->
-    <a href="<?= url_to('AdminController::adminView') ?>">
+    <a href="<?= url_to(getRoute("adminView")) ?>">
       <h3 class="underline_animation">Admin</h3>
     </a>
   </div>
@@ -206,15 +209,15 @@ if(document.readyState == "loading" ){
   </a>
   
   <div class="carrousel_images">
-    <a href="<?= url_to('Product::display', $carrouselProduits[0]) ?>">
+    <a href="<?= url_to(getRoute("display"), $carrouselProduits[0]) ?>">
       <img id="carrousel_previous_button" class="previous" src="<?= $carrouselImages[0] ?>">
     </a>
     
-    <a href="<?= url_to('Product::display', $carrouselProduits[1]) ?>">
+    <a href="<?= url_to(getRoute("display"), $carrouselProduits[1]) ?>">
       <img class="current" src="<?= $carrouselImages[1] ?>">
     </a>
   
-    <a href="<?= url_to('Product::display', $carrouselProduits[2]) ?>">
+    <a href="<?= url_to(getRoute("display"), $carrouselProduits[2]) ?>">
       <img id="carrousel_next_button" class="next" src="<?= $carrouselImages[2] ?>">
     </a>
   </div>
@@ -231,7 +234,7 @@ if(document.readyState == "loading" ){
 
 <div class="categories">
 <div class="sweats">
-  <a href="<?= url_to('Product::trouverToutDeCategorie', 'sweat') ?>"> 
+  <a href="<?= url_to(getRoute("trouverToutDeCategorie"), "sweat") ?>"> 
     <div class="sweats_image">
       <img src="<?= site_url() . "images/home/categories/sweat.png" ?>" alt="Sweats">
     </div>
@@ -241,7 +244,7 @@ if(document.readyState == "loading" ){
 </div>
 
  <div class="tshirts">
-   <a href="<?= url_to('Product::trouverToutDeCategorie', 'tshirt') ?>"> 
+   <a href="<?= url_to(getRoute("trouverToutDeCategorie"), "tshirt") ?>"> 
   <div class="tshirts_image">
    <img src="<?= site_url() . "images/home/categories/tshirt.png" ?>" alt="T-shirts">
   </div>
@@ -250,7 +253,7 @@ if(document.readyState == "loading" ){
  </div>
 
  <div class="pantalons">
-   <a href="<?= url_to('Product::trouverToutDeCategorie', 'pantalon') ?>"> 
+   <a href="<?= url_to(getRoute("trouverToutDeCategorie"), "pantalon") ?>"> 
   <div class="pantalons_image">
    <img src="<?= site_url() . "images/home/categories/pantalon.png" ?>" alt="Pantalons">
   </div>
@@ -259,7 +262,7 @@ if(document.readyState == "loading" ){
  </div>
 
  <div class="accessoires">
- <a href="<?= url_to('Product::trouverToutDeCategorie', 'accessoire') ?>"> 
+ <a href="<?= url_to(getRoute("trouverToutDeCategorie"), "accessoire") ?>"> 
   <div class="accessoires_image">
    <img src="<?= site_url() . "images/home/categories/accessoire.jpg" ?>" alt="Accessoires">
   </div>
@@ -268,7 +271,7 @@ if(document.readyState == "loading" ){
  </div>
 
  <div class="posters">
- <a href="<?= url_to('Product::trouverToutDeCategorie', 'poster') ?>"> 
+ <a href="<?= url_to(getRoute("trouverToutDeCategorie"), "poster") ?>"> 
   <div class="posters_image">
    <img src="<?= site_url() . "images/home/categories/poster.jpg" ?>" alt="Posters">
   </div>
@@ -286,14 +289,14 @@ if(document.readyState == "loading" ){
   <?php foreach($produitsPlusPopulaires as $produit) : ?>
     <div>
 
-      <a href="<?= url_to('Product::display', $produit->id_produit) ?>">
+      <a href="<?= url_to(getRoute("display"), $produit->id_produit) ?>">
         <img src="<?= $produitsPlusVendusImages[$produit->id_produit]?> ">
       </a>
 
      <div class="populaires_details">
       <h3><?= $produit->nom ?></h3>
 
-      <a href="<?= url_to('Product::display', $produit->id_produit) ?>">
+      <a href="<?= url_to(getRoute("display"), $produit->id_produit) ?>">
         <div>ACHETER</div>
       </a>
      </div>
@@ -317,14 +320,14 @@ if(document.readyState == "loading" ){
     console.log(element.clientHeight)
   </script> -->
 
-  <a href="<?= url_to('Product::display', $collectionIdProduits[0]) ?>" style="grid-column: 1; grid-row: 1 / 3"><img src="<?= $collectionProduits[0] ?>" class="one"/></a>
-  <a href="<?= url_to('Product::display', $collectionIdProduits[1]) ?>" style="grid-column: 2 / 4; grid-row: 1 / 3"><img  src="<?= $collectionProduits[1] ?>"class="two"/></a>
-  <a href="<?= url_to('Product::display', $collectionIdProduits[2]) ?>" style="grid-column: 4 / 5; grid-row: 1"><img src="<?= $collectionProduits[2] ?>" class="three"/></a>
-  <a href="<?= url_to('Product::display', $collectionIdProduits[3]) ?>" style="grid-column: 5 / 6; grid-row: 1 / 3"><img src="<?= $collectionProduits[3] ?>" class="four"/></a>
-  <a href="<?= url_to('Product::display', $collectionIdProduits[4]) ?>" style="grid-column: 1 / 3; grid-row: 3"><img src="<?= $collectionProduits[4] ?>" class="five"/></a>
-  <a href="<?= url_to('Product::display', $collectionIdProduits[5]) ?>" style="grid-column: 3 / 4; grid-row: 3"><img src="<?= $collectionProduits[5] ?>" class="six"/></a>
-  <a href="<?= url_to('Product::display', $collectionIdProduits[6]) ?>" style="grid-column: 4 / 5; grid-row: 2 / 4"><img src="<?= $collectionProduits[6] ?>" class="seven"/></a>
-  <a href="<?= url_to('Product::display', $collectionIdProduits[7]) ?>" style="grid-column: 5 / 6; grid-row: 3"><img src="<?= $collectionProduits[7] ?>" class="eight"/></a>
+  <a href="<?= url_to(getRoute("display"), $collectionIdProduits[0]) ?>" style="grid-column: 1; grid-row: 1 / 3"><img src="<?= $collectionProduits[0] ?>" class="one"/></a>
+  <a href="<?= url_to(getRoute("display"), $collectionIdProduits[1]) ?>" style="grid-column: 2 / 4; grid-row: 1 / 3"><img  src="<?= $collectionProduits[1] ?>"class="two"/></a>
+  <a href="<?= url_to(getRoute("display"), $collectionIdProduits[2]) ?>" style="grid-column: 4 / 5; grid-row: 1"><img src="<?= $collectionProduits[2] ?>" class="three"/></a>
+  <a href="<?= url_to(getRoute("display"), $collectionIdProduits[3]) ?>" style="grid-column: 5 / 6; grid-row: 1 / 3"><img src="<?= $collectionProduits[3] ?>" class="four"/></a>
+  <a href="<?= url_to(getRoute("display"), $collectionIdProduits[4]) ?>" style="grid-column: 1 / 3; grid-row: 3"><img src="<?= $collectionProduits[4] ?>" class="five"/></a>
+  <a href="<?= url_to(getRoute("display"), $collectionIdProduits[5]) ?>" style="grid-column: 3 / 4; grid-row: 3"><img src="<?= $collectionProduits[5] ?>" class="six"/></a>
+  <a href="<?= url_to(getRoute("display"), $collectionIdProduits[6]) ?>" style="grid-column: 4 / 5; grid-row: 2 / 4"><img src="<?= $collectionProduits[6] ?>" class="seven"/></a>
+  <a href="<?= url_to(getRoute("display"), $collectionIdProduits[7]) ?>" style="grid-column: 5 / 6; grid-row: 3"><img src="<?= $collectionProduits[7] ?>" class="eight"/></a>
  </div>
 </div>
 <?php include 'footer.php';?>

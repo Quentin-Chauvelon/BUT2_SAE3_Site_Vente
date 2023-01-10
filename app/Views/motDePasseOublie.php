@@ -1,3 +1,7 @@
+<?php
+require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.php');
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +19,7 @@
     if (!isset($compteNonExistant)) {
         $erreurTexte = "";
     } else if ($compteNonExistant) {
-        $erreurTexte = "Il ne semble pas d'y avoir de compte correspondant à cette adresse mail. Essayez de vous <a href=".url_to('ClientController::inscription').">inscrire</a> plutôt.";
+        $erreurTexte = "Il ne semble pas d'y avoir de compte correspondant à cette adresse mail. Essayez de vous <a href=".url_to(getRoute("inscription")).">inscrire</a> plutôt.";
     } else {
         $mailEnvoye = "Un email vous a été envoyé. Veuillez suivre les instructions pour réinitialiser votre mot de passe.";
     }
@@ -30,7 +34,7 @@
     <div class="right_side_container">
         <div class="form">
 
-            <a href="<?= url_to('Home::index') ?>">
+            <a href="<?= url_to(getRoute("index")) ?>">
                 <img src="<?= site_url() . "images/logos/logo hg noir.png" ?>" alt="Logo">
             </a>
 
@@ -48,7 +52,7 @@
 
                 <button type="submit">Réinitialiser mon mot de passe</button>
 
-                <h4 class="connexion_compte">Vous n'avez pas encore de compte ? <a href="<?= url_to('ClientController::inscription') ?>">Inscrivez-vous</a> plutôt.</h4>
+                <h4 class="connexion_compte">Vous n'avez pas encore de compte ? <a href="<?= url_to(getRoute("inscription")) ?>">Inscrivez-vous</a> plutôt.</h4>
             </form>
         </div>
     </div>

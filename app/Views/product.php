@@ -1,3 +1,7 @@
+<?php
+require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.php');
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -173,7 +177,7 @@
 				<div class="buttons_container">
 					<button type="submit" class="add_to_cart">AJOUTER AU PANIER</button>
 
-					<a href="<?= url_to('ClientController::ajouterFavori', $product->id_produit, 1) ?>">
+					<a href="<?= url_to(getRoute("ajouterFavori"), $product->id_produit, 1) ?>">
 						<div class="add_to_favorite">					
 							<img src="<?= ($produitFavori) ? site_url() . "images/icons/compte/favoris_plein.png" : site_url() . "images/icons/favoris.png" ?>">
 							<img class="hover_image" src="<?= ($produitFavori) ? site_url() . "images/icons/compte/favoris_blanc_plein.png" : site_url() . "images/icons/favoris_blanc.png" ?>">
@@ -187,7 +191,7 @@
 	<div id="article_ajoute" class="article_ajoute article_ajoute_hidden">
 		<h3>Votre article a bien été ajouté au panier !</h3>
 		
-		<a href="<?= url_to('ClientController::afficherPanier') ?>">
+		<a href="<?= url_to(getRoute("afficherPanier")) ?>">
 			<div class="valider_panier">Valider et payer</div>
 		</a>
 

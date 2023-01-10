@@ -1,3 +1,7 @@
+<?php
+require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.php');
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -74,11 +78,11 @@
             </div>
 
             <div class="panier_header_boutons">
-                <a href="<?= url_to('ClientController::validerPanier', ($coupon != NULL) ? $coupon->id_coupon : "") ?>">
+                <a href="<?= url_to(getRoute("validerPanier"), ($coupon != NULL) ? $coupon->id_coupon : "")?>">
                     <div class="valider_panier">Valider et payer</div>
                 </a>
 
-                <a href="<?= url_to('ClientController::viderPanier') ?>">
+                <a href="<?= url_to(getRoute("viderPanier")) ?>">
                     <div class="vider_panier">Vider panier</div>
                 </a>
             </div>
@@ -88,7 +92,7 @@
     <div class="products_container">
         <?php foreach($panier as $exemplaire) : ?>
             <div class="product">
-                <a href="<?= url_to('Product::display', $exemplaire["id_produit"]) ?>">
+                <a href="<?= url_to(getRoute("display"), $exemplaire["id_produit"]) ?>">
                     <div class="image_container">
                         <?php 
                             $imageURL = "";
@@ -117,7 +121,7 @@
                             <h2><?= sprintf('%01.2f€', (float)$produits[$exemplaire["id_produit"]]["prix"] / 100); ?></h2>
                         </div>
 
-                        <a href="<?= url_to('ClientController::supprimerDuPanier', $exemplaire["id_produit"], $exemplaire["couleur"], $exemplaire["taille"]) ?>">
+                        <a href="<?= url_to(getRoute("supprimerDuPanier"), $exemplaire["id_produit"], $exemplaire["couleur"], $exemplaire["taille"]) ?>">
                             <img class="logo" src="<?= site_url() . "images/icons/bin.png"?>" alt="Logo">
                         </a>
 

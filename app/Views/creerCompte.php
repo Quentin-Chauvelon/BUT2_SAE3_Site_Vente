@@ -35,7 +35,7 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
 		<div class="right_side_container">
 			<div class="form">
 
-			<a href="<?= url_to('Home::index') ?>">
+			<a href="<?= url_to(getRoute("index")) ?>">
             	<img src="<?= site_url() . "images/logos/logo hg noir.png" ?>" alt="Logo">
         	</a>
 
@@ -93,7 +93,7 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
 				<div>
 					<div class="cgu_checkbox">
 						<input class="checkbox" type="checkbox" name="cgu" id="cgu" placeholder=" " required/>
-						<label>J'accepte les <a href="<?= url_to('ClientController::cgu') ?>">conditions générales d'utilisation</a></label>
+						<label>J'accepte les <a href="<?= url_to(getRoute("cgu")) ?>">conditions générales d'utilisation</a></label>
 					</div>
 				</div>
 
@@ -106,7 +106,7 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
 
 				<button type="submit">Je crée mon compte</button>
 
-				<h4 class="creer_compte">Vous avez déjà un compte ? Essayez de vous <a href="<?= url_to('ClientController::connexion') ?>">connecter</a> plutôt.</h4>
+				<h4 class="creer_compte">Vous avez déjà un compte ? Essayez de vous <a href="<?= url_to(getRoute("connexion")) ?>">connecter</a> plutôt.</h4>
 			</form>
 		</div>
 	</div>

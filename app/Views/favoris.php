@@ -1,3 +1,7 @@
+<?php
+require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.php');
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -17,7 +21,7 @@
 
         <?php foreach($favoris as $favori) : ?>
             <div class="product">
-                <a href="<?= url_to('Product::display', $favori->id_produit) ?>">
+                <a href="<?= url_to(getRoute("display"), $favori->id_produit) ?>">
                     <div class="image_container">
                         <?php 
                             $extension = "";
@@ -45,7 +49,7 @@
                         <h2><?= sprintf('%01.2f€', (float)$favori->prix / 100); ?></h2>
                     </div>
 
-                    <a href="<?= url_to('ClientController::ajouterFavori', $favori->id_produit, 0) ?>">
+                    <a href="<?= url_to(getRoute("ajouterFavori"), $favori->id_produit, 0) ?>">
                         <img class="logo" src="<?= site_url() . "images/icons/bin.png"?>" alt="Logo">
                     </a>
                 </div>

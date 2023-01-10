@@ -110,6 +110,7 @@ $routes->post('creerCollection', 'AdminController::creerCollection');
 $routes->post('ajouterImageProduit', 'AdminController::ajouterImageProduit');
 $routes->post('reordonnerImagesProduits', 'AdminController::reordonnerImagesProduits');
 $routes->post('creerCoupon', 'AdminController::creerCoupon');
+$routes->post('modifierCollection', 'AdminController::modifierCollection');
 $routes->post('modifierCoupon', 'AdminController::modifierCoupon');
 
 $routes->get('motDePasseOublie', 'ClientController::motDePasseOublie');

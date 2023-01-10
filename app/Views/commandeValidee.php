@@ -1,3 +1,7 @@
+<?php
+require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.php');
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +13,7 @@
 </head>
 
 <body>
-    <a href="<?= url_to('Home::index') ?>">
+    <a href="<?= url_to(getRoute("index")) ?>">
         <img class="logo" src="<?= site_url() . "images/logos/logo hg noir.png" ?>" alt="Logo">
     </a>
 
@@ -20,11 +24,11 @@
     </div>
 
     <div class="bottom_container" >
-        <a href="<?= url_to('ClientController::detailCommande', $commande->id_commande) ?>">
+        <a href="<?= url_to(getRoute("detailCommande"), $commande->id_commande) ?>">
             <div class="voir_detail">Voir le détail</div>
         </a>
 
-        <h2>Retourner sur la page <a href="<?= url_to('Home::index') ?>">d'accueil</a></h2>
+        <h2>Retourner sur la page <a href="<?= url_to(getRoute("index")) ?>">d'accueil</a></h2>
     </div>
 </body>
 </html>

@@ -1,7 +1,3 @@
-<?php
-require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.php');
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,7 +51,7 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
 <body>
     <header>
         <div>
-            <a href="<?= url_to(getRoute("index")) ?>">
+            <a href="<?= url_to('Home::index') ?>">
                 <img class="logo" src="<?= site_url() . "images/logos/logo hg noir.png"?>" alt="Logo">
             </a>
         </div>
@@ -124,13 +120,13 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
                         <td><?= $utilisateur->est_admin ?></td>
 
                         <td>
-                            <a href="<?= ($utilisateur->est_admin) ? url_to(getRoute("enleverAdmin"), $utilisateur->id_client) : url_to(getRoute("mettreAdmin"), $utilisateur->id_client) ?>">
+                            <a href="<?= ($utilisateur->est_admin) ? url_to('AdminController::enleverAdmin', $utilisateur->id_client) : url_to('AdminController::mettreAdmin', $utilisateur->id_client) ?>">
                                 <div class="button"><?= ($utilisateur->est_admin) ? "Enlever admin" : "Mettre admin" ?></div>
                             </a>
                         </td>
 
                         <td>
-                            <a href="<?= url_to(getRoute("supprimerUtilisateur"), $utilisateur->id_client) ?>">
+                            <a href="<?= url_to('AdminController::supprimerUtilisateur', $utilisateur->id_client) ?>">
                                 <div class="button">Supprimer</div>
                             </a>
                         </td>
@@ -171,13 +167,13 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
                         <td><?= $produit->parution ?></td>
 
                         <td>
-                            <a href="<?= url_to(getRoute("modifierProduitVue"), $produit->id_produit) ?>">
+                            <a href="<?= url_to('AdminController::modifierProduitVue', $produit->id_produit) ?>">
                                 <div class="button">Modifier produit</div>
                             </a>
                         </td>
 
                         <td>
-                            <a href="<?= url_to(getRoute("supprimerProduit"), $produit->id_produit) ?>">
+                            <a href="<?= url_to('AdminController::supprimerProduit', $produit->id_produit) ?>">
                                 <div class="button">Supprimer produit</div>
                             </a>
                         </td>
@@ -262,7 +258,7 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
                     <div class="produit_exemplaire">
                         <h1><?= $produit->nom ?> (<?= ($produit->prix / 100) ?>€ · <?= ucfirst($produit->categorie) ?>) :</h1>
 
-                        <a href="<?= url_to(getRoute("modifierExemplaireImagesVue"), $idProduit) ?>">
+                        <a href="<?= url_to('AdminController::modifierExemplaireImagesVue', $idProduit) ?>">
                             <div class="button exemplaire_images">Modifier images</div>
                         </a>
                     </div>
@@ -305,11 +301,11 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
                                     <div class="exemplaire_couleurs">
                                         <h5><?= ucfirst($couleur) ?> : <span class="green"><?= $quantite ?> disponibles</span></h5>
 
-                                        <a href="<?= url_to(getRoute("supprimer1Exemplaire"), $idProduit, $taille, $couleur) ?>">
+                                        <a href="<?= url_to('AdminController::supprimer1Exemplaire', $idProduit, $taille, $couleur) ?>">
                                             <div class="button small">Supprimer 1</div>
                                         </a>
 
-                                        <a href="<?= url_to(getRoute("supprimerTousLesExemplaires"), $idProduit, $taille, $couleur) ?>">
+                                        <a href="<?= url_to('AdminController::supprimerTousLesExemplaires', $idProduit, $taille, $couleur) ?>">
                                             <div class="button small">Supprimer tout</div>
                                         </a>
                                     </div>
@@ -344,14 +340,14 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
                     
                     <select id="taille" name="taille">
                         <optgroup label="Tailles vêtements">
-                            <?php foreach($taillesVetements as $taille) : ?>
+                            <?php foreach($taillesVetements as $taille)>
                                 <option value="<?= $taille->value ?>"><?= $taille->value ?></option>                            
                             <?php endforeach; ?>
                         </optgroup>
 
                         <optgroup label="Tailles posters">
                             <?php foreach($taillesPosters as $taille) : ?>
-                                <option value="<?= $taille->value ?>"><?= $taille->value ?></option>                            
+                                <option value="<?= $taille ?>"><?= $taille ?></option>                            
                             <?php endforeach; ?>
                         </optgroup>
 
@@ -401,13 +397,13 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
                         <td><?= $collection->date_limite ?></td>
 
                         <td>
-                            <a href="<?= url_to(getRoute("modifierCollection"), $collection->id_collection) ?>">
+                            <a href="<?= url_to('AdminController::modifierCollection', $collection->id_collection) ?>">
                                 <div class="button">Modifier collection</div>
                             </a>
                         </td>
 
                         <td>
-                            <a href="<?= url_to(getRoute("supprimerCollection"), $collection->id_collection) ?>">
+                            <a href="<?= url_to('AdminController::supprimerCollection', $collection->id_collection) ?>">
                                 <div class="button">Supprimer collection</div>
                             </a>
                         </td>
@@ -499,13 +495,13 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
                         <td><?= $coupon->utilisations_max ?></td>
 
                         <td>
-                            <a href="<?= url_to(getRoute("modifierCouponVue"), $coupon->id_coupon) ?>">
+                            <a href="<?= url_to('AdminController::modifierCouponVue', $coupon->id_coupon) ?>">
                                 <div class="button">Modifier coupon</div>
                             </a>
                         </td>
 
                         <td>
-                            <a href="<?= url_to(getRoute("supprimerCoupon"), $coupon->id_coupon) ?>">
+                            <a href="<?= url_to('AdminController::supprimerCoupon', $coupon->id_coupon) ?>">
                                 <div class="button">Supprimer coupon</div>
                             </a>
                         </td>

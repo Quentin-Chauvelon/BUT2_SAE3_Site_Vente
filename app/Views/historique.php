@@ -1,3 +1,7 @@
+<?php
+require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.php');
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -74,7 +78,7 @@
                 <p class="etat_commande <?= $etatCommandeCouleur ?>"><?= $etatCommande ?></p>
             </div>
 
-            <a class="voir_detail" href="<?= url_to('ClientController::detailCommande', $commande->id_commande) ?>">
+            <a class="voir_detail" href="<?= url_to(getRoute("detailCommande"), $commande->id_commande) ?>">
                 <div class="voir_detail">Voir le détail</div>
             </a>
             </div>

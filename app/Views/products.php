@@ -1,3 +1,7 @@
+<?php
+require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.php');
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -16,7 +20,7 @@
     <div class="products_container">
         <?php foreach($products as $product) : ?>
             <div class="product">
-                <a href="<?= url_to('Product::display', $product->id_produit) ?>">
+                <a href="<?= url_to(getRoute('display'), $product->id_produit) ?>">
                     <div class="image_container">
                         <!-- <div class="rupture_stock <?= (array_search($product->id_produit, $produitsRuptureStock) !== false) ? "en_rupture" : "" ?>">RUPTURE DE STOCK</div> -->
                         <div class="rupture_stock2 <?= (array_search($product->id_produit, $produitsRuptureStock) !== false) ? "en_rupture" : "" ?>">RUPTURE DE STOCK</div>

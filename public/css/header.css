@@ -123,6 +123,7 @@ nav {
     flex-wrap: wrap;
     gap: 30px;
     width: 100%;
+    font-weight : bold;
 }
 
 nav a {
@@ -278,7 +279,7 @@ nav a {
 }
 
 .arrow {
-    border: solid black;
+    border: solid rgba(67,67,67,1);
     border-width: 0 2px 2px 0;
     display: inline-block;
     padding: 5px;

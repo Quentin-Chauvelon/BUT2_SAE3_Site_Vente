@@ -1,3 +1,7 @@
+<?php
+require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.php');
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,7 +35,7 @@
 		<div class="right_side_container">
 			<div class="form">
 
-			<a href="<?= url_to('Home::index') ?>">
+			<a href="<?= url_to(getRoute("index")) ?>">
         <img src="<?= site_url() . "images/logos/logo hg noir.png" ?>" alt="Logo">
       </a>
 
@@ -39,7 +43,7 @@
 
 			<h5 class="erreur_texte"><?= ($erreurTexte != "") ? $erreurTexte : "" ?></h5>
 
-			<form action=<?= url_to('ClientController::connexionCompte') ?> method="post">
+			<form action=<?= url_to(getRoute("connexionCompte")) ?> method="post">
 				<div>
 					<label for="email">Adresse email *</label>
 					<input type="email" name="email" id="email" placeholder=" " maxlength="255" required/>
@@ -59,7 +63,7 @@
 
 					<h5>Votre mot de passe doit faire entre 8 et 64 caractères</h5>
 				</div>
-                <a href="<?= url_to('ClientController::motDePasseOublie') ?>">Mot de passe oublié ?</a>
+                <a href="<?= url_to(getRoute("motDePasseOublie")) ?>">Mot de passe oublié ?</a>
 
 				<div>
 					<div class="rester_connecte">
@@ -70,7 +74,7 @@
 
 				<button type="submit">Je me connecte</button>
 
-				<h4 class="connexion_compte">Vous n'avez pas encore de compte ? <a href="<?= url_to('ClientController::inscription') ?>">Inscrivez-vous</a> plutôt.</h4>
+				<h4 class="connexion_compte">Vous n'avez pas encore de compte ? <a href="<?= url_to(getRoute("inscription")) ?>">Inscrivez-vous</a> plutôt.</h4>
 			</form>
 		</div>
 	</div>

@@ -1181,6 +1181,7 @@ class ClientController extends BaseController
 // vérifier les strings vides et les tailles dans les posts
 // sauter ligne pour les return view array pour que ce soit plus lisible ?
 // au lieu de faire plusieurs return view, en avoir un seul dans un controller et appeler la méthode
+// rajouter try catch sur le code que j'ai ajouté aux controllers
 
 // tester coupon
 // ajouter pour les images .jpeg

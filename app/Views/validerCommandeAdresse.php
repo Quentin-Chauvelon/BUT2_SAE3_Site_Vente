@@ -15,15 +15,15 @@
             <h1 class="total">Total : <?= $montant / 100 ?>€</h1>
             <h2 class="nombre_produits">Nombre de produits : <?= $nombreArticles ?></h2>
         </div>
-
-        <a  href="<?= url_to("ClientController::annulerCommande", $idCommande) ?>">
+        
+        <a href="<?= url_to(getRoute('annulerCommande', $idCommande)) ?>">
             <div class="annuler_commande">Annuler ma commande</div>
         </a>
     </div>
 
     <div class="adresse_container">
 
-        <form action=<?= url_to("ClientController::adresseCommande") ?> method="post">
+        <form action=<?= url_to(getRoute("adresseCommande")) ?> method="post">
             <div>
                 <label for="rue">Rue *</label>
                 <input type="text" name="rue" id="rue" placeholder=" " maxlength="100" required/>
@@ -50,7 +50,7 @@
             <div class="adresses_precedentes">
                 <?php foreach($adressesPrecendentes as $adresse) : ?>
     
-                    <form action=<?= url_to("ClientController::adresseCommande") ?> method="post">
+                    <form action=<?= url_to(getRoute("adresseCommande")) ?> method="post">
                         <div class="adresse_precedente">
                             <div>
                                 <h3>Rue :</h3>

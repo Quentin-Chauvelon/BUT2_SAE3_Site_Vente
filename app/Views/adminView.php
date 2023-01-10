@@ -341,13 +341,13 @@
                     <select id="taille" name="taille">
                         <optgroup label="Tailles vêtements">
                             <?php foreach($taillesVetements as $taille) : ?>
-                                <option value="<?= $taille ?>"><?= $taille ?></option>                            
+                                <option value="<?= $taille->value ?>"><?= $taille->value ?></option>                            
                             <?php endforeach; ?>
                         </optgroup>
 
                         <optgroup label="Tailles posters">
                             <?php foreach($taillesPosters as $taille) : ?>
-                                <option value="<?= $taille ?>"><?= $taille ?></option>                            
+                                <option value="<?= $taille->value ?>"><?= $taille->value ?></option>                            
                             <?php endforeach; ?>
                         </optgroup>
 

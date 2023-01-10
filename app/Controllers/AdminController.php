@@ -13,6 +13,7 @@ use Config\Services;
 use Exception;
 
 require_once APPPATH  . 'Entities' . DIRECTORY_SEPARATOR . 'Taille.php';
+require_once APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetExtensionImage.php';
 
 
 /**
@@ -297,26 +298,29 @@ class AdminController extends BaseController
                 $extensionOrdreI = "";
 
                 // on récupère l'extension de la première image
-                if (file_exists("images/produits/" . $idProduit . "/images/image_" . $i . ".jpg")) {
-                    $extensionI = ".jpg";
-                }
-                elseif (file_exists("images/produits/" . $idProduit . "/images/image_" . $i . ".jpeg")) {
-                    $extensionI = ".jpeg";
-                }
-                elseif (file_exists("images/produits/" . $idProduit . "/images/image_" . $i . ".png")) {
-                    $extensionI = ".png";
-                }
+                // if (file_exists("images/produits/" . $idProduit . "/images/image_" . $i . ".jpg")) {
+                //     $extensionI = ".jpg";
+                // }
+                // elseif (file_exists("images/produits/" . $idProduit . "/images/image_" . $i . ".jpeg")) {
+                //     $extensionI = ".jpeg";
+                // }
+                // elseif (file_exists("images/produits/" . $idProduit . "/images/image_" . $i . ".png")) {
+                //     $extensionI = ".png";
+                // }
 
-                // on récupère l'extension de la deuxième image
-                if (file_exists("images/produits/" . $idProduit . "/images/image_" . $ordre[$i] . ".jpg")) {
-                    $extensionOrdreI = ".jpg";
-                }
-                elseif (file_exists("images/produits/" . $idProduit . "/images/image_" . $ordre[$i] . ".jpeg")) {
-                    $extensionOrdreI = ".jpeg";
-                }
-                elseif (file_exists("images/produits/" . $idProduit . "/images/image_" . $ordre[$i] . ".png")) {
-                    $extensionOrdreI = ".png";
-                }
+                // // on récupère l'extension de la deuxième image
+                // if (file_exists("images/produits/" . $idProduit . "/images/image_" . $ordre[$i] . ".jpg")) {
+                //     $extensionOrdreI = ".jpg";
+                // }
+                // elseif (file_exists("images/produits/" . $idProduit . "/images/image_" . $ordre[$i] . ".jpeg")) {
+                //     $extensionOrdreI = ".jpeg";
+                // }
+                // elseif (file_exists("images/produits/" . $idProduit . "/images/image_" . $ordre[$i] . ".png")) {
+                //     $extensionOrdreI = ".png";
+                // }
+
+                $extensionI = getExtensionImage("images/produits/" . $idProduit . "/images/image_" . $i);
+                $extensionOrdreI = getExtensionImage("images/produits/" . $idProduit . "/images/image_" . $ordre[$i]);
 
                 // on inverse les deux images
                 if ($extensionI != "" && $extensionOrdreI != "") {
@@ -352,31 +356,43 @@ class AdminController extends BaseController
         if ($nbImages == 1) {
             return $this->modifierProduitVue($idProduit);
         }
+
         // Trouver l'image avec la bonne extension et la supprimer
-        if (file_exists("images/produits/" . $idProduit . "/images/image_" . $numeroImage . ".jpg")) {
-            unlink("images/produits/" . $idProduit . "/images/image_" . $numeroImage . ".jpg");
-        }
+        // if (file_exists("images/produits/" . $idProduit . "/images/image_" . $numeroImage . ".jpg")) {
+        //     unlink("images/produits/" . $idProduit . "/images/image_" . $numeroImage . ".jpg");
+        // }
 
-        elseif (file_exists("images/produits/" . $idProduit . "/images/image_" . $numeroImage . ".png")) {
-            unlink("images/produits/" . $idProduit . "/images/image_" . $numeroImage . ".png");
-        }
+        // elseif (file_exists("images/produits/" . $idProduit . "/images/image_" . $numeroImage . ".png")) {
+        //     unlink("images/produits/" . $idProduit . "/images/image_" . $numeroImage . ".png");
+        // }
 
-        elseif (file_exists("images/produits/" . $idProduit . "/images/image_" . $numeroImage . ".jpeg")) {
-            unlink("images/produits/" . $idProduit . "/images/image_" . $numeroImage . ".jpeg");
+        // elseif (file_exists("images/produits/" . $idProduit . "/images/image_" . $numeroImage . ".jpeg")) {
+        //     unlink("images/produits/" . $idProduit . "/images/image_" . $numeroImage . ".jpeg");
+        // }
+        $extension = getExtensionImage("images/produits/" . $idProduit . "/images/image_" . $numeroImage);
+
+        if ($extension != "") {
+            unlink("images/produits/" . $idProduit . "/images/image_" . $numeroImage . $extension);
         }
 
         // on change le nom des images pour qu'ils aillent toujours de 1 au nombre d'images (pas de trous)
         for ($i = $numeroImage + 1; $i <= $nbImages; $i++) {
-            if (file_exists("images/produits/" . $idProduit . "/images/image_" . $i . ".jpg")) {
-                rename("images/produits/" . $idProduit . "/images/image_" . $i . ".jpg", "images/produits/" . $idProduit . "/images/image_" . ($i - 1) . ".jpg");
-            }
+            // if (file_exists("images/produits/" . $idProduit . "/images/image_" . $i . ".jpg")) {
+            //     rename("images/produits/" . $idProduit . "/images/image_" . $i . ".jpg", "images/produits/" . $idProduit . "/images/image_" . ($i - 1) . ".jpg");
+            // }
 
-            elseif (file_exists("images/produits/" . $idProduit . "/images/image_" . $i . ".png")) {
-                rename("images/produits/" . $idProduit . "/images/image_" . $i . ".png", "images/produits/" . $idProduit . "/images/image_" . ($i - 1) . ".png");
-            }
+            // elseif (file_exists("images/produits/" . $idProduit . "/images/image_" . $i . ".png")) {
+            //     rename("images/produits/" . $idProduit . "/images/image_" . $i . ".png", "images/produits/" . $idProduit . "/images/image_" . ($i - 1) . ".png");
+            // }
 
-            elseif (file_exists("images/produits/" . $idProduit . "/images/image_" . $i . ".jpeg")) {
-                rename("images/produits/" . $idProduit . "/images/image_" . $i . ".jpeg", "images/produits/" . $idProduit . "/images/image_" . ($i - 1) . ".jpeg");
+            // elseif (file_exists("images/produits/" . $idProduit . "/images/image_" . $i . ".jpeg")) {
+            //     rename("images/produits/" . $idProduit . "/images/image_" . $i . ".jpeg", "images/produits/" . $idProduit . "/images/image_" . ($i - 1) . ".jpeg");
+            // }
+
+            $extension = getExtensionImage("images/produits/" . $idProduit . "/images/image_" . $i);
+
+            if ($extension != "") {
+                rename("images/produits/" . $idProduit . "/images/image_" . $i . $extension, "images/produits/" . $idProduit . "/images/image_" . ($i - 1) . $extension);
             }
         }
 
@@ -492,7 +508,8 @@ class AdminController extends BaseController
 
         $this->ModeleExemplaire->creerExemplaire((int)$idProduit, $couleur, $taille, $quantite);
 
-        if (!file_exists("images/produits/" . $idProduit . "/couleurs/" . $couleur . ".jpg") && !file_exists("images/produits/" . $idProduit . "/couleurs/" . $couleur . ".png") && !file_exists("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".jpeg")) {
+        // if (!file_exists("images/produits/" . $idProduit . "/couleurs/" . $couleur . ".jpg") && !file_exists("images/produits/" . $idProduit . "/couleurs/" . $couleur . ".png") && !file_exists("images/produits/" . (string)$idProduit . "/couleurs/" . $couleur . ".jpeg")) {
+        if (getExtensionImage("images/produits/" . $idProduit . "/couleurs/" . $couleur) == "") {
             $filename = $_FILES['image']['tmp_name'];
 
             move_uploaded_file($filename, "images/produits/" . $idProduit . "/couleurs/" . $couleur . "." . str_replace("image/", "", $_FILES['image']['type']));
@@ -543,18 +560,19 @@ class AdminController extends BaseController
             $extensionImage = "";
 
             // on détermine l'extension de l'image
-            if (file_exists("images/produits/" . $idProduit . "/couleurs/" . $couleur . ".jpg")) {
-                $extensionImage = ".jpg";
-            }
+            // if (file_exists("images/produits/" . $idProduit . "/couleurs/" . $couleur . ".jpg")) {
+            //     $extensionImage = ".jpg";
+            // }
 
-            elseif (file_exists("images/produits/" . $idProduit . "/couleurs/" . $couleur . ".jpeg")) {
-                $extensionImage = ".jpeg";
-            }
+            // elseif (file_exists("images/produits/" . $idProduit . "/couleurs/" . $couleur . ".jpeg")) {
+            //     $extensionImage = ".jpeg";
+            // }
 
-            elseif (file_exists("images/produits/" . $idProduit . "/couleurs/" . $couleur . ".png")) {
-                $extensionImage = ".png";
-            }
+            // elseif (file_exists("images/produits/" . $idProduit . "/couleurs/" . $couleur . ".png")) {
+            //     $extensionImage = ".png";
+            // }
 
+            $extensionImage = getExtensionImage("images/produits/" . $idProduit . "/couleurs/" . $couleur);
 
             if ($extensionImage != "") {
                 // on supprime l'ancienne image

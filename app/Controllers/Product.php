@@ -31,7 +31,11 @@ class Product extends BaseController
      */
     public function display(int $idProduit): string
     {
-        $produit =  $this->ModeleProduit->find($idProduit);
+        try {
+            $produit =$this->ModeleProduit->find($idProduit);
+        } catch (Exception) {
+            $this->Home->index();
+        }
 
         if ($produit == NULL) {
             return $this->displayAll();

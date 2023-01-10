@@ -106,6 +106,10 @@ abstract class BaseController extends Controller
 
     public function getDonneesSession(): array
     {
+        if (!$this->SessionExistante()) {
+            return array();
+        }
+
         return array(
             'panier'  => $this->session->get("panier"),
             'id'  => $this->session->get("id"),
@@ -128,6 +132,10 @@ abstract class BaseController extends Controller
      */
     public function SessionExistante(): bool
     {
+        if ($this->session == NULL) {
+            return false;
+        }
+
         return $this->session->has('id') && $this->session->get('id') != NULL;
     }
 

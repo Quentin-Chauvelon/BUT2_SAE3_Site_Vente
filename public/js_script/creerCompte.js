@@ -22,3 +22,11 @@ function togglePasswordVisibility2() {
 		passwordRepetitionInput.type = "password";
 	}
 }
+
+
+
+// grecaptcha.enterprise.ready(function() {
+//     grecaptcha.enterprise.execute('6Lfp5-gjAAAAAGVFnYksnuEL3aNznmbXUHw33DvX', {action: 'login'}).then(function(token) {
+//        console.log("?");
+//     });
+// });

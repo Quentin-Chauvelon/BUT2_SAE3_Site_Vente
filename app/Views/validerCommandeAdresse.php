@@ -16,7 +16,7 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
 
     <div class="panier_header">
         <div>
-            <h1 class="total">Total : <?= $montant / 100 ?>€</h1>
+            <h1 class="total">Total : <?= substr($montant / 100, 0, 5) ?>€</h1>
             <h2 class="nombre_produits">Nombre de produits : <?= $nombreArticles ?></h2>
         </div>
         

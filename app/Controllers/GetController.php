@@ -7,14 +7,18 @@
  * @param $routeName string Le nom de la route sans le nom du contrôleur
  * @return string Le nom complet de la route
  */
+
+
 function getRoute(string $routeName): string {
     $routes = \Config\Services::routes();
-    $routes = $routes->getRoutes();
+    $routes = $routes->getRoutes("get");
+
     foreach ($routes as $route) {
         if (str_contains($route, $routeName)) {
-            $position = strpos("\App\Controllers\AdminController::adminView", '/');
+            $position = strpos($route, '/');
             return substr($route, 0, ($position != 0 ? $position : strlen($route)));
         }
     }
+
     return '\App\Controllers\Home::index';
 }

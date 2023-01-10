@@ -14,13 +14,10 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
 </head>
 
 <?php
-    $total = 0.0;
     $nombreProduits = 0;
 
     foreach ($exemplaires as $exemplaire) {
         $quantite = $quantitesExemplaires[(string)$exemplaire["id_produit"] . $exemplaire["couleur"] . $exemplaire["taille"]];
-
-        $total += (float)$produits[$exemplaire["id_produit"]]["prix"] * $quantite;
         $nombreProduits += $quantite;
     }
 
@@ -61,7 +58,7 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
 
     <div class="panier_header">
         <div>
-            <h1 class="total">Total : <?= $total / 100 ?>€</h1>
+            <h1 class="total">Total : <?= $commande->montant / 100 ?>€</h1>
             <h2 class="nombre_produits">Nombre de produits : <?= $nombreProduits ?></h2>
         </div>
 

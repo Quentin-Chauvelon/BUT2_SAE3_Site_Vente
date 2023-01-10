@@ -120,11 +120,11 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
           </a>
 
             <div class="dropdown_content">
-            <a href="<?= url_to(getRoute("trouverToutDeCategorie"), "sweat") ?>"><div><h3>Sweats</h3></div></a>
-            <a href="<?= url_to(getRoute("trouverToutDeCategorie"), "tshirt") ?>"><div><h3>T-shirts</h3></div></a>
-            <a href="<?= url_to(getRoute("trouverToutDeCategorie"), "pantalon") ?>"><div><h3>Pantalons</h3></div></a>
-            <a href="<?= url_to(getRoute("trouverToutDeCategorie"), "accessoire") ?>"><div><h3>Accessoires</h3></div></a>
-            <a href="<?= url_to(getRoute("trouverToutDeCategorie"), "poster") ?>"><div><h3>Posters</h3></div></a>
+              <a href="<?= url_to(getRoute("trouverToutDeCategorie"), "sweat") ?>"><div><h3>Sweats</h3></div></a>
+              <a href="<?= url_to(getRoute("trouverToutDeCategorie"), "tshirt") ?>"><div><h3>T-shirts</h3></div></a>
+              <a href="<?= url_to(getRoute("trouverToutDeCategorie"), "pantalon") ?>"><div><h3>Pantalons</h3></div></a>
+              <a href="<?= url_to(getRoute("trouverToutDeCategorie"), "accessoire") ?>"><div><h3>Accessoires</h3></div></a>
+              <a href="<?= url_to(getRoute("trouverToutDeCategorie"), "poster") ?>"><div><h3>Posters</h3></div></a>
             </div>
           </div>
 

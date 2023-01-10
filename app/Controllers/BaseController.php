@@ -52,6 +52,8 @@ abstract class BaseController extends Controller
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
 
+        $routes = \Config\Services::routes();
+
         // Preload any models, libraries, etc, here.
         $this->session = \Config\Services::session();
         $this->session->start();

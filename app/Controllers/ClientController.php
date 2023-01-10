@@ -272,11 +272,11 @@ class ClientController extends BaseController
 
     /**
      * Affiche la vue du panier de l'utilisateur actuel.
-     * @param string|null $coupon L'id du coupon utilisé ou nul.
+     * @param $coupon Le coupon utilisé ou null.
      * @param string $etatCoupon L'état du coupon utilisé ou vide.
      * @return string La vue
      */
-    public function afficherPanierCoupon(?string $coupon, string $etatCoupon): string
+    public function afficherPanierCoupon($coupon, string $etatCoupon): string
     {
 
         // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
@@ -635,17 +635,17 @@ class ClientController extends BaseController
             $this->ModeleExemplaire->ajouterExemplaireCommande($idCommande, $exemplaireCommande->id_exemplaire, $exemplaire->quantite);
         }
         try {
-            $idCoupon = $this->ModeleCommande
+            $coupon = $this->ModeleCommande
                 ->where('id_commande', $idCommande)
                 ->first();
         }
         catch (Exception){
-            $idCoupon = NULL;
+            $coupon = NULL;
         }
 
-        if ($idCoupon != NULL && $idCoupon != "" && $idCoupon->id_coupon) {
+        if ($coupon != NULL && $coupon != "" && $coupon->id_coupon) {
             try{
-                $coupon = $this->ModeleCoupon->find($idCoupon->id_coupon);
+                $coupon = $this->ModeleCoupon->find($coupon->id_coupon);
             } catch (Exception){
                 $coupon = NULL;
             }
@@ -666,7 +666,17 @@ class ClientController extends BaseController
         }
 
         // on calcule le montant de la commande
-        $this->ModeleCommande->CalculerMontant($idCommande);
+        $montant = 0;
+
+        foreach ($panier as $exemplaire) {
+            $produit = $this->ModeleProduit->find($exemplaire->id_produit);
+
+            if ($produit == NULL ||$exemplaire->id_produit == NULL) {
+                continue;               
+            }
+
+            $montant += (int)$produit->prix * (int)$exemplaire->quantite;
+        }
 
         try{
             $commande = $this->ModeleCommande
@@ -677,12 +687,27 @@ class ClientController extends BaseController
             $commande = NULL;
         }
 
-
         if ($commande == NULL) {
             return $this->afficherPanier();
         }
 
-        $montant = $commande->montant;
+        // on applique le coupon au montant de la commande
+        if ($commande->id_coupon != NULL) {
+            $coupon = $this->ModeleCoupon->find($commande->id_coupon);
+
+            if ($coupon != NULL) {
+                if ($coupon->est_pourcentage) {
+                    $montant *= (100 - $coupon->montant) / 100;
+                } else {
+                    $montant -= $coupon->montant;
+                }
+            }
+        }
+
+        $commande->montant = $montant;
+
+        $this->ModeleCommande->save($commande);
+        var_dump($this->ModeleCommande->find($commande->id_commande));
 
         return view("compte", array("compteAction" => "validerCommandeAdresse", "montant" => $montant, "nombreArticles" => $nombreArticles, "idCommande" => $idCommande, "adressesPrecendentes" => $this->ModeleAdresse->getAdressesParClient($idClient), "session" => $this->getDonneesSession()));
     }

@@ -109,11 +109,12 @@ class ClientController extends BaseController
     /**
      * @return string La vue pour créer un compte.
      */
-    public function inscription($compteDejaExistant = false, $passwordsDifferents = false): string
+    public function inscription($compteDejaExistant = false, $passwordsDifferents = false, $captchaVide = false): string
     {
         return view("creerCompte", array(
             "compteDejaExistant" => $compteDejaExistant,
             "passwordsDifferents" => $passwordsDifferents,
+            "captchaVide" => $captchaVide,
             "session" => $this->getDonneesSession()
         ));
     }
@@ -136,6 +137,25 @@ class ClientController extends BaseController
         if ($result != NULL) {
             return $this->inscription(true, false);
         }
+
+        if(isset($_POST['g-recaptcha-response'])){
+            $captcha = $_POST['g-recaptcha-response'];
+        } else {
+            return $this->inscription(false, false, true);
+        }
+
+        if(!$captcha) {
+            return $this->inscription(false, false, true);
+        }
+
+        // $cleCaptcha = "6LcDO-sjAAAAAA4gdNa_iH1azONWHfqKDKSSXcPI";
+        // $url = 'https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($cleCaptcha) .  '&response=' . urlencode($captcha);
+        // $response = file_get_contents($url);
+        // $responseKeys = json_decode($response,true);
+        // var_dump($responseKeys["success"]);
+        // if($responseKeys["success"]) {
+            
+        // }
 
         // on récupère les deux mots de passe pour s'assurer qu'ils sont égaux
         $password = $this->request->getPost('password');
@@ -1448,13 +1468,8 @@ class ClientController extends BaseController
     }
 }
 
-// vérifier les strings vides et les tailles dans les posts
-// sauter ligne pour les return view array pour que ce soit plus lisible ?
-// au lieu de faire plusieurs return view, en avoir un seul dans un controller et appeler la méthode
-
 // tester getExtensionImage et enlever les commentaires ou décommenter si ça marche pas
 // home.html, home.php.save, backup.php, adminView.php.save, adminView.php.save.1
-// captcha (cle)
 
 // custom 404
 // désactiver les erreurs + page spéciale ?

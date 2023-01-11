@@ -52,6 +52,7 @@ class AdminController extends BaseController
             "coupons" => $this->ModeleCoupon->findAll()));
     }
 
+
     /** adminView : Redirige vers la vue admin.
      * @return string La vue admin.
      */
@@ -64,6 +65,20 @@ class AdminController extends BaseController
         return $this->returnAdminView('utilisateurs');
     }
 
+
+    /**
+     * Retourne la vue home.
+     * @return string La vue home.
+     */
+    public function home(): string {
+        return view('home', array(
+            "estAdmin" => $this->estAdmin(),
+            "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(),
+            "session" => $this->getDonneesSession()
+        ));
+    }
+
+    
     /**
      * setAdmin Donne ou enlève la permission d'admin à un utilisateur.
      * @param int $idClient Le client dont on change le statut.
@@ -73,13 +88,13 @@ class AdminController extends BaseController
     private function setAdmin(int $idClient, bool $est_admin): string
     {
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+            return $this->home();
         }
 
         try {
             $this->ModeleClient->update($idClient, array("est_admin" => $est_admin));
-        } catch (Exception) {
-        }
+        } catch (Exception) {}
+
         return $this->returnAdminView('utilisateurs');
     }
 
@@ -93,6 +108,7 @@ class AdminController extends BaseController
         return $this->setAdmin($idClient, true);
     }
 
+
     /**
      * setAdmin Enlève la permission d'admin à un utilisateur.
      * @param int $idClient Le client dont on change le statut.
@@ -102,6 +118,7 @@ class AdminController extends BaseController
         return $this->setAdmin($idClient, false);
     }
 
+
     /**
      * supprimerClient Supprime un client.
      * @param int $idClient Le client à supprimer.
@@ -110,13 +127,13 @@ class AdminController extends BaseController
     public function supprimerUtilisateur(int $idClient): string {
 
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+            return $this->home();
         }
 
         try {
             $this->ModeleClient->delete($idClient);
-        } catch (Exception) {
-        }
+        } catch (Exception) {}
+
         return $this->returnAdminView('utilisateurs');
     }
 
@@ -127,47 +144,46 @@ class AdminController extends BaseController
      */
     public function creerProduit(): string {
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+            return $this->home();
         }
 
-            try {
-                $nom = $this->request->getPost('nom');
-                $prix = $this->request->getPost('prix');
-                $description = $this->request->getPost('description');
-                $categorie = $this->request->getPost('categorie');
-                $idCollection = $this->request->getPost('id_collection');
-                $countfiles = count($_FILES['images']['name']);
+        try {
+            $nom = $this->request->getPost('nom');
+            $prix = $this->request->getPost('prix');
+            $description = $this->request->getPost('description');
+            $categorie = $this->request->getPost('categorie');
+            $idCollection = $this->request->getPost('id_collection');
+            $countfiles = count($_FILES['images']['name']);
 
-                $result = false;
+            $result = false;
 
-                if ($nom != "" && $prix > 0 && $countfiles > 0) {
-                    $result = $this->ModeleProduit->creerProduit($nom, $prix, $description, $categorie, ($idCollection == "") ? NULL : (int)$this->request->getPost($idCollection));
-                }
+            if ($nom != "" && $prix > 0 && $countfiles > 0) {
+                $result = $this->ModeleProduit->creerProduit($nom, $prix, $description, $categorie, ($idCollection == "") ? NULL : (int)$this->request->getPost($idCollection));
+            }
 
-                if ($result) {
-                    $produit = $this->ModeleProduit
-                        ->where('nom', $nom)
-                        ->first();
+            if ($result) {
+                $produit = $this->ModeleProduit
+                    ->where('nom', $nom)
+                    ->first();
 
-                    if ($produit != NULL) {
+                if ($produit != NULL) {
 
-                        $idProduit = $produit->id_produit;
+                    $idProduit = $produit->id_produit;
 
-                        mkdir("images/produits/" . (string)$idProduit);
-                        mkdir("images/produits/" . (string)$idProduit . "/images");
-                        mkdir("images/produits/" . (string)$idProduit . "/couleurs");
+                    mkdir("images/produits/" . (string)$idProduit);
+                    mkdir("images/produits/" . (string)$idProduit . "/images");
+                    mkdir("images/produits/" . (string)$idProduit . "/couleurs");
 
-                        for ($i = 0; $i < $countfiles; $i++) {
-                            $filename = $_FILES['images']['tmp_name'][$i];
+                    for ($i = 0; $i < $countfiles; $i++) {
+                        $filename = $_FILES['images']['tmp_name'][$i];
 
-                            //move_uploaded_file($filename, "images/produits/" . (string)$idProduit . "/images/image_"  . (string)$i . "." . $_FILES['images']['type'][$i]);
-                            move_uploaded_file($filename, "images/produits/" . (string)$idProduit . "/images/image_" . (string)($i + 1) . "." . str_replace("image/", "", $_FILES['images']['type'][$i]));
-                            //rename("images/produits/" . (string)$idProduit . "/images/" . $filename, site_url() . "images/produits/" . (string)$idProduit . "/images/image_" . (string)$i . "." . $_FILES['images']['type'][$i]);
-                        }
+                        //move_uploaded_file($filename, "images/produits/" . (string)$idProduit . "/images/image_"  . (string)$i . "." . $_FILES['images']['type'][$i]);
+                        move_uploaded_file($filename, "images/produits/" . (string)$idProduit . "/images/image_" . (string)($i + 1) . "." . str_replace("image/", "", $_FILES['images']['type'][$i]));
+                        //rename("images/produits/" . (string)$idProduit . "/images/" . $filename, site_url() . "images/produits/" . (string)$idProduit . "/images/image_" . (string)$i . "." . $_FILES['images']['type'][$i]);
                     }
                 }
-            } catch (Exception) {
             }
+        } catch (Exception) {}
 
         return $this->returnAdminView('produits');
     }
@@ -180,9 +196,8 @@ class AdminController extends BaseController
      */
     public function modifierProduitVue(int $idProduit): string
     {
-        if (!$this->estAdmin())
-        {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+        if (!$this->estAdmin()) {
+            return $this->home();
         }
 
         $produit = $this->ModeleProduit->find($idProduit);
@@ -202,7 +217,7 @@ class AdminController extends BaseController
     public function modifierProduit() {
 
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+            return $this->home();
         }
 
         $produit = $this->ModeleProduit->find($this->request->getPost('id_produit'));
@@ -236,7 +251,7 @@ class AdminController extends BaseController
     public function ajouterImageProduit(): string {
 
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+            return $this->home();
         }
 	
         
@@ -266,12 +281,11 @@ class AdminController extends BaseController
      */
     public function reordonnerImagesProduits(): string {
 
-        $idProduit = (string)$this->request->getPost("id_produit");
-
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+            return $this->home();
         }
-
+        
+        $idProduit = (string)$this->request->getPost("id_produit");
         $ordre = array();
 
         // on récupère l'ordre des images dans le post pour savoir lesquelles échanger.
@@ -345,9 +359,8 @@ class AdminController extends BaseController
     public function supprimerImageProduit(int $idProduit, int $numeroImage): string {
 
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+            return $this->home();
         }
-
 
         $idProduit = (string)$idProduit;
         $nbImages = count(glob("images/produits/" . $idProduit . "/images/" . "*"));
@@ -437,7 +450,7 @@ class AdminController extends BaseController
     public function supprimerProduit(int $idProduit) {
 
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+            return $this->home();
         }
 
         $this->ModeleProduit->SupprimerProduit($idProduit);
@@ -459,7 +472,7 @@ class AdminController extends BaseController
     public function creerExemplaire(): string {
 
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+            return $this->home();
         }
 
         $idProduit = $this->request->getPost('id_produit');
@@ -473,8 +486,7 @@ class AdminController extends BaseController
             return $this->returnAdminView('exemplaires');
         }
 
-        if ($quantite == null || $quantite <= 0)
-        {
+        if ($quantite == null || $quantite <= 0) {
             $quantite = 1;
         }
 
@@ -490,11 +502,13 @@ class AdminController extends BaseController
                 return $this->returnAdminView('exemplaires');
             }
         }
+        
         elseif ($produit->categorie == "accessoire") {
             if (!$tailleEnum->estAccessoire()) {
                 return $this->returnAdminView('exemplaires');
             }
         }
+
         else {
             if (!$tailleEnum->estVetement()) {
                 return $this->returnAdminView('exemplaires');
@@ -525,7 +539,7 @@ class AdminController extends BaseController
     {
         
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+            return $this->home();
         }
 
         return view('modifierExemplaireImagesVue', array("idProduit" => $idProduit, "session" => $this->getDonneesSession()));
@@ -538,7 +552,7 @@ class AdminController extends BaseController
     public function modifierImageExemplaire() {
         
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+            return $this->home();
         }
 
         $idProduit = $this->request->getPost("id_produit");
@@ -595,7 +609,7 @@ class AdminController extends BaseController
     public function supprimer1Exemplaire(int $idProduit, string $taille, string $couleur): string {
         
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+            return $this->home();
         }
 
         $exemplairesDispoParProduitCouleurTaille = $this->ModeleExemplaire->getExemplairesDispoParProduitCouleurTaille($idProduit, $couleur, $taille);
@@ -633,7 +647,7 @@ class AdminController extends BaseController
     public function supprimerTousLesExemplaires(int $idProduit, string $taille, string $couleur) {
 
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+            return $this->home();
         }
 
         $exemplairesDispoParProduitCouleurTaille = $this->ModeleExemplaire->getExemplairesDispoParProduitCouleurTaille($idProduit, $couleur, $taille);
@@ -661,7 +675,7 @@ class AdminController extends BaseController
     public function creerCollection(): string {
         
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+            return $this->home();
         }
 
         $today = date("Y-m-d");
@@ -687,12 +701,15 @@ class AdminController extends BaseController
     {
         if (!$this->estAdmin())
         {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+            return $this->home();
         }
 
         $collection = $this->ModeleCollection->find($idCollection);
 
-        return view('modifierCollectionVue', array("collection" => $collection, "session" => $this->getDonneesSession()));
+        return view('modifierCollectionVue', array(
+            "collection" => $collection,
+            "session" => $this->getDonneesSession()
+        ));
     }
 
     /**
@@ -702,7 +719,7 @@ class AdminController extends BaseController
     public function modifierCollection(): string {
 
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+            return $this->home();
         }
 
         $idCollection = $this->request->getPost('id_collection');
@@ -742,13 +759,13 @@ class AdminController extends BaseController
     public function supprimerCollection(int $idCollection): string {
 
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+            return $this->home();
         }
 
         try {
             $this->ModeleCollection->delete($idCollection);
-        } catch (Exception) {
-        }
+        } catch (Exception) {}
+
         return $this->returnAdminView('collections');
     }
 
@@ -759,7 +776,7 @@ class AdminController extends BaseController
     public function creerCoupon(): string {
 
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+            return $this->home();
         }
 
         $today = date("Y-m-d");
@@ -785,10 +802,11 @@ class AdminController extends BaseController
             "utilisations_max" => (int)$utilisationsMax
         );
 
-        try{
+        try {
             $this->ModeleCoupon->insert($coupon);
         }
         catch (Exception){}
+
         return $this->returnAdminView('coupons');
     }
 
@@ -801,12 +819,15 @@ class AdminController extends BaseController
 
         if (!$this->estAdmin())
         {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+            return $this->home();
         }
 
         $coupon = $this->ModeleCoupon->find($idCoupon);
 
-        return view('modifierCouponVue', array("coupon" => $coupon, "session" => $this->getDonneesSession()));
+        return view('modifierCouponVue', array(
+            "coupon" => $coupon,
+            "session" => $this->getDonneesSession()
+        ));
     }
 
     /**
@@ -816,7 +837,7 @@ class AdminController extends BaseController
     public function modifierCoupon(): string {
 
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+            return $this->home();
         }
 
         $idCoupon = $this->request->getPost('id_coupon');
@@ -855,13 +876,13 @@ class AdminController extends BaseController
      */
     public function supprimerCoupon(int $idCoupon): string {
         if (!$this->estAdmin()) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+            return $this->home();
         }
 
         try {
             $this->ModeleCoupon->delete($idCoupon);
-        } catch (Exception) {
-        }
+        } catch (Exception) {}
+        
         return $this->returnAdminView('coupons');
     }
 }

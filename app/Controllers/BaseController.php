@@ -135,18 +135,24 @@ abstract class BaseController extends Controller
      * @return bool true si l'utilisateur actuel est admin
      */
     public function estAdmin(): bool {
+        
         if (!$this->SessionExistante()) {
             return false;
         }
+
         $email = $this->session->get("email");
+        
         if ($email == NULL) {
             return false;
         }
+
         try{
             $client = $this->ModeleClient->getClientParEmail($email);
+            
             if ($client == null) {
                 return false;
             }
+
             return $client->est_admin;
         } catch (\Exception) {
             return false;
@@ -159,9 +165,11 @@ abstract class BaseController extends Controller
      */
     public function ProduitsPlusPopulaires(): array {
         $produits = $this->ModeleProduit->getAllProduitsPlusVendus();
+
         if (count($produits) > 3) {
             return array_slice($produits, 0, 3);
         }
+
         return $produits;
     }
 

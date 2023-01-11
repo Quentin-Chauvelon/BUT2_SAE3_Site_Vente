@@ -11,6 +11,7 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
     <link rel="stylesheet" href=<?= site_url() . "css/creerCompte.css"?>>
 	<!-- <script src="https://www.google.com/recaptcha/enterprise.js?render=6LcDO-sjAAAAACCLute0JPUrvTLRch1GqTy5myDd"></script> -->
 	<!-- <script src="https://www.google.com/recaptcha/api.js?render=6LcDO-sjAAAAACCLute0JPUrvTLRch1GqTy5myDd"></script> -->
+	<script src="https://www.google.com/recaptcha/api.js?hl=fr" async defer></script>
     <script src=<?= site_url() . "js_script/creerCompte.js"?>></script>
     <title>Hot genre</title>
 </head>
@@ -25,6 +26,10 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
 
 	if ($passwordsDifferents) {
 		$erreurTexte = "Les mots de passe que vous avez indiqués sont différents. Veuillez réessayez.";
+	}
+
+	if ($captchaVide) {
+		$erreurTexte = "Vous devez compléter le captcha pour vous inscrire.";
 	}
 ?>
 
@@ -106,7 +111,7 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
 					</div>
 				</div>
 
-				<div class="g-recaptcha" data-sitekey="6LcDO-sjAAAAACCLute0JPUrvTLRch1GqTy5myDd"></div>
+				<div class="g-recaptcha" id="captcha" data-sitekey="6LcDO-sjAAAAACCLute0JPUrvTLRch1GqTy5myDd"></div>
 
 				<button type="submit">Je crée mon compte</button>
 

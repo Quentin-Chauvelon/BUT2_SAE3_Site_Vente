@@ -34,7 +34,7 @@ class Product extends BaseController
         try {
             $produit =$this->ModeleProduit->find($idProduit);
         } catch (Exception) {
-            $this->Home->index();
+            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
         }
 
         if ($produit == NULL) {

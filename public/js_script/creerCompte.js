@@ -4,6 +4,15 @@ let passwordRepetitionInput = null;
 document.addEventListener("DOMContentLoaded", function(event) { 
 	passwordInput = document.getElementById("password");
 	passwordRepetitionInput = document.getElementById("passwordRepetition");
+
+	document.getElementById("captcha").addEventListener("submit",function(evt) {
+		var response = grecaptcha.getResponse();
+
+		if(response.length == 0)
+			alert("vide");
+		else
+			alert("pas vide");
+	});
 });
 
 function togglePasswordVisibility1() {
@@ -22,11 +31,3 @@ function togglePasswordVisibility2() {
 		passwordRepetitionInput.type = "password";
 	}
 }
-
-
-
-// grecaptcha.enterprise.ready(function() {
-//     grecaptcha.enterprise.execute('6Lfp5-gjAAAAAGVFnYksnuEL3aNznmbXUHw33DvX', {action: 'login'}).then(function(token) {
-//        console.log("?");
-//     });
-// });

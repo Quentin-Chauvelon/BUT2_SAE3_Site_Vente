@@ -5,7 +5,7 @@
 namespace App\Models;
 
 use App\Entities\Exemplaire;
-use App\Entities\Taille;
+use App\Enums\Taille;
 use CodeIgniter\SafeModel;
 use Exception;
 

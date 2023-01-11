@@ -43,7 +43,7 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
 
 			<h5 class="erreur_texte"><?= ($erreurTexte != "") ? $erreurTexte : "" ?></h5>
 
-			<form action=<?= url_to("ClientController::connexionCompte") ?> method="post">
+			<form action=<?= url_to(getRoute("connexionCompte")) ?> method="post">
 				<div>
 					<label for="email">Adresse email *</label>
 					<input type="email" name="email" id="email" placeholder=" " maxlength="255" required/>

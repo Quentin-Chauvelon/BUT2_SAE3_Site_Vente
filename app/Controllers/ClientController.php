@@ -36,10 +36,56 @@ class ClientController extends BaseController
         $this->request = \Config\Services::request();
     }
 
+
+    /**
+     * Retourne la vue home.
+     * @param ?bool $estAdmin indique si l'utilisateur est admin.
+     * @param bool $sessionVide indique si les valeurs de la session devraient être retounées ou un array de session vide.
+     * @return string La vue home.
+     */
+    public function home(?bool $estAdmin = NULL, $sessionVide = false): string {
+        return view('home', array(
+            "estAdmin" => ($estAdmin != NULL) ? $this->estAdmin() : $estAdmin,
+            "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(),
+            "session" => (!$sessionVide) ? $this->getDonneesSession() : array('panier' => array(), 'id'  => NULL, 'prenom' => NULL, 'nom' => NULL, 'email' => NULL)
+        ));
+    }
+
+    
+    /**
+     * Retourne la vue product.
+     * @param int $idProduit l'id du produit à retourné.
+     * @param bool $ajouteAuPanier indique si le produit a été ajouté au panier.
+     * @param bool $manqueExemplaire indique si il y a suffisamment d'exemplaires si l'utilisateur a essayé d'en ajouter à son panier.
+     * @return string La vue product.
+     */
+    public function product(int $idProduit, bool $ajouteAuPanier = false, bool $manqueExemplaire = false) {
+        try {
+            $produit = $this->ModeleProduit->find($idProduit);
+        } catch (Exception) {
+            return $this->home();
+        }
+
+        try { 
+            $exemplaires = $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll();
+        } catch (Exception) {
+            $exemplaires = array();
+        }
+
+        return view('product', array(
+            "product" => $produit,
+            "exemplaires" => $exemplaires,
+            "ajouteAuPanier" => $ajouteAuPanier,
+            "produitFavori" => $this->estEnFavori($idProduit),
+            "manqueExemplaire" => $manqueExemplaire,
+            "session" => $this->getDonneesSession()));
+    }
+
+
     /**
      * Retourne la page quand on appuie sur le bouton monCompte.
      * Se connecter si on n'est pas connecté, sinon affiche la page monCompte.
-     * @return string
+     * @return string La vue creerCompte ou compte.
      */
     public function monCompte(): string
     {
@@ -51,6 +97,7 @@ class ClientController extends BaseController
                 "session" => $this->getDonneesSession()
             ));
         }
+
         // La vue de connexion
         return view("creerCompte", array(
             "compteDejaExistant" => false,
@@ -62,9 +109,13 @@ class ClientController extends BaseController
     /**
      * @return string La vue pour créer un compte.
      */
-    public function inscription(): string
+    public function inscription($compteDejaExistant = false, $passwordsDifferents = false): string
     {
-        return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
+        return view("creerCompte", array(
+            "compteDejaExistant" => $compteDejaExistant,
+            "passwordsDifferents" => $passwordsDifferents,
+            "session" => $this->getDonneesSession()
+        ));
     }
 
     /**
@@ -74,16 +125,16 @@ class ClientController extends BaseController
     public function creerCompte(): string
     {
         $email = $this->request->getPost('email');
+
         try {
             $result =  $this->ModeleClient->where('adresse_email', $email)->first();
         } catch (Exception) {
-            return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
+            return $this->inscription();
         }
 
-        
         // si l'utilisateur a déjà un compte, on lui suggère de se connecter plutôt
         if ($result != NULL) {
-            return view("creerCompte", array("compteDejaExistant" => true, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
+            return $this->inscription(true, false);
         }
 
         // on récupère les deux mots de passe pour s'assurer qu'ils sont égaux
@@ -91,15 +142,15 @@ class ClientController extends BaseController
         $passwordRepetition = $this->request->getPost('passwordRepetition');
 
         // si les deux mots de passe sont différents, on retourne une erreur
-        if ($password != $passwordRepetition) {        
-            return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => true, "session" => $this->getDonneesSession()));
+        if ($password != $passwordRepetition || strlen($password) <= 8 || strlen($password) > 64) {
+            return $this->inscription(false, true);
         }
 
         $prenom = $this->request->getPost('prenom');
         $nom = $this->request->getPost('nom');
 
         if ($prenom == "" || $nom == "") {
-            return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
+            return $this->inscription();
         }
 
         // si les deux mot de passe sont égaux, on crée le compte
@@ -112,30 +163,35 @@ class ClientController extends BaseController
         // on ajoute le client à la base de donnée
         try {
             $this->ModeleClient->insert($client);
+
+            // on récupère l'id du client qui vient d'être créé
+            $idClient = $this->ModeleClient->getInsertID();
         } catch (Exception) {
-            return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
+            return $this->inscription();
         }
         
-        // on récupère l'id du client qui vient d'être créé
-        $idClient = $this->ModeleClient->getInsertID();
-        
-        // on sauvegarde certaines données dans la session
+        // si l'utilisateur souhaite rester connecté, alors on crée deux cookies afin de le reconnecter quand il ouvre le site
         if ($this->request->getPost("rester_connecte") == "rester_connecte") {
             setcookie("idClient", (int)$idClient, time() + 60 * 60 * 24 * 30);
             setcookie("password", $password, time() + 60 * 60 * 24 * 30);
         }
-
+        
+        // on sauvegarde certaines données dans la session
         $this->setDonneesSession($idClient, $client->prenom, $client->nom, $email);
 
-        return view("successCreationCompteClient");
+        return view("succesCreationCompteClient");
     }
 
     /**
      * Retourne la page de connexion.
      * @return string La page de connexion
      */
-    public function connexion(): string {
-        return view("connexionCompte", array("compteNonExistant" => false, "passwordFaux" => false, "session" => $this->getDonneesSession()));
+    public function connexion($compteNonExistant = false, $passwordFaux = false): string {
+        return view("connexionCompte", array(
+            "compteNonExistant" => $compteNonExistant,
+            "passwordFaux" => $passwordFaux,
+            "session" => $this->getDonneesSession()
+        ));
     }
 
     /**
@@ -149,13 +205,12 @@ class ClientController extends BaseController
 
         // si l'utilisateur n'a pas encore de compte, on lui suggère d'en créer un
         if ($result == NULL) {
-            return view("connexionCompte", array("compteNonExistant" => true, "passwordFaux" => false, "session" => $this->getDonneesSession()));
+            return $this->connexion(true, false);
         }
-
 
         // si les mots de passe sont différents, alors on retourne une erreur
         if (!$result->checkPassword($password)) {
-            return view("connexionCompte", array("compteNonExistant" => false, "passwordFaux" => true, "session" => $this->getDonneesSession()));
+            return $this->connexion(false, true);
         }
 
         $id = $result->id_client;
@@ -164,12 +219,13 @@ class ClientController extends BaseController
         
         $this->setDonneesSession($id, $prenom, $nom, $email);
 
+        // si l'utilisateur souhaite rester connecté, alors on crée deux cookies afin de le reconnecter quand il ouvre le site
         if ($this->request->getPost("rester_connecte") == "rester_connecte") {
             setcookie("idClient", (int)$id, time() + 60 * 60 * 24 * 30);
             setcookie("password", $result->password, time() + 60 * 60 * 24 * 30);
         }
 
-        return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+        return $this->home();
     }
 
 
@@ -188,7 +244,7 @@ class ClientController extends BaseController
             setcookie('password', "", 1);
         }
 
-        return view('home', array("estAdmin" => false, "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => array('panier' => array(), 'id'  => NULL, 'prenom' => NULL, 'nom' => NULL, 'email' => NULL)));
+        return $this->home(false, true);
     }
 
     /**
@@ -217,16 +273,22 @@ class ClientController extends BaseController
 
         foreach ($favoris as $favori) {
             $idFavori = $favori->id_produit;
+            
             try{
                 $produit = $this->ModeleProduit->find($idFavori);
             }
             catch (Exception) {
                 continue;
             }
+
             $produits[] = $produit;
         }
 
-        return view("compte", array("compteAction" => "favoris", "favoris" => $produits, "session" => $this->getDonneesSession()));
+        return view("compte", array(
+            "compteAction" => "favoris",
+            "favoris" => $produits,
+            "session" => $this->getDonneesSession()
+        ));
     }
 
     /**
@@ -239,30 +301,19 @@ class ClientController extends BaseController
 
         // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
         if (!$this->SessionExistante()) {
-            return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
+            return $this->inscription();
         }
+
         if ($this->estEnFavori($idProduit)) {
             $this->supprimerFavori($idProduit);
-        } else
-        {
+        } else {
             $this->ModeleFavori->ajouterFavori($this->session->get('id'), $idProduit);
         }
 
-        // Rediriger sur la page des produits si $returnProduit == 1, sinon sur la page de tous les favoris.
+        // Rediriger sur la page des produits si $returnProduit == 1, sinon sur la page de tous les favoris
+        // Permet de renvoyer l'utilisateur sur la page d'où il vient
         if ($returnProduit == 1) {
-            try {
-                $produit = $this->ModeleProduit->find($idProduit);
-            } catch (Exception) {
-                return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
-            }
-
-            try { 
-                $exemplaires = $this->ModeleExemplaire->where('id_produit', $idProduit)->where('est_disponible', true)->findAll();
-            } catch (Exception) {
-                $exemplaires = array();
-            }
-
-            return view('product', array("product" => $produit, "exemplaires" => $exemplaires, "ajouteAuPanier" => false, "produitFavori" => $this->estEnFavori($idProduit), "manqueExemplaire" => false, "session" => $this->getDonneesSession()));
+            return $this->product($idProduit, false, false);
         } else {
             return $this->afficherFavoris();
         }
@@ -1323,7 +1374,6 @@ class ClientController extends BaseController
 // vérifier les strings vides et les tailles dans les posts
 // sauter ligne pour les return view array pour que ce soit plus lisible ?
 // au lieu de faire plusieurs return view, en avoir un seul dans un controller et appeler la méthode
-// rajouter try catch sur le code que j'ai ajouté aux controllers
 
 // tester getExtensionImage et enlever les commentaires ou décommenter si ça marche pas
 // home.html, home.php.save, backup.php, adminView.php.save, adminView.php.save.1

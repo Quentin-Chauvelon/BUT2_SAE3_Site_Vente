@@ -8,11 +8,10 @@ use App\Models\ModeleExemplaire;
 use App\Models\ModeleCollection;
 use App\Models\ModeleCommande;
 use App\Models\ModeleCoupon;
-use App\Entities\Taille;
+use App\Enums\Taille;
 use Config\Services;
 use Exception;
 
-require_once APPPATH  . 'Entities' . DIRECTORY_SEPARATOR . 'Taille.php';
 require_once APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetExtensionImage.php';
 
 

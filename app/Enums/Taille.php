@@ -1,5 +1,5 @@
 <?php
-namespace App\Entities;
+namespace App\Enums;
 /**
  * Énumération des tailles possibles des vêtements, des accessoires et des posters.
  * Est une classe fille de string.

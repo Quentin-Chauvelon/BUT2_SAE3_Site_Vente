@@ -9,7 +9,8 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href=<?= site_url() . "css/creerCompte.css"?>>
-	<script src="https://www.google.com/recaptcha/enterprise.js?render=6LcseukjAAAAAGNpL--OyGMXyPowhCO0f2Js54tg"></script>
+	<!-- <script src="https://www.google.com/recaptcha/enterprise.js?render=6LcDO-sjAAAAACCLute0JPUrvTLRch1GqTy5myDd"></script> -->
+	<!-- <script src="https://www.google.com/recaptcha/api.js?render=6LcDO-sjAAAAACCLute0JPUrvTLRch1GqTy5myDd"></script> -->
     <script src=<?= site_url() . "js_script/creerCompte.js"?>></script>
     <title>Hot genre</title>
 </head>
@@ -105,7 +106,7 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
 					</div>
 				</div>
 
-				<div class="g-recaptcha" data-sitekey="6LcseukjAAAAAGNpL--OyGMXyPowhCO0f2Js54tg"></div>
+				<div class="g-recaptcha" data-sitekey="6LcDO-sjAAAAACCLute0JPUrvTLRch1GqTy5myDd"></div>
 
 				<button type="submit">Je crée mon compte</button>
 

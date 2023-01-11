@@ -12,7 +12,7 @@ require_once APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetExtensionImage
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src=<?= site_url() . "js_script/home.js"?>></script>
   <link rel="stylesheet" href=<?= site_url() . "css/home.css"?>>
-  <title>Hot genre DEV</title>
+  <title>Hot genre</title>
 </head>
 
 <?php

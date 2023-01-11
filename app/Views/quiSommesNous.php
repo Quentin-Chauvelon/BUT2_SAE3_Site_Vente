@@ -12,8 +12,11 @@
     <?php include 'header.php';?>
 
     <div>
-        <h1>Qui sommes nous ?</h1>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <h1>Qui sommes-nous ?</h1>
+        <p>Hot Genre est une marque de vêtement ainsi qu'un collectif de musique Techno/Indus qui se veut underground et loin des grandes marques. Nous
+proposons des vêtements graphiques à des prix abordables afin qu’ils soient accessibles à un grand
+nombre de personnes, les jeunes en particulier. Nous vous proposons aussi de découvrir des actualités
+liées au monde de l’underground, ainsi que de découvrir des artistes méconnus ou à suivre de très près.</p>
     </div>
 
     <?php include 'footer.php';?>

@@ -48,12 +48,12 @@ require_once APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetExtensionImage
         // on calcule le nouveau montant de la commande en fonction du coupon appliqué
         if ($coupon->est_pourcentage) {
             $montant = $coupon->montant;
-            $total = $total * (1 - ($montant / 100));
+            $total = max(0, $total * (1 - ($montant / 100)));
             $symbole = "%";
         }
         else {
             $montant = $coupon->montant / 100;
-            $total = $total - $coupon->montant;
+            $total = max(0, $total - $coupon->montant);
             $symbole = "€";
         }
     }

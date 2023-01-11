@@ -127,7 +127,6 @@ display: inline-block;
     transform: rotate(135deg);
     -webkit-transform: rotate(135deg);
 left : 10px;
-top : 5px;
 }
 
 .right {
@@ -135,7 +134,6 @@ top : 5px;
     transform: rotate(-45deg);
     -webkit-transform: rotate(-45deg);
 right : 10px;
-top : 5px;
 }
 
 
@@ -204,6 +202,10 @@ top : 5px;
 }
 
 .populaires > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     width: 33%;
     height: 550px;
 

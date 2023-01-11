@@ -45,7 +45,7 @@ class ClientController extends BaseController
      */
     public function home(?bool $estAdmin = NULL, $sessionVide = false): string {
         return view('home', array(
-            "estAdmin" => ($estAdmin != NULL) ? $this->estAdmin() : $estAdmin,
+            "estAdmin" => ($estAdmin == NULL) ? $this->estAdmin() : $estAdmin,
             "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(),
             "session" => (!$sessionVide) ? $this->getDonneesSession() : array('panier' => array(), 'id'  => NULL, 'prenom' => NULL, 'nom' => NULL, 'email' => NULL)
         ));
@@ -83,6 +83,20 @@ class ClientController extends BaseController
 
 
     /**
+     * @return string La vue pour créer un compte.
+     */
+    public function inscription($compteDejaExistant = false, $passwordsDifferents = false, $captchaVide = false): string
+    {
+        return view("creerCompte", array(
+            "compteDejaExistant" => $compteDejaExistant,
+            "passwordsDifferents" => $passwordsDifferents,
+            "captchaVide" => $captchaVide,
+            "session" => $this->getDonneesSession()
+        ));
+    }
+
+
+    /**
      * Retourne la page quand on appuie sur le bouton monCompte.
      * Se connecter si on n'est pas connecté, sinon affiche la page monCompte.
      * @return string La vue creerCompte ou compte.
@@ -99,25 +113,9 @@ class ClientController extends BaseController
         }
 
         // La vue de connexion
-        return view("creerCompte", array(
-            "compteDejaExistant" => false,
-            "passwordsDifferents" => false,
-            "session" => $this->getDonneesSession()
-        ));
+        return $this->inscription();
     }
 
-    /**
-     * @return string La vue pour créer un compte.
-     */
-    public function inscription($compteDejaExistant = false, $passwordsDifferents = false, $captchaVide = false): string
-    {
-        return view("creerCompte", array(
-            "compteDejaExistant" => $compteDejaExistant,
-            "passwordsDifferents" => $passwordsDifferents,
-            "captchaVide" => $captchaVide,
-            "session" => $this->getDonneesSession()
-        ));
-    }
 
     /**
      * Crée un compte à partir des paramètres en post.
@@ -190,10 +188,23 @@ class ClientController extends BaseController
             return $this->inscription();
         }
         
+        if ($idClient == NULL) {
+            return $this->inscription();
+        }
+
         // si l'utilisateur souhaite rester connecté, alors on crée deux cookies afin de le reconnecter quand il ouvre le site
         if ($this->request->getPost("rester_connecte") == "rester_connecte") {
             setcookie("idClient", (int)$idClient, time() + 60 * 60 * 24 * 30);
-            setcookie("password", $password, time() + 60 * 60 * 24 * 30);
+
+            try {
+                $client = $this->ModeleClient->find($idClient);
+            } catch (Exception) {
+                $client = NULL;
+            }
+
+            if ($client != NULL) {
+                setcookie("password", $client->password, time() + 60 * 60 * 24 * 30);
+            }
         }
         
         // on sauvegarde certaines données dans la session
@@ -283,12 +294,11 @@ class ClientController extends BaseController
      * Retourne la page des favoris de l'utilisateur actuel.
      * @return string La vue des favoris
      */
-    public function afficherFavoris(): string
-    {
+    public function afficherFavoris(): string {
 
         // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
         if (!$this->SessionExistante()) {
-            return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
+            return $this->inscription();
         }
 
         $favoris = $this->getAllFavorisClient();
@@ -328,6 +338,11 @@ class ClientController extends BaseController
             return $this->inscription();
         }
 
+        // on s'assure que le produit existe bien
+        if (!$this->ModeleProduit->find($idProduit)) {
+            return $this->home();
+        }
+
         if ($this->estEnFavori($idProduit)) {
             $this->supprimerFavori($idProduit);
         } else {
@@ -358,6 +373,7 @@ class ClientController extends BaseController
         }
     }
 
+
     /**
      * Affiche la vue du panier de l'utilisateur actuel.
      * @param $coupon Le coupon utilisé ou null.
@@ -368,7 +384,7 @@ class ClientController extends BaseController
     {
         // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
         if (!$this->SessionExistante()) {
-            return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
+            return $this->inscription();
         }
 
         $panier = $this->session->get("panier");
@@ -444,7 +460,13 @@ class ClientController extends BaseController
      * @return string La vue de l'historique des commandes.
      */
     public function afficherHistorique(): string {
-        try{
+        
+        // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
+        if (!$this->SessionExistante()) {
+            return $this->inscription();
+        }
+
+        try {
             $commandes = $this->ModeleCommande->where('id_client', $this->getSessionId())->findAll();
         }
         catch (Exception) {
@@ -474,6 +496,7 @@ class ClientController extends BaseController
         $email = $this->request->getPost('email');
 
         // si l'adresse mail indiquée est la même que celle déjà utilisée pour le compte, alors on l'enlève pour ne pas trouver de compte dans le select suivant
+        // sinon il y aurait toujours un compte avec l'adresse mail (celle de 'utilisateur courant)
         if ($this->SessionExistante() && $this->session->get('email') == $email) {
             $email = "";
         }
@@ -529,7 +552,7 @@ class ClientController extends BaseController
     public function ajouterAuPanier(): string {
 
         if (!$this->SessionExistante()) {
-            return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
+            return $this->inscription();
         }
 
         $idProduit = $this->request->getPost('idProduit');
@@ -561,7 +584,21 @@ class ClientController extends BaseController
                 $exemplaires = array();
             }
 
-            return $this->product(false, true);
+            return $this->product($idProduit, false, true);
+        }
+
+        $panier = $this->session->get("panier");
+        $quantiteDejaDansPanier = 0;
+
+        foreach ($panier as $exemplairePanier) {
+            if ($exemplaire->id_produit == $exemplairePanier->id_produit && $exemplaire->couleur == $exemplairePanier->couleur && $exemplaire->taille == $exemplairePanier->taille) {
+                $quantiteDejaDansPanier = $exemplairePanier->quantite;
+            }
+        }
+
+        // on s'assure que l'utilisateur n'essaye pas d'ajouter plus d'exemplaires que ce qu'il y a en stock en fonction de ce qu'il a déjà dans son panier
+        if ($quantiteDejaDansPanier + $quantite > $exemplaire->quantite) {
+            return $this->product($idProduit, false, true);
         }
 
         // on s'assure qu'il y a assez d'exemplaires pour la couleur et la taille donnée
@@ -578,11 +615,8 @@ class ClientController extends BaseController
                 $exemplaires = array();
             }
 
-            return $this->product(false, true);
+            return $this->product($idProduit, false, true);
         }
-
-        // on récupère le panier de l'utilisateur
-        $panier = $this->session->get("panier");
 
         $exempl = new Exemplaire(array(
             "id_produit" => $exemplaire->id_produit,
@@ -622,7 +656,7 @@ class ClientController extends BaseController
             $exemplaires = array();
         }
 
-        return $this->product(true, false);
+        return $this->product($idProduit, true, false);
     }
 
     /**
@@ -636,7 +670,7 @@ class ClientController extends BaseController
 
         // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
         if (!$this->SessionExistante()) {
-            return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
+            return $this->inscription();
         }
 
         $panier = $this->session->get("panier");
@@ -702,7 +736,7 @@ class ClientController extends BaseController
 
         // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
         if (!$this->SessionExistante()) {
-            return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
+            return $this->inscription();
         }
 
         $panier = $this->session->get("panier");
@@ -885,6 +919,12 @@ class ClientController extends BaseController
             return $this->afficherPanier();
         }
 
+        try {
+            $adressesPrecedentes = $this->ModeleAdresse->getAdressesParClient($idClient);
+        } catch (Exception) {
+            $adressesPrecedentes = array();
+        }
+
         return view("compte", array(
             "compteAction" => "validerCommandeAdresse",
             "montant" => $montant,
@@ -913,8 +953,12 @@ class ClientController extends BaseController
      */
     public function annulerCommande(int $idCommande): string
     {
-        // on enlève tous les exemplaires de la commande au cas où la commande aurait été annulée et certains articles enlevés ou ajoutés
-        $this->enleverExemplairesCommande($idCommande);
+        $commande = $this->ModeleCommande->find($idCommande);
+
+        if ($commande != NULL && !$commande->est_validee) {
+            // on enlève tous les exemplaires de la commande au cas où la commande aurait été annulée et certains articles enlevés ou ajoutés
+            $this->enleverExemplairesCommande($idCommande);   
+        }
 
         return $this->afficherPanier();
     }
@@ -1000,6 +1044,14 @@ class ClientController extends BaseController
      * @return string
      */
     public function detailCommande(int $idCommande) {
+
+        // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
+        if (!$this->SessionExistante()) {
+            return $this->inscription();
+        }
+
+        $idClient = $this->session->get("id");
+
         try {
             $commande = $this->ModeleCommande
                 ->where('id_commande', $idCommande)
@@ -1011,6 +1063,10 @@ class ClientController extends BaseController
 
         // si la commande n'a pas été trouvée, on renvoie sur la page d'accueil
         if ($commande == NULL) {
+            return $this->home();
+        }
+        
+        if ($commande->id_client != NULL && (int)$commande->id_client != $idClient) {
             return $this->home();
         }
         
@@ -1040,7 +1096,6 @@ class ClientController extends BaseController
             }
         }
     
-
         // si aucun exemplaire n'a été trouvé, on renvoie sur la page d'accueil
         if (count($exemplaires) == 0) {
             return $this->home();
@@ -1090,9 +1145,20 @@ class ClientController extends BaseController
             }
         }
 
+        $coupon = NULL;
+
+        if ($commande->id_coupon != NULL) {
+            try {
+                $coupon = $this->ModeleCoupon->find($commande->id_coupon);
+            } catch (Exception) {
+                $coupon = NULL;
+            }
+        }
+
         return view("compte", array(
             "compteAction" => "detailCommande",
             "commande" => $commande,
+            "coupon" => $coupon,
             "adresse" => $adresse,
             "exemplaires" => $exemplairesUnique,
             "quantitesExemplaires" => $quantitesExemplaires,
@@ -1306,8 +1372,6 @@ class ClientController extends BaseController
         $codePostal = $adresse->code_postal;
         $ville = $adresse->ville;
 
-        $total = 0;
-
         try {
             $exemplaires = $this->ModeleExemplaire
                 ->where('id_commande', $idCommande)
@@ -1398,18 +1462,17 @@ class ClientController extends BaseController
             $pdf->SetTextColor(46);
             $pdf->SetFont('Helvetica','',14);
             $pdf->Cell(35, 12, $exemplaire->quantite, 0, 0, "C", true);
-            $pdf->Cell(85, 12, $produit->nom . "(couleur : " . $exemplaire->couleur . ", taille : " . $exemplaire->taille . ")" , 0, 0, "L", true);
+
+            $pdf->Cell(85, 12, $produit->nom . " (" . $exemplaire->couleur . ", " . $exemplaire->taille . ")" , 0, 0, "L", true);
             $pdf->Cell(35, 12, ($produit->prix / 100) . chr(128), 0, 0, "C", true);
             $pdf->Cell(35, 12, (($produit->prix * $exemplaire->quantite) / 100) . chr(128), 0, 0, "C", true);
-
-            $total += $produit->prix * $exemplaire->quantite;
         }
 
         $pdf->Ln(14);
         $pdf->SetFont('Helvetica','B',14);
         $pdf->Cell(120, 10, "", 0, 0, "C");
         $pdf->Cell(35, 10, "Total", 0, 0, "C");
-        $pdf->Cell(35, 10, ($total / 100) . chr(128), 0, 0, "C");
+        $pdf->Cell(35, 10, ($commande->montant / 100) . chr(128), 0, 0, "C");
 
         header('Content-Type: application/pdf');
         return $pdf->Output("D", 'facture_' . $idCommande . '.pdf');
@@ -1468,7 +1531,10 @@ class ClientController extends BaseController
     }
 }
 
-// tester getExtensionImage et enlever les commentaires ou décommenter si ça marche pas
+
+// reduction coupon dans facture et detail commande ?
+// s'il n'y a pas de produits dans la catégorie, retourner products
+
 // home.html, home.php.save, backup.php, adminView.php.save, adminView.php.save.1
 
 // custom 404

@@ -53,13 +53,26 @@ require_once APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetExtensionImage
             }
         }
     }
+
+    $montantCoupon = "";
+    $symboleCoupon = "";
+
+    if ($coupon != NULL) {
+        if ($coupon->est_pourcentage) {
+            $montantCoupon = $coupon->montant;
+            $symboleCoupon = "%";
+        } else {
+            $montantCoupon = $coupon->montant / 100;
+            $symboleCoupon = "€";
+        }
+    }
 ?>
 
 <body>
 
     <div class="panier_header">
         <div>
-            <h1 class="total">Total : <?= $commande->montant / 100 ?>€</h1>
+            <h1 class="total">Total : <?= $commande->montant / 100 ?>€ <span class="green <?= ($coupon == NULL) ? "hidden" : "" ?>">(-<?= $montantCoupon ?><?= $symboleCoupon ?>)</span></h1>
             <h2 class="nombre_produits">Nombre de produits : <?= $nombreProduits ?></h2>
         </div>
 

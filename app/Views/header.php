@@ -97,7 +97,7 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
 
         <a class="underline_animation" href="<?= url_to(getRoute("index")) ?>">FEED</a>
         <a class="underline_animation" href="<?= url_to(getRoute("index")) ?>">LOOKBOOK</a>
-        <a class="underline_animation" href="<?= url_to(getRoute("quiSommesNous")) ?>">QUI SOMMES NOUS?</a>
+        <a class="underline_animation" href="<?= url_to(getRoute("quiSommesNous")) ?>">QUI SOMMES-NOUS?</a>
         <a class="underline_animation" href="<?= url_to(getRoute("contact")) ?>">CONTACT</a>
       </nav>
     </div>
@@ -131,7 +131,7 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
 
           <a class="underline_animation" href="<?= url_to(getRoute("index")) ?>">FEED</a>
           <a class="underline_animation" href="<?= url_to(getRoute("index")) ?>">LOOKBOOK</a>
-          <a class="underline_animation" href="<?= url_to(getRoute("quiSommesNous")) ?>">QUI SOMMES NOUS?</a>
+          <a class="underline_animation" href="<?= url_to(getRoute("quiSommesNous")) ?>">QUI SOMMES-NOUS?</a>
           <a class="underline_animation" href="<?= url_to(getRoute("contact")) ?>">CONTACT</a>
         </nav>
       </div>

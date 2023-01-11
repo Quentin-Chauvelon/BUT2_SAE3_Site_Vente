@@ -93,10 +93,10 @@ class ModeleExemplaire extends SafeModel
     /** getExemplairesDispoParProduitCouleurTaille retourne le stock disponible d'un produit pour une couleur et une taille donnée.
      * @param int $id_produit L'id du produit.
      * @param string $couleur La couleur.
-     * @param Taille $taille La taille.
+     * @param $taille La taille.
      * @return Exemplaire[] Les exemplaires disponibles. Vide en cas d'erreur.
      */
-    function getExemplairesDispoParProduitCouleurTaille(int $id_produit, string $couleur, Taille $taille): array
+    function getExemplairesDispoParProduitCouleurTaille(int $id_produit, string $couleur, $taille): array
     {
         $sql = "CALL GetExemplairesDispoParProduitCouleurTaille(?, ?, ?)";
         try {

@@ -57,7 +57,7 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
             <?php endforeach; ?>
         </div>
 
-        <a href="<?= url_to(getRoute("index")) ?>">
+        <a href="<?= url_to(getRoute("adminView")) ?>">
             <div class="bouton">Valider</div>
         </a>
     </section>

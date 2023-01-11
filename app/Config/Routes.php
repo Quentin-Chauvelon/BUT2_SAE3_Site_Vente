@@ -63,7 +63,7 @@ $routes->get('inscription', 'ClientController::inscription');
 $routes->get('connexion', 'ClientController::connexion');
 $routes->get('deconnexion', 'ClientController::deconnexion');
 $routes->get('afficherFavoris', 'ClientController::afficherFavoris');
-$routes->get('ajouterFavori/(:num)/(:any)', 'ClientController::ajouterFavori/$1/$2');
+$routes->get('ajouterFavori/(:num)/(:num)', 'ClientController::ajouterFavori/$1/$2');
 $routes->get('afficherPanier', 'ClientController::afficherPanier');
 $routes->get('afficherHistorique', 'ClientController::afficherHistorique');
 $routes->get('supprimerDuPanier/(:num)/(:any)/(:any)', 'ClientController::supprimerDuPanier/$1/$2/$3');
@@ -78,21 +78,21 @@ $routes->get('contact', 'ClientController::contact');
 $routes->get('facture/(:any)', 'ClientController::facture/$1');
 
 $routes->get('adminView', 'AdminController::adminView');
-$routes->get('mettreAdmin/(:any)', 'AdminController::mettreAdmin/$1');
-$routes->get('enleverAdmin/(:any)', 'AdminController::enleverAdmin/$1');
+$routes->get('mettreAdmin/(:num)', 'AdminController::mettreAdmin/$1');
+$routes->get('enleverAdmin/(:num)', 'AdminController::enleverAdmin/$1');
 $routes->get('supprimerUtilisateur/(:any)', 'AdminController::supprimerUtilisateur/$1');
 $routes->get('modifierProduitVue/(:any)', 'AdminController::modifierProduitVue/$1');
 $routes->get('modifierExemplaireImagesVue/(:any)', 'AdminController::modifierExemplaireImagesVue/$1');
 $routes->get('modifierCollectionVue/(:any)', 'AdminController::modifierCollectionVue/$1');
 $routes->get('modifierCouponVue/(:any)', 'AdminController::modifierCouponVue/$1');
-// $routes->get('modifierProduit', 'AdminController::modifierProduit');
 $routes->get('supprimerProduit/(:any)', 'AdminController::supprimerProduit/$1');
 $routes->get('supprimer1Exemplaire/(:any)/(:any)/(:any)', 'AdminController::supprimer1Exemplaire/$1/$2/$3');
 $routes->get('supprimerTousLesExemplaires/(:any)/(:any)/(:any)', 'AdminController::supprimerTousLesExemplaires/$1/$2/$3');
 $routes->get('supprimerCollection/(:any)', 'AdminController::supprimerCollection/$1');
 $routes->get('supprimerImageProduit/(:any)/(:any)', 'AdminController::supprimerImageProduit/$1/$2');
 $routes->get('supprimerCoupon/(:any)', 'AdminController::supprimerCoupon/$1');
-
+$routes->get('motDePasseOublie', 'ClientController::motDePasseOublie');
+$routes->get('ChangerMotDePasse/(:any)', 'ClientController::ChangerMotDePasse/$1');
 
 $routes->post('creerCompte','ClientController::creerCompte');
 $routes->post('connexionCompte','ClientController::connexionCompte');
@@ -102,6 +102,8 @@ $routes->post('appliquerCoupon', 'ClientController::appliquerCoupon');
 $routes->post('adresseCommande', 'ClientController::adresseCommande');
 $routes->post('avis', 'ClientController::avis');
 $routes->post('messageContact', 'ClientController::messageContact');
+$routes->post('envoyerMailChangementMDP', 'ClientController::envoyerMailChangementMDP');
+$routes->post('reinitialiserMotDePasse', 'ClientController::reinitialiserMotDePasse');
 
 $routes->post('creerProduit', 'AdminController::creerProduit');
 $routes->post('modifierProduit', 'AdminController::modifierProduit');
@@ -112,9 +114,4 @@ $routes->post('reordonnerImagesProduits', 'AdminController::reordonnerImagesProd
 $routes->post('creerCoupon', 'AdminController::creerCoupon');
 $routes->post('modifierCollection', 'AdminController::modifierCollection');
 $routes->post('modifierCoupon', 'AdminController::modifierCoupon');
-
-$routes->get('motDePasseOublie', 'ClientController::motDePasseOublie');
-$routes->post('envoyerMailChangementMDP', 'ClientController::envoyerMailChangementMDP');
-$routes->post('reinitialiserMotDePasse', 'ClientController::reinitialiserMotDePasse');
-$routes->get('ChangerMotDePasse/(:any)', 'ClientController::ChangerMotDePasse/$1');
 $routes->post('modifierImageExemplaire', 'AdminController::modifierImageExemplaire');

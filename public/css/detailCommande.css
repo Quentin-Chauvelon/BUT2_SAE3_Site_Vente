@@ -222,6 +222,15 @@ body {
 }
 
 
+.green {
+    color: green;
+}
+
+.hidden {
+    display: none;
+}
+
+
 @media screen and (max-width: 1000px) {
 
     .panier_header {

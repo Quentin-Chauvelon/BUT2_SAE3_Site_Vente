@@ -158,7 +158,7 @@ class AdminController extends BaseController
             $result = false;
 
             if ($nom != "" && $prix > 0 && $countfiles > 0) {
-                $result = $this->ModeleProduit->creerProduit($nom, $prix, $description, $categorie, ($idCollection == "") ? NULL : (int)$this->request->getPost($idCollection));
+                $result = $this->ModeleProduit->creerProduit($nom, $prix, $description, $categorie, ($idCollection == "") ? NULL : (int)$idCollection);
             }
 
             if ($result) {
@@ -547,11 +547,11 @@ class AdminController extends BaseController
     /**
      * Supprimer1Exemplaire diminue de 1 la quantité d'un exemplaire.
      * @param int $idProduit L'id du produit.
-     * @param string $taille La taille de l'exemplaire.
+     * @param $taille La taille de l'exemplaire.
      * @param string $couleur La couleur de l'exemplaire.
      * @return string La vue admin
      */
-    public function supprimer1Exemplaire(int $idProduit, string $taille, string $couleur): string {
+    public function supprimer1Exemplaire(int $idProduit, $taille, string $couleur): string {
         
         if (!$this->estAdmin()) {
             return $this->home();
@@ -687,7 +687,7 @@ class AdminController extends BaseController
         $collection->date_limite = $this->request->getPost('date_limite');
 
         // Vérifier si le modèle existe et s'il est trouvé
-        if ($collection->id_collection != NULL && $collection->nom != "" && $collection->parution < date("Y-m-d") && $collection->date_limite >= date("Y-m-d")) {
+        if ($collection->id_collection != NULL && $collection->nom != "" && $collection->parution <= date("Y-m-d") && $collection->date_limite >= date("Y-m-d")) {
             try{
                 $this->ModeleCollection->save($collection);
             } catch (Exception) {}
@@ -816,10 +816,10 @@ class AdminController extends BaseController
 
     /**
      * supprimerCoupon supprime un coupon de la base de données.
-     * @param int $idCoupon L'identifiant du coupon à supprimer.
+     * @param string $idCoupon L'identifiant du coupon à supprimer.
      * @return string La vue des coupons
      */
-    public function supprimerCoupon(int $idCoupon): string {
+    public function supprimerCoupon(string $idCoupon): string {
         if (!$this->estAdmin()) {
             return $this->home();
         }

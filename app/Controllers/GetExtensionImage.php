@@ -18,7 +18,7 @@
         }
 
         elseif (file_exists($chemin . ".jpeg")) {
-            return "jpeg";
+            return ".jpeg";
         }
          
         else {

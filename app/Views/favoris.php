@@ -1,5 +1,6 @@
 <?php
 require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.php');
+require_once APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetExtensionImage.php';
 ?>
 
 <!DOCTYPE html>
@@ -24,19 +25,7 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
                 <a href="<?= url_to(getRoute("display"), $favori->id_produit) ?>">
                     <div class="image_container">
                         <?php 
-                            $extension = "";
-                            
-                            if (file_exists("images/produits/" . $favori->id_produit . "/images/image_1.jpg")) {
-                                $extension = ".jpg";
-                            }
-
-                            elseif (file_exists("images/produits/" . $favori->id_produit . "/images/image_1.png")) {
-                                $extension = ".png";
-                            }
-
-                            elseif (file_exists("images/produits/" . $favori->id_produit . "/images/image_1.jpeg")) {
-                                $extension = ".jpeg";
-                            }
+                            $extension = getExtensionImage("images/produits/" . $favori->id_produit . "/images/image_1");
                         ?>
 
                         <img src=<?= site_url() . "images/produits" . DIRECTORY_SEPARATOR . $favori->id_produit . DIRECTORY_SEPARATOR . "images/image_1" . $extension ?>>

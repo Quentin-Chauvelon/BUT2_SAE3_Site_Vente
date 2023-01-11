@@ -1,5 +1,6 @@
 <?php
 require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.php');
+require_once APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetExtensionImage.php';
 ?>
 
 <!DOCTYPE html>
@@ -58,20 +59,13 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
 
 	foreach ($couleurs as $couleur) {
 		$imageURL = "";
-                            
-		if (file_exists("images/produits" . DIRECTORY_SEPARATOR . $product->id_produit . DIRECTORY_SEPARATOR . "couleurs/" . $couleur . ".jpg")) {
-			$imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $product->id_produit . DIRECTORY_SEPARATOR . "couleurs/" . $couleur . ".jpg";
-		}
 
-		elseif (file_exists("images/produits" . DIRECTORY_SEPARATOR . $product->id_produit . DIRECTORY_SEPARATOR . "couleurs/" . $couleur . ".png")) {
-			$imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $product->id_produit . DIRECTORY_SEPARATOR . "couleurs/" . $couleur . ".png";
-		}
+		$extension = getExtensionImage("images/produits" . DIRECTORY_SEPARATOR . $product->id_produit . DIRECTORY_SEPARATOR . "couleurs/" . $couleur);
 
-		elseif (file_exists("images/produits" . DIRECTORY_SEPARATOR . $product->id_produit . DIRECTORY_SEPARATOR . "couleurs/" . $couleur . ".jpeg")) {
-			$imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $product->id_produit . DIRECTORY_SEPARATOR . "couleurs/" . $couleur . ".jpeg";
+		if ($extension != "") {
+			$imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $product->id_produit . DIRECTORY_SEPARATOR . "couleurs/" . $couleur . $extension;
+			$imageURLParCouleurs[$couleur] = $imageURL;
 		}
-
-		$imageURLParCouleurs[$couleur] = $imageURL;
 	}
 
 	// $productColors = [];

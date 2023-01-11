@@ -1,5 +1,6 @@
 <?php
 require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.php');
+require_once APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetExtensionImage.php';
 ?>
 
 <!DOCTYPE html>
@@ -19,19 +20,7 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
   $carrouselImages = array();
 
 	foreach ($carrouselProduits as $idProduit) {
-		$extension = "";
-                            
-    if (file_exists("images/produits/" . $idProduit . "/images/image_1.jpg")) {
-      $extension = ".jpg";
-    }
-
-    elseif (file_exists("images/produits/" . $idProduit . "/images/image_1.png")) {
-      $extension = ".png";
-    }
-
-    elseif (file_exists("images/produits/" . $idProduit . "/images/image_1.jpeg")) {
-      $extension = ".jpeg";
-    }
+    $extension = getExtensionImage("images/produits/" . $idProduit . "/images/image_1");
 
 		$carrouselImages[] = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $idProduit . DIRECTORY_SEPARATOR . "images/image_1" . $extension;
 	}
@@ -41,38 +30,14 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
 
 	foreach ($produitsPlusPopulaires as $produit) {
     $idProduit = $produit->id_produit;
-    $extension = "";
-                            
-    if (file_exists("images/produits/" . $idProduit . "/images/image_1.jpg")) {
-      $extension = ".jpg";
-    }
-
-    elseif (file_exists("images/produits/" . $idProduit . "/images/image_1.png")) {
-      $extension = ".png";
-    }
-
-    elseif (file_exists("images/produits/" . $idProduit . "/images/image_1.jpeg")) {
-      $extension = ".jpeg";
-    }
+    $extension = getExtensionImage("images/produits/" . $idProduit . "/images/image_1");
 
 		$produitsPlusVendusImages[$idProduit] = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $idProduit . DIRECTORY_SEPARATOR . "images/image_1" . $extension;
 
 
     $collectionProduitsId = array(25, 19, 34, 39, 31, 21, 40, 33); 
     foreach ($collectionProduitsId as $idProduit) {
-      $extension = "";
-                              
-      if (file_exists("images/produits/" . $idProduit . "/images/image_1.jpg")) {
-        $extension = ".jpg";
-      }
-  
-      elseif (file_exists("images/produits/" . $idProduit . "/images/image_1.png")) {
-        $extension = ".png";
-      }
-  
-      elseif (file_exists("images/produits/" . $idProduit . "/images/image_1.jpeg")) {
-        $extension = ".jpeg";
-      }
+      $extension = getExtensionImage("images/produits/" . $idProduit . "/images/image_1");
   
       $collectionIdProduits[] = $idProduit;
       $collectionProduits[] = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $idProduit . DIRECTORY_SEPARATOR . "images/image_1" . $extension;

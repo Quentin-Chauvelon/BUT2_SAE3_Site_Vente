@@ -1,5 +1,6 @@
 <?php
 require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.php');
+require_once APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetExtensionImage.php';
 ?>
 
 <!DOCTYPE html>
@@ -26,19 +27,7 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
                         <div class="rupture_stock2 <?= (array_search($product->id_produit, $produitsRuptureStock) !== false) ? "en_rupture" : "" ?>">RUPTURE DE STOCK</div>
 
                         <?php
-                            $extension = "";
-                            
-                            if (file_exists("images/produits/" . $product->id_produit . "/images/image_1.jpg")) {
-                                $extension = ".jpg";
-                            }
-
-                            elseif (file_exists("images/produits/" . $product->id_produit . "/images/image_1.png")) {
-                                $extension = ".png";
-                            }
-
-                            elseif (file_exists("images/produits/" . $product->id_produit . "/images/image_1.jpeg")) {
-                                $extension = ".jpeg";
-                            }
+                            $extension = getExtensionImage("images/produits/" . $product->id_produit . "/images/image_1");
                         ?>
 
                         <img src=<?= site_url() . "images/produits" . DIRECTORY_SEPARATOR . $product->id_produit . DIRECTORY_SEPARATOR . "images/image_1" . $extension ?>>

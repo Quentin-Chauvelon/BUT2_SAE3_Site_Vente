@@ -85,19 +85,6 @@ require_once APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetExtensionImage
                     <div class="image_container">
                         <?php 
                             $imageURL = "";
-                            
-                            // if (file_exists("images/produits" . DIRECTORY_SEPARATOR . $exemplaire["id_produit"] . DIRECTORY_SEPARATOR . "couleurs/" . $exemplaire["couleur"] . ".jpg")) {
-                            //     $imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $exemplaire["id_produit"] . DIRECTORY_SEPARATOR . "couleurs/" . $exemplaire["couleur"] . ".jpg";
-                            // }
-                    
-                            // elseif (file_exists("images/produits" . DIRECTORY_SEPARATOR . $exemplaire["id_produit"] . DIRECTORY_SEPARATOR . "couleurs/" . $exemplaire["couleur"] . ".png")) {
-                            //     $imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $exemplaire["id_produit"] . DIRECTORY_SEPARATOR . "couleurs/" . $exemplaire["couleur"] . ".png";
-                            // }
-                    
-                            // elseif (file_exists("images/produits" . DIRECTORY_SEPARATOR . $exemplaire["id_produit"] . DIRECTORY_SEPARATOR . "couleurs/" . $exemplaire["couleur"] . ".jpeg")) {
-                            //     $imageURL = site_url() . "images/produits" . DIRECTORY_SEPARATOR . $exemplaire["id_produit"] . DIRECTORY_SEPARATOR . "couleurs/" . $exemplaire["couleur"] . ".jpeg";
-                            // }
-
                             $extension = getExtensionImage("images/produits" . DIRECTORY_SEPARATOR . $exemplaire["id_produit"] . DIRECTORY_SEPARATOR . "couleurs/" . $exemplaire["couleur"]);
 
                             if ($extension != "") {

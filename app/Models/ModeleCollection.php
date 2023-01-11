@@ -66,7 +66,7 @@ class ModeleCollection extends SafeModel
     {
         $sql = "CALL GetCollectionParNom(?)";
         try {
-            return $this->db->query($sql, [$nom])->getResult()[0];
+            return $this->db->query($sql, [$nom])->getFirstRow("App\Entities\Collection");
         } catch (Exception) {
             return null;
         }

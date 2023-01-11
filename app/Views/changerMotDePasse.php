@@ -38,7 +38,7 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
 
 			<h5 class="erreur_texte"><?= ($erreurTexte != "") ? $erreurTexte : "" ?></h5>
 
-			<form action=<?= url_to('ClientController::reinitialiserMotDePasse') ?> method="post">
+			<form action=<?= url_to(getRoute("reinitialiserMotDePasse")) ?> method="post">
 			
 				<input type="hidden" name="id_client" id="id_client" placeholder=" " value="<?= $idClient ?>" required/>
 

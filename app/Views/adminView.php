@@ -186,7 +186,7 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
             </table>
 
 
-            <form id="creer_produit" class="creer_produit_form" action=<?= url_to('AdminController::creerProduit') ?> method="post" enctype='multipart/form-data'>
+            <form id="creer_produit" class="creer_produit_form" action=<?= url_to(getRoute("creerProduit")) ?> method="post" enctype='multipart/form-data'>
                 <h1>Créer un produit :</h1>
 
                 <div>
@@ -320,7 +320,7 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
                 <?php endforeach; ?>
             </div>
 
-            <form id="creer_exemplaire" class="creer_exemplaire_form" action=<?= url_to('AdminController::creerExemplaire') ?> method="post" enctype='multipart/form-data'>
+            <form id="creer_exemplaire" class="creer_exemplaire_form" action=<?= url_to(getRoute("creerExemplaire")) ?> method="post" enctype='multipart/form-data'>
                 <h1>Créer un exemplaire :</h1>
 
                 <div>
@@ -416,7 +416,7 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
             </table>
 
 
-            <form id="creer_collection" class="creer_collection_form" action=<?= url_to('AdminController::creerCollection') ?> method="post">
+            <form id="creer_collection" class="creer_collection_form" action=<?= url_to(getRoute("creerCollection")) ?> method="post">
                 <h1>Créer une collection :</h1>
 
                 <div>
@@ -513,7 +513,7 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
                 <?php endforeach; ?>
             </table>
 
-            <form id="creer_coupon" class="creer_coupon_form" action=<?= url_to('AdminController::creerCoupon') ?> method="post">
+            <form id="creer_coupon" class="creer_coupon_form" action=<?= url_to(getRoute("creerCoupon")) ?> method="post">
                 <h1>Créer un coupon :</h1>
 
                 <div>

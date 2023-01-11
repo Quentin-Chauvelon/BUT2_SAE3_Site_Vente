@@ -159,7 +159,7 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
 				<?php endforeach; ?>
 			</div>
 
-			<form action=<?= url_to('ClientController::ajouterAuPanier') ?> method="post">
+			<form action=<?= url_to(getRoute("ajouterAuPanier")) ?> method="post">
 				<div class="quantity_container">
 					<h3>Quantité :</h3>
 					<!-- <button class="increase_quantity"></button> -->

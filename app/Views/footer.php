@@ -40,7 +40,7 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
 
         <div class="contact_container">
 
-          <form action=<?= url_to('ClientController::avis') ?> method="post">
+          <form action=<?= url_to(getRoute("avis")) ?> method="post">
             <input class="contact_field" type="text" name="avis">
             <button class="contact_button">ENVOYER</button>
           </form>

@@ -94,13 +94,13 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
         </form>
 
         <div class="images_container">
-            <form action=<?= url_to('AdminController::ajouterImageProduit') ?> method="post" enctype='multipart/form-data'>
+            <form action=<?= url_to(getRoute("ajouterImageProduit")) ?> method="post" enctype='multipart/form-data'>
                 <input type="hidden" name="id_produit" id="id_produit" value="<?= $produit->id_produit ?>" />
                 <input class="add_image image" value="+" type="button" onclick="document.getElementById('image').click();" />
                 <input type="file" style="display:none;" id="image" name="image" accept=".jpg, .png" onchange="this.form.submit()"/>
             </form>
 
-            <form action=<?= url_to('AdminController::reordonnerImagesProduits') ?> method="post">
+            <form action=<?= url_to(getRoute("reordonnerImagesProduits")) ?> method="post">
                 <input type="hidden" name="id_produit" id="id_produit" value="<?= $produit->id_produit ?>" />
                 
                 <?php foreach($productImages as $key=>$imageSrc) : ?>

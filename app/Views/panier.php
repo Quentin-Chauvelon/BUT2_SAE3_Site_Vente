@@ -61,32 +61,31 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
 <body>
 
     <div class="panier_header">
-            <div>
-                <h1 class="total">Total : <?= substr($total / 100, 0, 5) ?>€ <span class='green <?= ($etatCoupon == "valide" ? "" : "hidden") ?>'>(-<?= $montant ?><?= $symbole ?>)</span></h1>
-                <h2 class="nombre_produits">Nombre de produits : <?= $nombreProduits ?></h2>
+        <div>
+            <h1 class="total">Total : <?= substr($total / 100, 0, 5) ?>€ <span class='green <?= ($etatCoupon == "valide" ? "" : "hidden") ?>'>(-<?= $montant ?><?= $symbole ?>)</span></h1>
+            <h2 class="nombre_produits">Nombre de produits : <?= $nombreProduits ?></h2>
 
-                <div class="coupon_container">
-                    <h3>Coupon :</h3>
-    
-                    <form action=<?= url_to('ClientController::appliquerCoupon') ?> method="post">
-                        <input id="code_promo" class="coupon_input" name="code_promo" type="text" placeholder=" ">
-                        <button type="submit" class="appliquer_coupon">APPLIQUER</button>
-                    </form>
-                </div>
+            <div class="coupon_container">
+                <h3>Coupon :</h3>
 
-                <h4 class="coupon_etat <?= $etatCouponCouleur ?>"><?= $etatCouponTexte ?></h4>
+                <form action=<?= url_to(getRoute("appliquerCoupon")) ?> method="post">
+                    <input id="code_promo" class="coupon_input" name="code_promo" type="text" placeholder=" ">
+                    <button type="submit" class="appliquer_coupon">APPLIQUER</button>
+                </form>
             </div>
 
-            <div class="panier_header_boutons">
-                <a href="<?= url_to(getRoute("validerPanier"), ($coupon != NULL) ? $coupon->id_coupon : "")?>">
-                    <div class="valider_panier">Valider et payer</div>
-                </a>
+            <h4 class="coupon_etat <?= $etatCouponCouleur ?>"><?= $etatCouponTexte ?></h4>
+        </div>
 
-                <a href="<?= url_to(getRoute("viderPanier")) ?>">
-                    <div class="vider_panier">Vider panier</div>
-                </a>
-            </div>
-        </form>
+        <div class="panier_header_boutons">
+            <a href="<?= url_to(getRoute("validerPanier"), ($coupon != NULL) ? $coupon->id_coupon : "")?>">
+                <div class="valider_panier">Valider et payer</div>
+            </a>
+
+            <a href="<?= url_to(getRoute("viderPanier")) ?>">
+                <div class="vider_panier">Vider panier</div>
+            </a>
+        </div>
     </div>
 
     <div class="products_container">

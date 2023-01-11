@@ -225,7 +225,11 @@ class ClientController extends BaseController
             setcookie("password", $result->password, time() + 60 * 60 * 24 * 30);
         }
 
-        return $this->home();
+        if ($result->est_admin) {
+            return $this->home(true);
+        } else {
+            return $this->home(false);
+        }
     }
 
 
@@ -342,7 +346,6 @@ class ClientController extends BaseController
      */
     public function afficherPanierCoupon($coupon, string $etatCoupon): string
     {
-
         // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
         if (!$this->SessionExistante()) {
             return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
@@ -383,11 +386,10 @@ class ClientController extends BaseController
 
                 // si le produit n'a pas été trouvée, on renvoie sur la page d'accueil
                 if ($produit == NULL) {
-                    return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+                    return $this->home();
                 }
 
                 if (!array_key_exists($idProduit, $produits)) {
-
                     $produits[$idProduit] = array(
                         "nom" => $produit->nom,
                         "prix" => $produit->prix
@@ -417,7 +419,11 @@ class ClientController extends BaseController
     }
 
 
-    public function afficherHistorique() {
+    /**
+     * Affiche l'historique des commandes de l'utilisateur.
+     * @return string La vue de l'historique des commandes.
+     */
+    public function afficherHistorique(): string {
         try{
             $commandes = $this->ModeleCommande->where('id_client', $this->getSessionId())->findAll();
         }
@@ -428,28 +434,36 @@ class ClientController extends BaseController
         try {
             $exemplaires = $this->ModeleExemplaire->findAll();
         } catch (Exception) {
-            return view('home');
+            return $this->home();
         }
 
-        return view("compte", array("compteAction" => "historique", "commandes" => $commandes, "exemplaires" => $exemplaires, "session" => $this->getDonneesSession()));
+        return view("compte", array(
+            "compteAction" => "historique",
+            "commandes" => $commandes,
+            "exemplaires" => $exemplaires,
+            "session" => $this->getDonneesSession()
+        ));
     }
+
 
     /**
      * Affiche la vue du compte de l'utilisateur actuel.
      * @return string La vue du compte
      */
-    public function modifierProfil() {
+    public function modifierProfil(): string {
         $email = $this->request->getPost('email');
 
         // si l'adresse mail indiquée est la même que celle déjà utilisée pour le compte, alors on l'enlève pour ne pas trouver de compte dans le select suivant
         if ($this->SessionExistante() && $this->session->get('email') == $email) {
             $email = "";
         }
+
         try{
             $result =  $this->ModeleClient->where('adresse_email', $email)->first();
         } catch (Exception) {
             $result = null;
         }
+
         // s'il existe déjà un autre compte avec l'adresse mail indiquée ou que la variable de session n'est pas définie, on renvoie une erreur
         if ($result != NULL || !$this->SessionExistante()) {
             return view("compte", array("compteAction" => "profil", "emailDejaUtilise" => true, "session" => $this->getDonneesSession()));
@@ -473,13 +487,19 @@ class ClientController extends BaseController
                 'nom' => ($nom != "") ? $nom : $clientAvant->nom
                 // 'password' => $clientAvant->password
             );
+
             try {
                 $this->ModeleClient->update($idClientAvant, $client);
                 $this->setDonneesSession($idClientAvant, $client['prenom'], $client['nom'], $client['adresse_email']);
             } catch (Exception) {}
 
         }
-        return view("compte", array("compteAction" => "profil", "emailDejaUtilise" => false, "session" => $this->getDonneesSession()));
+
+        return view("compte", array(
+            "compteAction" => "profil",
+            "emailDejaUtilise" => false,
+            "session" => $this->getDonneesSession()
+        ));
     }
 
     /**
@@ -491,6 +511,7 @@ class ClientController extends BaseController
         if (!$this->SessionExistante()) {
             return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
         }
+
         $idProduit = $this->request->getPost('idProduit');
         $quantite = $this->request->getPost('quantite');
         $couleur = $this->request->getPost('couleur');
@@ -511,7 +532,7 @@ class ClientController extends BaseController
             try {
                 $produit = $this->ModeleProduit->find($idProduit);
             } catch (Exception) {
-                return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+                return $this->home();
             }
 
             try { 
@@ -520,7 +541,7 @@ class ClientController extends BaseController
                 $exemplaires = array();
             }
 
-            return view('product', array("product" => $produit, "exemplaires" => $exemplaires, "ajouteAuPanier" => false, "produitFavori" => $this->estEnFavori($idProduit), "manqueExemplaire" => true, "session" => $this->getDonneesSession()));
+            return $this->product(false, true);
         }
 
         // on s'assure qu'il y a assez d'exemplaires pour la couleur et la taille donnée
@@ -528,7 +549,7 @@ class ClientController extends BaseController
             try {
                 $produit = $this->ModeleProduit->find($idProduit);
             } catch (Exception) {
-                return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+                return $this->home();
             }
 
             try { 
@@ -537,7 +558,7 @@ class ClientController extends BaseController
                 $exemplaires = array();
             }
 
-            return view('product', array("product" => $produit, "exemplaires" => $exemplaires, "ajouteAuPanier" => false, "produitFavori" => $this->estEnFavori($idProduit), "manqueExemplaire" => true, "session" => $this->getDonneesSession()));
+            return $this->product(false, true);
         }
 
         // on récupère le panier de l'utilisateur
@@ -551,7 +572,9 @@ class ClientController extends BaseController
             "est_disponible" => false
         ));
 
+        
         $exemplaireDejaPresentDansPanier = false;
+        
         // Vérifier si on a déjà la même chose dans le panier.
         foreach($panier as $exemplaire) {
             if ($exemplaire->id_produit == $exempl->id_produit && $exemplaire->couleur == $exempl->couleur && $exemplaire->taille == $exempl->taille) {
@@ -570,7 +593,7 @@ class ClientController extends BaseController
         try {
             $produit = $this->ModeleProduit->find($idProduit);
         } catch (Exception) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+            return $this->home();
         }
 
         try { 
@@ -579,7 +602,7 @@ class ClientController extends BaseController
             $exemplaires = array();
         }
 
-        return view('product', array("product" => $produit, "exemplaires" => $exemplaires, "ajouteAuPanier" => true, "produitFavori" => $this->estEnFavori($idProduit), "manqueExemplaire" => false, "session" => $this->getDonneesSession()));
+        return $this->product(true, false);
     }
 
     /**
@@ -612,9 +635,12 @@ class ClientController extends BaseController
     }
 
 
-    public function appliquerCoupon(): string
-    {
-        
+    /**
+     * Vérifie si un coupon est valide.
+     * @return string La vue panier
+     */
+    public function appliquerCoupon(): string {
+
         // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
         if (!$this->SessionExistante()) {
             return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
@@ -630,8 +656,7 @@ class ClientController extends BaseController
 
         if ($coupon == NULL) {
             return $this->afficherPanierCoupon(NULL, "invalide");
-        } 
-        else {
+        } else {
             $etatCoupon = "";
 
             if (!$coupon->est_valable) {
@@ -672,6 +697,7 @@ class ClientController extends BaseController
         if ($nombreArticles == 0) {
             return $this->afficherPanier();
         }
+
         try{
             $commandes = $this->ModeleCommande->findAll();
         } catch(Exception){
@@ -687,12 +713,12 @@ class ClientController extends BaseController
                 $idCommande = $commande->id_commande;
             }
         }
+
         try{
             $coupon = $this->ModeleCoupon->find($idCoupon);
         } catch (Exception){
             $coupon = NULL;
         }
-
 
         // si l'utilisateur n'a pas de commande en cours, on en crée une
         if ($idCommande == NULL) {
@@ -712,7 +738,6 @@ class ClientController extends BaseController
                 // on récupère l'id de la commande qui vient d'être crée
                 $idCommande = $this->ModeleCommande->getInsertID();
             } catch(Exception){}
-
         }
 
         // on applique le nouveau coupon à la commande si elle existait déjà
@@ -746,6 +771,7 @@ class ClientController extends BaseController
 
             $this->ModeleExemplaire->ajouterExemplaireCommande($idCommande, $exemplaireCommande->id_exemplaire, $exemplaire->quantite);
         }
+
         try {
             $coupon = $this->ModeleCommande
                 ->where('id_commande', $idCommande)
@@ -839,8 +865,16 @@ class ClientController extends BaseController
             return $this->afficherPanier();
         }
 
-        return view("compte", array("compteAction" => "validerCommandeAdresse", "montant" => $montant, "nombreArticles" => $nombreArticles, "idCommande" => $idCommande, "adressesPrecendentes" => $adressesPrecedentes, "session" => $this->getDonneesSession()));
+        return view("compte", array(
+            "compteAction" => "validerCommandeAdresse",
+            "montant" => $montant,
+            "nombreArticles" => $nombreArticles,
+            "idCommande" => $idCommande,
+            "adressesPrecendentes" => $adressesPrecedentes,
+            "session" => $this->getDonneesSession()
+        ));
     }
+
 
     /**
      * Vide le panier et va sur la vue panier.
@@ -852,18 +886,19 @@ class ClientController extends BaseController
         return $this->afficherPanier();
     }
 
+
     /** Annule une commande et retourne sur le panier.
      * @param int $idCommande
      * @return string
      */
     public function annulerCommande(int $idCommande): string
     {
-
         // on enlève tous les exemplaires de la commande au cas où la commande aurait été annulée et certains articles enlevés ou ajoutés
         $this->enleverExemplairesCommande($idCommande);
 
         return $this->afficherPanier();
     }
+
 
     /**
      * Lit l'adresse renseignée par l'utilisateur lors de la commande.
@@ -931,10 +966,12 @@ class ClientController extends BaseController
         try {
             $commande = $this->ModeleCommande->where('id_commande', $idCommande)->first();
         } catch (Exception) {
-            return view('home');
+            return $this->home();
         }
 
-        return view("commandeValidee", array("commande" => $commande));
+        return view("commandeValidee", array(
+            "commande" => $commande
+        ));
     }
 
     /**
@@ -954,7 +991,7 @@ class ClientController extends BaseController
 
         // si la commande n'a pas été trouvée, on renvoie sur la page d'accueil
         if ($commande == NULL) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+            return $this->home();
         }
         
         $adresse = NULL;
@@ -968,13 +1005,12 @@ class ClientController extends BaseController
             }
         }
 
-
         $exemplaires = array();
 
         try {
             $allExemplaires = $this->ModeleExemplaire->findAll();
         } catch (Exception) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+            return $this->home();
         }
         
         // on récupère tous les exemplaires de la commande
@@ -987,7 +1023,7 @@ class ClientController extends BaseController
 
         // si aucun exemplaire n'a été trouvé, on renvoie sur la page d'accueil
         if (count($exemplaires) == 0) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+            return $this->home();
         }
 
 
@@ -1013,6 +1049,7 @@ class ClientController extends BaseController
         // Rajouter les produits.
         foreach ($exemplaires as $exemplaire) {
             $idProduit = $exemplaire->id_produit;
+
             try {
                 $produit = $this->ModeleProduit->where('id_produit', $idProduit)->first();
             } catch (Exception){
@@ -1022,11 +1059,10 @@ class ClientController extends BaseController
 
             // si le produit n'a pas été trouvée, on renvoie sur la page d'accueil
             if ($produit == NULL) {
-                return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+                return $this->home();
             }
 
             if (!array_key_exists($idProduit, $produits)) {
-                
                 $produits[$idProduit] = array(
                     "nom" => $produit->nom,
                     "prix" => $produit->prix
@@ -1034,28 +1070,42 @@ class ClientController extends BaseController
             }
         }
 
-        return view("compte", array("compteAction" => "detailCommande", "commande" => $commande, "adresse" => $adresse, "exemplaires" => $exemplairesUnique, "quantitesExemplaires" => $quantitesExemplaires, "produits" => $produits, "session" => $this->getDonneesSession()));
+        return view("compte", array(
+            "compteAction" => "detailCommande",
+            "commande" => $commande,
+            "adresse" => $adresse,
+            "exemplaires" => $exemplairesUnique,
+            "quantitesExemplaires" => $quantitesExemplaires,
+            "produits" => $produits,
+            "session" => $this->getDonneesSession()
+        ));
     }
 
     /**
      * @return string La page cgu
      */
     public function cgu() {
-        return view("cgu", array("session" => $this->getDonneesSession()));
+        return view("cgu", array(
+            "session" => $this->getDonneesSession()
+        ));
     }
 
     /**
      * @return string La page qui sommes nous
      */
     public function quiSommesNous() {
-        return view("quiSommesNous", array("session" => $this->getDonneesSession()));
+        return view("quiSommesNous", array(
+            "session" => $this->getDonneesSession()
+        ));
     }
 
     /**
      * @return string La page contact
      */
     public function contact() {
-        return view("contact", array("session" => $this->getDonneesSession()));
+        return view("contact", array(
+            "session" => $this->getDonneesSession()
+        ));
     }
 
     /**
@@ -1073,7 +1123,7 @@ class ClientController extends BaseController
 
         mail($to, $subject, $message, $headers);
 
-        return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+        return $this->home();
     }
 
     /**
@@ -1092,7 +1142,7 @@ class ClientController extends BaseController
 
         mail($to, $subject, $message, $headers);
 
-        return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+        return $this->home();
     }
 
     /**
@@ -1120,7 +1170,10 @@ class ClientController extends BaseController
         "Merci de la confiance que vous accordez à nos services, \n" . "L'équipe Hotgenre.";
 
         mail($to, $subject, $message, $headers);
-        return view('motDePasseOublie', ['compteNonExistant' => false]);
+
+        return view('motDePasseOublie', array(
+            'compteNonExistant' => false
+        ));
     }
 
     /**
@@ -1132,10 +1185,16 @@ class ClientController extends BaseController
         $client = $this->ModeleClient->getClientParCodeMDPOublie(urldecode($codeMDPOublie));
 
         if ($client == NULL){
-            return view('motDePasseOublie', array('compteNonExistant' => true));
+            return view('motDePasseOublie', array(
+                'compteNonExistant' => true
+            ));
         }
 
-        return view('changerMotDePasse', array("idClient" => $client->id_client, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
+        return view('changerMotDePasse', array(
+            "idClient" => $client->id_client,
+            "passwordsDifferents" => false,
+            "session" => $this->getDonneesSession()
+        ));
     }
 
 
@@ -1148,12 +1207,20 @@ class ClientController extends BaseController
         $client = $this->ModeleClient->find($idClient);
 
         if ($client == NULL || $idClient == NULL) {
-            return view("connexionCompte", array("compteNonExistant" => false, "passwordFaux" => false, "session" => $this->getDonneesSession()));
+            return view("connexionCompte", array(
+                "compteNonExistant" => false,
+                "passwordFaux" => false,
+                "session" => $this->getDonneesSession()
+            ));
         }
 
         // si les deux mot de passe sont différents, on retourne une erreur
         if ($password != $passwordRepetition || strlen($password) <= 8 || strlen($password) > 64) {        
-            return view('changerMotDePasse', array("idClient" => $idClient, "passwordsDifferents" => true, "session" => $this->getDonneesSession()));
+            return view('changerMotDePasse', array(
+                "idClient" => $idClient,
+                "passwordsDifferents" => true,
+                "session" => $this->getDonneesSession()
+            ));
         }
 
         $client->password = $password;
@@ -1161,12 +1228,16 @@ class ClientController extends BaseController
         try {
             $this->ModeleClient->save($client);
         } catch (Exception) {
-            return view('changerMotDePasse', array("idClient" => $idClient, "passwordsDifferents" => true, "session" => $this->getDonneesSession()));
+            return view('changerMotDePasse', array(
+                "idClient" => $idClient,
+                "passwordsDifferents" => true,
+                "session" => $this->getDonneesSession()
+            ));
         }
 
         $this->setDonneesSession($client->id_client, $client->prenom, $client->nom, $client->adresse_email);
 
-        return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+        return $this->home();
     }
 
 
@@ -1180,7 +1251,11 @@ class ClientController extends BaseController
 
         // si la variable de session n'est pas définie, on redirige l'utilisateur vers la page d'inscription
         if (!$this->SessionExistante()) {
-            return view("creerCompte", array("compteDejaExistant" => false, "passwordsDifferents" => false, "session" => $this->getDonneesSession()));
+            return view("creerCompte", array(
+                "compteDejaExistant" => false,
+                "passwordsDifferents" => false,
+                "session" => $this->getDonneesSession()
+            ));
         }
 
         try {
@@ -1190,7 +1265,7 @@ class ClientController extends BaseController
         }
 
         if ($commande == NULL) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+            return $this->home();
         }
 
         $idFacture = substr("0000" . (string)$idCommande, -5);
@@ -1204,7 +1279,7 @@ class ClientController extends BaseController
         }
 
         if ($adresse == NULL || $commande->id_adresse == NULL) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+            return $this->home();
         }
 
         $rue = $adresse->rue;
@@ -1222,7 +1297,7 @@ class ClientController extends BaseController
         }
 
         if ($exemplaires == NULL) {
-            return view('home', array("estAdmin" => $this->estAdmin(), "produitsPlusPopulaires" => $this->ProduitsPlusPopulaires(), "session" => $this->getDonneesSession()));
+            return $this->home();
         }
 
         $pdf = new FPDF();
@@ -1337,7 +1412,9 @@ class ClientController extends BaseController
             try {
                 $this->ModeleExemplaire->delete($exemplaire->id_exemplaire);
             } catch (Exception) {
+
             }
+
             try {
                 $exemplaireAvecProduitCouleurTaille = $this->ModeleExemplaire
                     ->where('id_commande', $idCommande)
@@ -1357,11 +1434,11 @@ class ClientController extends BaseController
                         ->where('id_exemplaire', $exemplaireAvecProduitCouleurTaille->id_exemplaire)
                         ->set(['quantite' => (int)$exemplaireAvecProduitCouleurTaille->quantite + (int)$exemplaire->quantite])
                         ->update();
-                } catch (Exception) {
-                }
+                } catch (Exception) {}
             } else {
                 $this->ModeleExemplaire->creerExemplaire($exemplaire->id_produit, $exemplaire->couleur, $exemplaire->taille, $exemplaire->quantite);
             }
+
             try {
                 $exemplaire = $this->ModeleExemplaire->where('id_commande', $idCommande)->first();
             } catch (Exception) {

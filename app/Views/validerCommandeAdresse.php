@@ -27,7 +27,7 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
 
     <div class="adresse_container">
 
-        <form action=<?= url_to("ClientController::adresseCommande") ?> method="post">
+        <form action=<?= url_to(getRoute("adresseCommande")) ?> method="post">
             <div>
                 <label for="rue">Rue *</label>
                 <input type="text" name="rue" id="rue" placeholder=" " maxlength="100" required/>

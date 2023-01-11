@@ -47,7 +47,7 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
         <div class="images_container">
             
             <?php foreach($exemplaireImages as $key=>$imageSrc) : ?>
-                <form action=<?= url_to('AdminController::modifierImageExemplaire') ?> method="post" enctype='multipart/form-data'>
+                <form action=<?= url_to(getRoute("modifierImageExemplaire")) ?> method="post" enctype='multipart/form-data'>
                     <input type="hidden" name="id_produit" id="id_produit" value="<?= $idProduit ?>" />
                     <input type="hidden" name="couleur" id="couleur" value="<?= $key ?>" />
                     <input class="add_image image" style="background-image: url(<?= $imageSrc . "?" . time() ?>);" type="button" onclick="document.getElementById('image').click();" />
@@ -55,7 +55,6 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
                     <h3><?= ucfirst($key) ?></h3>
                 </form>
             <?php endforeach; ?>
-            </form>
         </div>
 
         <a href="<?= url_to(getRoute("index")) ?>">

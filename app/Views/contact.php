@@ -14,7 +14,7 @@
     <div class="contact_container">
         <h1>Contact</h1>
 
-        <form class="contact" action=<?= url_to('ClientController::messageContact') ?> method="post">
+        <form class="contact" action=<?= url_to(getRoute("messageContact")) ?> method="post">
             <div>
                 <label for="from">Votre adresse mail *</label>
                 <input type="email" name="from" id="from" placeholder=" " maxlength="70" value="<?= $session["email"] ?>" required/>

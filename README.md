@@ -1,11 +1,5 @@
 # Équipe 1-3
 
-## Informations de connexion
-
-* IP : `172.26.82.56`
-* Pass : `c8PFN69nv7mV`
-* Mot de pass root : `manoir`
-
 ## Diagramme de classes SQL
 
 ```mermaid

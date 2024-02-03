@@ -1,6 +1,4 @@
 CREATE
-OR
-REPLACE
 TABLE
     Client(
         id_client INT PRIMARY KEY AUTO_INCREMENT,
@@ -11,13 +9,11 @@ TABLE
         est_admin BOOLEAN NOT NULL DEFAULT false
     );
 
-CREATE OR REPLACE VIEW Admin AS
+CREATE VIEW Admin AS
 	SELECT * FROM Client WHERE est_admin =
 TRUE;
 
 CREATE
-OR
-REPLACE
 TABLE
     Coupon(
         id_coupon VARCHAR(20) PRIMARY KEY,
@@ -33,10 +29,10 @@ TABLE
         )
     );
 
-CREATE OR REPLACE VIEW CouponValable AS
+CREATE VIEW CouponValable AS
 SELECT * FROM Coupon WHERE est_valable = true;
 
-CREATE OR REPLACE TABLE Adresse(
+CREATE TABLE Adresse(
     id_adresse INT PRIMARY KEY AUTO_INCREMENT,
     code_postal INT NOT NULL,
     ville VARCHAR(100) NOT NULL,
@@ -45,8 +41,6 @@ CREATE OR REPLACE TABLE Adresse(
 );
 
 CREATE
-OR
-REPLACE
 TABLE
     Commande(
         id_commande INT PRIMARY KEY AUTO_INCREMENT,
@@ -70,13 +64,11 @@ TABLE
         )
     );
 
-CREATE OR REPLACE VIEW Fidele AS
+CREATE VIEW Fidele AS
 	SELECT * FROM Client c WHERE 3 <=
     (SELECT COUNT(*) FROM Commande co WHERE co.id_client = c.id_client);
 
 CREATE
-OR
-REPLACE
 TABLE
     Collection (
         id_collection INT PRIMARY KEY AUTO_INCREMENT,
@@ -90,8 +82,6 @@ TABLE
     );
 
 CREATE
-OR
-REPLACE
 TABLE
     Produit(
         id_produit INT PRIMARY KEY AUTO_INCREMENT,
@@ -110,37 +100,37 @@ TABLE
         CONSTRAINT check_prix_superieur_reduction CHECK(reduction <= prix)
     );
 
-CREATE OR REPLACE VIEW ProduitReduction AS
+CREATE VIEW ProduitReduction AS
 	SELECT * FROM Produit WHERE reduction >
 0;
 
-CREATE OR REPLACE VIEW Poster AS
+CREATE VIEW Poster AS
 	SELECT * FROM Produit WHERE categorie =
 'poster';
 
-CREATE OR REPLACE VIEW Accessoire AS
+CREATE VIEW Accessoire AS
 	SELECT * FROM Produit WHERE categorie =
 'accessoire';
 
-CREATE OR REPLACE VIEW Vetement AS
+CREATE VIEW Vetement AS
 	SELECT *
 	FROM Produit
 	WHERE
 	    categorie in ('pantalon', 'sweat', 'tshirt');
 
-CREATE OR REPLACE VIEW Pantalon AS
+CREATE VIEW Pantalon AS
 	SELECT * FROM Produit WHERE categorie =
 'pantalon';
 
-CREATE OR REPLACE VIEW Sweat AS
+CREATE VIEW Sweat AS
 	SELECT * FROM Produit WHERE categorie =
 'sweat';
 
-CREATE OR REPLACE VIEW Tshirt AS
+CREATE VIEW Tshirt AS
 	SELECT * FROM Produit WHERE categorie =
 'tshirt';
 
-CREATE OR REPLACE TABLE Taille(
+CREATE TABLE Taille(
     taille VARCHAR(3) PRIMARY KEY,
     categorie VARCHAR(10) NOT NULL
 );
@@ -157,8 +147,6 @@ INSERT INTO Taille VALUES('XL', 'vetement');
 INSERT INTO Taille VALUES('XXL', 'vetement');
 
 CREATE
-OR
-REPLACE
 TABLE
     Exemplaire(
         id_exemplaire INT PRIMARY KEY AUTO_INCREMENT,
@@ -179,13 +167,11 @@ TABLE
         CONSTRAINT exemplaire_unique UNIQUE (id_produit, taille, couleur, est_disponible, id_commande)
     );
 
-CREATE OR REPLACE VIEW ExemplaireDispo AS
+CREATE VIEW ExemplaireDispo AS
 	SELECT * FROM Exemplaire WHERE est_disponible =
 TRUE;
 
 CREATE
-OR
-REPLACE
 TABLE
     Favori(
         id_client INT NOT NULL,

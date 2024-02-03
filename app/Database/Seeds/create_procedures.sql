@@ -94,39 +94,39 @@
 
 */
 
-CREATE OR REPLACE PROCEDURE GetAllClients()
+CREATE PROCEDURE GetAllClients()
 BEGIN
     SELECT * FROM Client;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetClientParID(IN _id_client INT)
+CREATE PROCEDURE GetClientParID(IN _id_client INT)
 BEGIN
     SELECT * FROM Client WHERE id_client = _id_client;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetClientParEmail(IN _adresse_email VARCHAR(255))
+CREATE PROCEDURE GetClientParEmail(IN _adresse_email VARCHAR(255))
 BEGIN
     SELECT * FROM Client WHERE adresse_email = _adresse_email;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetAllAdmins()
+CREATE PROCEDURE GetAllAdmins()
 BEGIN
     SELECT * FROM Admin;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetAllFideles()
+CREATE PROCEDURE GetAllFideles()
 BEGIN
     SELECT * FROM Fidele;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE CreerClient(
+CREATE PROCEDURE CreerClient(
     IN _adresse_email VARCHAR(255), IN _nom VARCHAR(255), IN _prenom VARCHAR(64), IN _password VARCHAR(64))
 BEGIN
     INSERT INTO Client(adresse_email, nom, prenom, password, est_admin)
-    VALUES (_adresse_email, _nom, _prenom, _password, false);
-END;
+    VALUES (_adresse_email, _nom, _prenom, _password, FALSE);
+END;//
 
-CREATE OR REPLACE PROCEDURE ModifierClient(
+CREATE PROCEDURE ModifierClient(
     IN _id_client INT, IN _adresse_email VARCHAR(255), IN _nom VARCHAR(255), IN _prenom VARCHAR(64),
     IN _password VARCHAR(64), IN _est_admin BOOLEAN)
 BEGIN
@@ -137,55 +137,55 @@ BEGIN
         password=_password,
         est_admin=_est_admin
     WHERE id_client = _id_client;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE SupprimerClient(IN _id_client INT)
+CREATE PROCEDURE SupprimerClient(IN _id_client INT)
 BEGIN
    DELETE FROM Client WHERE id_client=_id_client;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE CreerCollection(IN _nom VARCHAR(50))
+CREATE PROCEDURE CreerCollection(IN _nom VARCHAR(50))
 BEGIN
     INSERT INTO Collection(nom, parution, date_limite) VALUES (_nom, CURDATE(), NULL);
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE ModifierCollection(IN _id_collection INT, _nom VARCHAR(50), _parution DATE,
+CREATE PROCEDURE ModifierCollection(IN _id_collection INT, _nom VARCHAR(50), _parution DATE,
                                                _date_limite DATE)
 BEGIN
     UPDATE Collection SET nom=_nom, date_limite=_date_limite, parution=_parution WHERE id_collection = _id_collection;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetAllCollections()
+CREATE PROCEDURE GetAllCollections()
 BEGIN
     SELECT * FROM Collection;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetCollectionParId(IN _id_collection INT)
+CREATE PROCEDURE GetCollectionParId(IN _id_collection INT)
 BEGIN
     SELECT * FROM Collection WHERE id_collection = _id_collection;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetCollectionParNom(IN _nom VARCHAR(50))
+CREATE PROCEDURE GetCollectionParNom(IN _nom VARCHAR(50))
 BEGIN
     SELECT * FROM Collection WHERE nom = _nom;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetCollectionsActuelles()
+CREATE PROCEDURE GetCollectionsActuelles()
 BEGIN
     SELECT * FROM Collection WHERE date_limite IS NULL OR date_limite >= CURDATE();
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetCollectionsEphemeresActuelles()
+CREATE PROCEDURE GetCollectionsEphemeresActuelles()
 BEGIN
     SELECT * FROM Collection WHERE date_limite IS NOT NULL AND date_limite >= CURDATE();
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE SupprimerCollection(IN _id_collection INT)
+CREATE PROCEDURE SupprimerCollection(IN _id_collection INT)
 BEGIN
     DELETE FROM Collection WHERE id_collection=_id_collection;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE CreerCoupon(
+CREATE PROCEDURE CreerCoupon(
     IN _id_coupon VARCHAR(20),
     IN _nom VARCHAR(50),
     IN _montant INT,
@@ -194,9 +194,9 @@ CREATE OR REPLACE PROCEDURE CreerCoupon(
 BEGIN
     INSERT INTO Coupon(id_coupon, nom, montant, est_pourcentage, est_valable, date_limite, utilisations_max) VALUES
     (_id_coupon, _nom, _montant, _est_pourcentage, _est_valable, NULL, NULL);
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE ModifierCoupon(
+CREATE PROCEDURE ModifierCoupon(
     IN _id_coupon VARCHAR(20),
     IN _nom VARCHAR(50),
     IN _montant INT,
@@ -207,245 +207,245 @@ CREATE OR REPLACE PROCEDURE ModifierCoupon(
 BEGIN
    UPDATE Coupon SET nom=_nom, montant=_montant, est_pourcentage=_est_pourcentage,
     est_valable=_est_valable, date_limite=_date_limite, utilisations_max=_utilisations_max WHERE id_coupon=_id_coupon;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetAllCoupons()
+CREATE PROCEDURE GetAllCoupons()
 BEGIN
    SELECT * FROM Coupon;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetAllCouponsValables()
+CREATE PROCEDURE GetAllCouponsValables()
 BEGIN
    SELECT * FROM CouponValable;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetCouponParId(IN _id_coupon VARCHAR(20))
+CREATE PROCEDURE GetCouponParId(IN _id_coupon VARCHAR(20))
 BEGIN
     SELECT * FROM Coupon WHERE id_coupon = _id_coupon;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE NombreUtilisationsCoupon(IN _id_coupon VARCHAR(20))
+CREATE PROCEDURE NombreUtilisationsCoupon(IN _id_coupon VARCHAR(20))
 BEGIN
     SELECT COUNT(*) AS nombre_utilisations FROM Commande where id_coupon=_id_coupon;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetAllCouponsNonExpires()
+CREATE PROCEDURE GetAllCouponsNonExpires()
 BEGIN
    SELECT * FROM Coupon WHERE date_limite IS NULL OR date_limite >= CURDATE();
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetAllCouponsUtilisables()
+CREATE PROCEDURE GetAllCouponsUtilisables()
 BEGIN
     SELECT * FROM Coupon AS cp WHERE est_valable AND (date_limite IS NULL OR date_limite >= CURDATE())
     AND (utilisations_max IS NULL OR utilisations_max > (SELECT COUNT(*) FROM Commande As c where c.id_coupon=cp.id_coupon));
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE SupprimerCoupon(IN _id_coupon VARCHAR(20))
+CREATE PROCEDURE SupprimerCoupon(IN _id_coupon VARCHAR(20))
 BEGIN
    DELETE FROM Coupon WHERE id_coupon=_id_coupon;
-END;
+END;//
 
 
-CREATE OR REPLACE PROCEDURE CreerProduit(IN _nom VARCHAR(100), IN _prix INT, IN _description VARCHAR(500),
+CREATE PROCEDURE CreerProduit(IN _nom VARCHAR(100), IN _prix INT, IN _description VARCHAR(500),
 IN _categorie VARCHAR(50), IN _id_collection INT)
 BEGIN
     INSERT INTO Produit(nom, prix, reduction, description, categorie, parution, id_collection)
     VALUES (_nom, _prix, 0, _description, _categorie, CURDATE(), _id_collection);
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetAllProduits()
+CREATE PROCEDURE GetAllProduits()
 BEGIN
     SELECT * FROM Produit;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetAllProduitsReduction()
+CREATE PROCEDURE GetAllProduitsReduction()
 BEGIN
     SELECT * FROM ProduitReduction;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetProduitParId(IN _id_produit INT)
+CREATE PROCEDURE GetProduitParId(IN _id_produit INT)
 BEGIN
     SELECT * FROM Produit WHERE id_produit=_id_produit;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE ModifierProduit(IN _id_produit INT, IN _nom VARCHAR(100), _prix INT, IN _description VARCHAR(500),
+CREATE PROCEDURE ModifierProduit(IN _id_produit INT, IN _nom VARCHAR(100), _prix INT, IN _description VARCHAR(500),
 IN _categorie VARCHAR(50), IN _parution DATE, IN _reduction INT, IN _id_collection INT)
 BEGIN
    UPDATE Produit SET nom=_nom, prix=_prix, description=_description,
                       categorie=_categorie, parution=_parution, reduction=_reduction, id_collection=_id_collection
                   WHERE id_produit=_id_produit;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE SupprimerProduit(IN _id_produit INT)
+CREATE PROCEDURE SupprimerProduit(IN _id_produit INT)
 BEGIN
     DELETE FROM Exemplaire WHERE id_produit=_id_produit AND id_commande IS NULL;
     DELETE FROM Favori WHERE id_produit=_id_produit;
     IF (SELECT COUNT(*) FROM Exemplaire WHERE id_produit=_id_produit) = 0 THEN
         DELETE FROM Produit WHERE id_produit=_id_produit;
     END IF;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetAllPantalons()
+CREATE PROCEDURE GetAllPantalons()
 BEGIN
     SELECT * FROM Pantalon;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetAllSweats()
+CREATE PROCEDURE GetAllSweats()
 BEGIN
    SELECT * FROM Sweat;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetAllTshirts()
+CREATE PROCEDURE GetAllTshirts()
 BEGIN
     SELECT * FROM Tshirt;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetAllVetements()
+CREATE PROCEDURE GetAllVetements()
 BEGIN
     SELECT * FROM Vetement;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetAllPosters()
+CREATE PROCEDURE GetAllPosters()
 BEGIN
     SELECT * FROM Poster;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetAllAccessoires()
+CREATE PROCEDURE GetAllAccessoires()
 BEGIN
     SELECT * FROM Accessoire;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetAllProduitsDispo()
+CREATE PROCEDURE GetAllProduitsDispo()
 BEGIN
    SELECT * FROM Produit WHERE id_produit IN (SELECT DISTINCT id_produit FROM ExemplaireDispo);
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE CreerFavori(IN _id_client INT, IN _id_produit INT)
+CREATE PROCEDURE CreerFavori(IN _id_client INT, IN _id_produit INT)
 BEGIN
     INSERT INTO Favori(id_client, id_produit) VALUES (_id_client, _id_produit);
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE SupprimerFavori(IN _id_client INT, IN _id_produit INT)
+CREATE PROCEDURE SupprimerFavori(IN _id_client INT, IN _id_produit INT)
 BEGIN
     DELETE FROM Favori WHERE id_client=_id_client AND id_produit=_id_produit;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetAllFavoris()
+CREATE PROCEDURE GetAllFavoris()
 BEGIN
     SELECT * FROM Favori;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetFavorisClient(IN _id_client INT)
+CREATE PROCEDURE GetFavorisClient(IN _id_client INT)
 BEGIN
    SELECT * FROM Favori WHERE id_client=_id_client;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE ProduitsPlusFavoris()
+CREATE PROCEDURE ProduitsPlusFavoris()
 BEGIN
    SELECT id_produit, COUNT(*) AS nombre FROM Favori GROUP BY id_produit ORDER BY nombre DESC;
-END;
+END;//
 
 
-CREATE OR REPLACE PROCEDURE GetAllProduitsPlusVendus()
+CREATE PROCEDURE GetAllProduitsPlusVendus()
 BEGIN
     SELECT * FROM Produit ORDER BY (SELECT SUM(quantite) FROM Exemplaire WHERE Exemplaire.id_produit=Produit.id_produit AND id_commande IS NOT NULL) DESC;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE CreerExemplaire(IN _id_produit INT, IN _couleur VARCHAR(20), IN _taille VARCHAR(50), IN _quantite INT)
+CREATE PROCEDURE CreerExemplaire(IN _id_produit INT, IN _couleur VARCHAR(20), IN _taille VARCHAR(50), IN _quantite INT)
 BEGIN
     IF EXISTS(SELECT * FROM Exemplaire
                     WHERE id_produit=_id_produit AND couleur=_couleur AND taille=_taille AND id_commande IS NULL
-                      AND est_disponible=true) THEN
+                      AND est_disponible=TRUE) THEN
         UPDATE Exemplaire SET quantite=quantite+_quantite WHERE id_produit=_id_produit AND couleur=_couleur AND taille=_taille AND id_commande IS NULL
-                      AND est_disponible=true AND id_commande IS NULL;
+                      AND est_disponible=TRUE AND id_commande IS NULL;
     ELSE
         INSERT INTO Exemplaire(id_produit, couleur, taille, quantite) VALUES (_id_produit, _couleur, _taille, _quantite);
     END IF;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE SupprimerExemplaire(IN _id_exemplaire INT)
+CREATE PROCEDURE SupprimerExemplaire(IN _id_exemplaire INT)
 BEGIN
    DELETE FROM Exemplaire WHERE id_exemplaire=_id_exemplaire;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE ModifierExemplaire(IN _id_exemplaire INT, IN _id_produit INT, IN _couleur VARCHAR(20),
+CREATE PROCEDURE ModifierExemplaire(IN _id_exemplaire INT, IN _id_produit INT, IN _couleur VARCHAR(20),
 IN _taille VARCHAR(50), IN _est_disponible BOOLEAN, IN _id_commande INT, IN _quantite INT)
 BEGIN
     UPDATE Exemplaire SET id_produit=_id_produit, couleur=_couleur, taille=_taille, est_disponible=_est_disponible, id_commande=_id_commande, quantite=_quantite
     WHERE id_exemplaire=_id_exemplaire;
-END;
+END;//
 
 
-CREATE OR REPLACE PROCEDURE GetAllExemplaires()
+CREATE PROCEDURE GetAllExemplaires()
 BEGIN
    SELECT * FROM Exemplaire;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetAllExemplairesDispo()
+CREATE PROCEDURE GetAllExemplairesDispo()
 BEGIN
    SELECT * FROM ExemplaireDispo;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetExemplaireParId(IN _id_exemplaire INT)
+CREATE PROCEDURE GetExemplaireParId(IN _id_exemplaire INT)
 BEGIN
     SELECT * FROM Exemplaire WHERE id_exemplaire=_id_exemplaire;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetExemplairesParProduit(IN _id_produit INT)
+CREATE PROCEDURE GetExemplairesParProduit(IN _id_produit INT)
 BEGIN
     SELECT * FROM Exemplaire WHERE id_produit=_id_produit;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetExemplairesDispoParProduit(IN _id_produit INT)
+CREATE PROCEDURE GetExemplairesDispoParProduit(IN _id_produit INT)
 BEGIN
    SELECT * FROM ExemplaireDispo WHERE id_produit=_id_produit;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetExemplairesParProduitCouleurTaille(IN _id_produit INT, IN _couleur VARCHAR(20), IN _taille VARCHAR(50))
+CREATE PROCEDURE GetExemplairesParProduitCouleurTaille(IN _id_produit INT, IN _couleur VARCHAR(20), IN _taille VARCHAR(50))
 BEGIN
     SELECT * FROM Exemplaire WHERE id_produit=_id_produit AND couleur=_couleur AND taille=_taille;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetExemplairesDispoParProduitCouleurTaille(IN _id_produit INT, IN _couleur VARCHAR(20), IN _taille VARCHAR(50))
+CREATE PROCEDURE GetExemplairesDispoParProduitCouleurTaille(IN _id_produit INT, IN _couleur VARCHAR(20), IN _taille VARCHAR(50))
 BEGIN
     SELECT * FROM ExemplaireDispo WHERE id_produit=_id_produit AND couleur=_couleur AND taille=_taille;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE CreerCommande(IN _id_client INT)
+CREATE PROCEDURE CreerCommande(IN _id_client INT)
 BEGIN
    INSERT INTO Commande(id_client, date_commande, date_livraison_estimee, date_livraison, id_coupon, est_validee, montant, id_adresse)
-    VALUES(_id_client, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 15 DAY), NULL, NULL, false, 0, NULL);
-END;
+    VALUES(_id_client, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 15 DAY), NULL, NULL, FALSE, 0, NULL);
+END;//
 
-CREATE OR REPLACE PROCEDURE ModifierCommande(IN _id_commande INT, IN _id_client INT, IN _date_commande DATE,
+CREATE PROCEDURE ModifierCommande(IN _id_commande INT, IN _id_client INT, IN _date_commande DATE,
 IN _date_livraison_estimee DATE, IN _date_livraison DATE, IN _id_coupon VARCHAR(20), IN _est_validee BOOL, IN _montant INT, IN _id_adresse INT)
 BEGIN
     UPDATE Commande SET id_coupon=_id_client, date_commande=_date_commande, date_livraison_estimee=_date_livraison_estimee,
                         date_livraison=_date_livraison, id_coupon=_id_coupon, est_validee=_est_validee, montant=_montant, id_adresse=_id_adresse
     WHERE id_commande=_id_commande;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE SupprimerCommande(IN _id_commande INT)
+CREATE PROCEDURE SupprimerCommande(IN _id_commande INT)
 BEGIN
     DELETE FROM Commande WHERE id_commande=_id_commande;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetAllCommandes()
+CREATE PROCEDURE GetAllCommandes()
 BEGIN
     SELECT * FROM Commande;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetCommandeParId(IN _id_commande INT)
+CREATE PROCEDURE GetCommandeParId(IN _id_commande INT)
 BEGIN
     SELECT * FROM Commande WHERE id_commande=_id_commande;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetContenuCommande(IN _id_commande INT)
+CREATE PROCEDURE GetContenuCommande(IN _id_commande INT)
 BEGIN
     SELECT id_exemplaire FROM Exemplaire WHERE id_commande=_id_commande;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE CalculerMontant(IN _id_commande INT)
+CREATE PROCEDURE CalculerMontant(IN _id_commande INT)
 BEGIN
     DECLARE coupon VARCHAR(20);
     DECLARE montant INT DEFAULT 0;
@@ -453,7 +453,7 @@ BEGIN
     SELECT SUM(prix* e.quantite) INTO montant FROM Produit AS p INNER JOIN Exemplaire AS e ON p.id_produit = e.id_produit
                     WHERE id_commande=_id_commande;
     IF coupon IS NOT NULL THEN
-        IF EXISTS(SELECT * FROM Coupon AS c WHERE c.id_coupon=coupon AND c.est_pourcentage=false) THEN
+        IF EXISTS(SELECT * FROM Coupon AS c WHERE c.id_coupon=coupon AND c.est_pourcentage=FALSE) THEN
             SET montant = montant - (SELECT montant FROM Coupon AS c WHERE c.id_coupon=coupon);
             IF montant < 0 THEN SET montant = 0; END IF;
         ELSE
@@ -461,16 +461,15 @@ BEGIN
         END IF;
     END IF;
     UPDATE Commande SET montant=montant WHERE id_commande=_id_commande;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE AjouterExemplaireCommande(IN _id_commande INT, IN _id_exemplaire INT, IN _quantite INT)
+CREATE PROCEDURE AjouterExemplaireCommande(IN _id_commande INT, IN _id_exemplaire INT, IN _quantite INT)
 BEGIN
-    LOCK TABLES Exemplaire WRITE CONCURRENT;
     DECLARE cou VARCHAR(20) DEFAULT '';
     DECLARE tai VARCHAR(50) DEFAULT '';
     DECLARE id_prod INT DEFAULT 0;
     DECLARE new_id INT DEFAULT 0;
-    IF NOT EXISTS(SELECT * FROM Exemplaire AS e WHERE e.id_exemplaire=_id_exemplaire AND e.est_disponible=true AND quantite >= _quantite) THEN
+    IF NOT EXISTS(SELECT * FROM Exemplaire AS e WHERE e.id_exemplaire=_id_exemplaire AND e.est_disponible=TRUE AND quantite >= _quantite) THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Exemplaire indisponible';
     ELSE
         UPDATE Exemplaire SET quantite=quantite-_quantite WHERE id_exemplaire=_id_exemplaire;
@@ -478,69 +477,69 @@ BEGIN
         SELECT id_exemplaire INTO new_id FROM Exemplaire WHERE couleur=cou AND taille=tai AND id_produit=id_prod AND id_commande=_id_commande;
         IF (new_id = 0) THEN
             INSERT INTO Exemplaire(id_produit, couleur, taille, quantite, id_commande, est_disponible)
-            VALUES(id_prod, cou, tai, _quantite, _id_commande, false);
+            VALUES(id_prod, cou, tai, _quantite, _id_commande, FALSE);
         ELSE
             UPDATE Exemplaire SET quantite=quantite+_quantite WHERE id_exemplaire=new_id;
         END IF;
     END IF;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetNbExemplairesVendusParProduit(IN _id_produit INT)
+CREATE PROCEDURE GetNbExemplairesVendusParProduit(IN _id_produit INT)
     BEGIN
-    SELECT SUM(quantite) FROM Exemplaire WHERE id_produit=_id_produit AND est_disponible=false;
-END;
+    SELECT SUM(quantite) FROM Exemplaire WHERE id_produit=_id_produit AND est_disponible=FALSE;
+END;//
 
-CREATE OR REPLACE PROCEDURE CreerAdresse(IN _code_postal INT, IN _ville VARCHAR(100), IN _rue VARCHAR(100))
+CREATE PROCEDURE CreerAdresse(IN _code_postal INT, IN _ville VARCHAR(100), IN _rue VARCHAR(100))
 BEGIN
     INSERT INTO Adresse(code_postal, ville, rue) VALUES (_code_postal, _ville, _rue);
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE ModifierAdresse(IN _id_adresse INT, IN _ville VARCHAR(100), IN _code_postal INT, IN _rue VARCHAR(100))
+CREATE PROCEDURE ModifierAdresse(IN _id_adresse INT, IN _ville VARCHAR(100), IN _code_postal INT, IN _rue VARCHAR(100))
 BEGIN
     UPDATE Adresse SET code_postal=_code_postal, rue=_rue, ville=_ville WHERE id_adresse=_id_adresse;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE SupprimerAdresse(IN _id_adresse INT)
+CREATE PROCEDURE SupprimerAdresse(IN _id_adresse INT)
 BEGIN
     DELETE FROM Adresse WHERE id_adresse=_id_adresse;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetAllAdresses()
+CREATE PROCEDURE GetAllAdresses()
 BEGIN
     SELECT * FROM Adresse;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetAdressesParCodePostal(IN _code_postal INT)
+CREATE PROCEDURE GetAdressesParCodePostal(IN _code_postal INT)
 BEGIN
     SELECT * FROM Adresse WHERE code_postal=_code_postal;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetAdresseParId(IN _id_adresse INT)
+CREATE PROCEDURE GetAdresseParId(IN _id_adresse INT)
 BEGIN
     SELECT * FROM Adresse WHERE id_adresse=_id_adresse;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetAdressesParClient(IN _id_client INT)
+CREATE PROCEDURE GetAdressesParClient(IN _id_client INT)
 BEGIN
     SELECT * FROM Adresse WHERE id_adresse IN (SELECT id_adresse FROM Client NATURAL JOIN Commande WHERE id_client=_id_client);
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetAllTailles()
+CREATE PROCEDURE GetAllTailles()
 BEGIN
     SELECT * FROM Taille;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetCategorieParTaille(IN _taille VARCHAR(3))
+CREATE PROCEDURE GetCategorieParTaille(IN _taille VARCHAR(3))
 BEGIN
     SELECT * FROM Taille WHERE taille=_taille;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetTaillesParCategorie(IN _categorie VARCHAR(10))
+CREATE PROCEDURE GetTaillesParCategorie(IN _categorie VARCHAR(10))
 BEGIN
     SELECT * FROM Taille WHERE categorie=_categorie;
-END;
+END;//
 
-CREATE OR REPLACE PROCEDURE GetTaillesPoster()
+CREATE PROCEDURE GetTaillesPoster()
 BEGIN
     SELECT * FROM Taille WHERE categorie='poster';
-END;
+END;//

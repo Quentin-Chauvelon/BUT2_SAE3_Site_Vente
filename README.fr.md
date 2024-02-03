@@ -256,7 +256,9 @@ Nous avons aussi réalisé des tests de performance sur différentes pages du si
 ## Prérequis
 
 > PHP version 8.1+
+
 > PHP extensions : mbstring, curl, intl, xml, mysql
+
 > MySQL
 
 ## Déploiement

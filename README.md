@@ -257,7 +257,9 @@ We also tested the performance of multiple pages of our website to estimate the 
 ## Prerequesites
 
 > PHP version 8.1+
+
 > PHP extensions : mbstring, curl, intl, xml, mysql
+
 > MySQL
 
 ## Deployment
@@ -329,7 +331,7 @@ This has to be done only once and can then be done from the administrator dashbo
 *Administrator dashboard - Vouchers management*
 
 ![Administrator dashboard - Orders history](Images/Admin_Orders_Summary.png)  
-*Page administrateur - Orders history*
+*Administrator dashboard - Orders history*
 
 
 # Contact

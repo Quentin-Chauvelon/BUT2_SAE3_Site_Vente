@@ -1,6 +1,29 @@
-# Équipe 1-3
+[![en](https://img.shields.io/badge/lang-fr-blue.svg)](README.fr.md) 
 
-## Diagramme de classes SQL
+# Hot Genre
+![Static Badge](https://img.shields.io/badge/PHP-777BB4?style=flat&logo=php&logoColor=777BB4&labelColor=grey)
+![Static Badge](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=E34F26&labelColor=grey)
+![Static Badge](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=1572B6&labelColor=grey)
+[![JavaScript](https://github.com/aleen42/badges/raw/docs/src/javascript.svg)](https://www.javascript.com/)
+![Static Badge](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=4479A1&labelColor=grey&cacheSeconds=https%3A%2F%2Fwww.mysql.com%2F)
+![Static Badge](https://img.shields.io/badge/CodeIgniter-EF4223?style=flat&logo=codeigniter&logoColor=EF4223&labelColor=grey&cacheSeconds=https%3A%2F%2Fwww.codeigniter.com%2F)
+![Static Badge](https://img.shields.io/badge/Trello-0052CC?style=flat&logo=trello&logoColor=0052CC&labelColor=grey)
+![Static Badge](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=181717&labelColor=grey)
+
+Hot Genre is our end of term project we worked on as a group of 5 for 2 months during my second year of BUT in Computer Science. For this project, we had to develop an online shopping website from client authentification to order confirmation (payement was not to be handled)
+
+The project has been developed in PHP, HTML5, CSS3 et JavaScript with the  [CodeIgniter 4](https://www.codeigniter.com) framework and a [MySQL](https://www.mysql.com/) database.
+
+To organize ourselves, we divided the tasks among us using a planning tool: Trello.
+
+Prior to starting development, we analyzed the requirements and made multiple diagrams to fully understand the needs and knowing what we had to do.
+
+![Use case diagram](Images/Use_Case_Diagram.png)  
+*Use case diagram*
+
+![Example of one of the sequence diagram we made (Order)](Images/Sequence_Diagram.png)  
+*Example of one of the sequence diagram we made (Order)*
+
 
 ```mermaid
 classDiagram
@@ -186,124 +209,131 @@ Exemplaire  -->  Taille : taille
 Favori  -->  Client : id_client
 Favori  -->  Produit : id_produit
 Produit  -->  Collection : id_collection
+admin --> Client : id_client
+couponvalable --> Coupon : id_coupon
+accessoire --> Produit : id_produit
+accessoire --> Collection : id_collection
+exemplairedispo --> Exemplaire : id_exemplaire
+exemplairedispo --> Produit : id_produit
+exemplairedispo --> Commande : id_commande
+fidele --> Client : id_client
+pantalon --> Produit : id_produit
+pantalon --> Collection : id_collection
+poster --> Produit : id_produit
+poster --> Collection : id_collection
+produitreduction --> Produit : id_produit
+produitreduction --> Collection : id_collection
+sweat --> Produit : id_produit
+sweat --> Collection : id_collection
+tshirt --> Produit : id_produit
+tshirt --> Collection : id_collection
+vetement --> Produit : id_produit
+vetement --> Collection : id_collection
+```
+*Database diagram*
+
+We decided to use CodeIgniter 4 because it uses a MVC pattern. This allows us to separate the aspects of our applications. Controllers handle the back-end, models handle database access and views are used for the front-end.
+
+The main features we developed are:
+- Authentification
+- Consultation of available products
+- Product size and color selection
+- Favorite products
+- Cart
+- Vouchers
+- Orders
+- Orders history
+- Dashboard for administrators (to manage accounts, products, stocks...)
+- ...
+
+
+For this project, I primarly worked on controllers and views but also on the requirements analysis and the database.
+
+We also tested the performance of multiple pages of our website to estimate the load the server could handle (see the report [here](Rapport_Tests_Performance.pdf))
+
+
+# Installation and setup
+
+## Prerequesites
+
+> PHP version 8.1+
+> PHP extensions : mbstring, curl, intl, xml, mysql
+> MySQL
+
+## Deployment
+
+First, clone this repository
+
+Then, configure the `baseUrl` variable in the `app/Config/App.php` file with the host and port you wish to use.
+
+After that, create a MySQL database:
+```sql
+CREATE DATABASE database_name;
+USE database_name;
+```
+And execute the three SQL scripts inside `app/Database/Seeds`:
+```sql
+source PATH/TO/create_tables.sql
+source PATH/TO/create_procedures.sql
+source PATH/TO/create_triggers.sql
 ```
 
-## Triggers SQL
+Next, configure the `default` variable in the `app/Config/Database.php` file by modifying `username` and `password` with the username and password you would use to connect to the databse, and the name of the database in `database`.
 
-* `coupon_trop_utilise_insert`
-* `coupon_trop_utilise_update`
-* `coupon_expire_insert`
-* `coupon_expire_update`
-* `coupon_non_valable_insert`
-* `coupon_non_valable_update`
-* `supprimer_client_cascade`
-* `exemplaire_pas_dispo_commande` Met est_dispo à false quand on ajoute à une commande
-* `suppression_commande_liberer_exemplaire` Met dispo à true quand on supprime une commande
-* `suppression_collection`
-* `categorie_produit_invalide_insert`
-* `categorie_produit_invalide_update`
-* `taille_valide_insert`
-* `taille_valide_update`
-* `update_commande_validee`
-* `commande_validee_mauvaise`
 
-## Procédures SQL
+To start the server, execute :
+```
+php spark serve
+```
 
-### Table Client
+To access administrators features on the website, you must first create a user (with the Sign up button), then manually make it administrator from MySQL by running the command:
+```sql
+UPDATE Client SET set_admin = 1 WHERE id_client = 1;
+```
+This has to be done only once and can then be done from the administrator dashboard.
 
-- `GetAllClients()`
-- `GetClientParID(ID)`
-- `GetClientParEmail(email)`
-- `GetAllAdmins()`
-- `GetAllFideles()`
-- `CreerClient(mail, nom, prenom, password)` Pas admin par défaut
-- `ModifierClient(id, mail, nom, prenom, password, admin)`
-- `SupprimerClient(id)`
 
-### Table Collection
+# Screenshots
 
-- `CreerCollection(nom)` Parution aujourd'hui et pas de date limite par défaut
-- `ModifierCollection(id, nom, parution, date_limite)`
-- `GetAllCollections()`
-- `GetCollectionParId(id)`
-- `GetCollectionParNom(nom)`
-- `GetCollectionsActuelles()`
-- `GetCollectionsEphemeresActuelles()`
-- `SupprimerCollection(id)`
+![Home screen](Images/Home.gif)  
+*Home screen*
 
-### Table Coupon
+![Sign up](Images/Account_Creation.gif)  
+*Sign up*
 
-- `CreerCoupon(id_coupon, nom, montant, est_pourcentage, est_valable)` Pas de date limite ni de nombre d'utilisations max par défaut.
-- `ModifierCoupon(id_coupon, nom, montant, est_pourcentage, est_valable, date_limite, utilisations_max)`
-- `GetAllCoupons()`
-- `GetAllCouponsValables()`
-- `GetCouponParId(id_coupon)`
-- `NombreUtilisationsCoupon(id_coupon)`
-- `GetAllCouponsNonExpires()
-- `GetAllCouponsUtilisables()`
-- `SupprimerCoupon(id_coupon)`
+![Products listing](Images/Products.png)  
+*Products listing*
 
-### Table Produit
+![Add product to cart](Images/Add_Product_To_Cart.gif)  
+*Add product to cart*
 
-- `CreerProduit(nom, prix, description, categorie)`
-- `GetAllProduits()`
-- `GetAllProduitsReduction()`
-- `GetProduitParId(id_produit)`
-- `ModifierProduit(id_produit, nom, prix, description, categorie, parution, reduction, id_collection)`
-- `SupprimerProduit(id_produit)`
-- `GetAllPantalons()`
-- `GetAllSweats()`
-- `GetAllTshirts()`
-- `GetAllVetements()`
-- `GetAllPosters()`
-- `GetAllAccessoires()`
-- `GetAllProduitsDispo()`
+![Confirm order](Images/Order.gif)  
+*Confirm order*
 
-### Table Favori
+![Order recap](Images/Order_Summary.png)  
+*Order recap*
 
-- `CreerFavori(id_client, id_produit)`
-- `SupprimerFavori(id_client, id_produit)`
-- `GetAllFavoris()`
-- `GetFavorisClient(id_client)`
-- `ProduitsPlusFavoris()`
+![Profile](Images/Profile.gif)  
+*Profile*
 
-### Table Exemplaire
+![Administrator dashboard - Account management](Images/Admin_Accounts_Management.png)  
+*Administrator dashboard - Account management*
 
-- `CreerExemplaire(id_produit, couleur, taille)`
-- `SupprimerExemplaire(id_exemplaire)`
-- `ModifierExemplaire(id_exemplaire, id_produit, couleur, taille, est_disponible, date_obtention, id_commande)`
-- `GetAllExemplaires()`
-- `GetAllExemplairesDispo()`
-- `GetExemplaireParId(id_exemplaire)`
-- `GetExemplairesParProduit(id_produit)`
-- `GetExemplairesDispoParProduit(id_produit)`
-- `GetExemplairesParProduitCouleurTaille(id_produit, couleur, taille)`
-- `GetExemplairesDispoParProduitCouleurTaille(id_produit, couleur, taille)`
+![Administrator dashboard - Products management](Images/Admin_Products_Management.gif)  
+*Administrator dashboard - Products management*
 
-### Table Commande
+![Administrator dashboard - Stock management](Images/Admin_Stock_Management.png)  
+*Administrator dashboard - Stock management*
 
-- `CreerCommande(id_client)`
-- `ModifierCommande(id_commande, id_client, date_commande, date_livraison_estimee, date_livraison, id_coupon, est_validee, montant, id_adresse)`
-- `SupprimerCommande(id_commande)`
-- `GetAllCommandes()`
-- `GetCommandeParId(id_commande)`
-- `GetContenuCommande(id_commande)`
-- `CalculerMontant(id_commande)`
+![Administrator dashboard - Vouchers management](Images/Admin_Vouchers_Management.png)  
+*Administrator dashboard - Vouchers management*
 
-### Table Adresse
+![Administrator dashboard - Orders history](Images/Admin_Orders_Summary.png)  
+*Page administrateur - Orders history*
 
-- `CreerAdresse(code_postal, ville, rue)`
-- `ModifierAdresse(id_adresse, ville, code_postal, rue)`
-- `SupprimerAdresse(id_adresse)`
-- `GetAllAdresses()`
-- `GetAdressesParCodePostal(code_postal)`
-- `GetAdresseParId(id_adresse)`
-- `GetAdressesParClient(id_client)`
 
-### Table Taille
+# Contact
 
-- `GetAllTailles()`
-- `GetCategorieParTaille(taille)`
-- `GetTaillesParCategorie(categorie)`
-- `GetTaillesPoster()`
-- `GetTaillesVetement()`
+Email: [quentin.chauvelon@gmail.com](mailto:quentin.chauvelon@gmail.com) 
+
+LinkedIn: [Quentin Chauvelon](https://www.linkedin.com/in/quentin-chauvelon/) 

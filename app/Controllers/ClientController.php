@@ -136,15 +136,15 @@ class ClientController extends BaseController
             return $this->inscription(true, false);
         }
 
-        if(isset($_POST['g-recaptcha-response'])){
-            $captcha = $_POST['g-recaptcha-response'];
-        } else {
-            return $this->inscription(false, false, true);
-        }
+        // if(isset($_POST['g-recaptcha-response'])){
+        //     $captcha = $_POST['g-recaptcha-response'];
+        // } else {
+        //     return $this->inscription(false, false, true);
+        // }
 
-        if(!$captcha) {
-            return $this->inscription(false, false, true);
-        }
+        // if(!$captcha) {
+        //     return $this->inscription(false, false, true);
+        // }
 
         // $cleCaptcha = "6LcDO-sjAAAAAA4gdNa_iH1azONWHfqKDKSSXcPI";
         // $url = 'https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($cleCaptcha) .  '&response=' . urlencode($captcha);
@@ -1350,6 +1350,7 @@ class ClientController extends BaseController
             $commande = NULL;
         }
 
+        
         if ($commande == NULL) {
             return $this->home();
         }

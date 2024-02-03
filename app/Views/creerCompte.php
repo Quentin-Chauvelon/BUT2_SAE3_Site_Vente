@@ -111,7 +111,7 @@ require_once (APPPATH  . 'Controllers' . DIRECTORY_SEPARATOR . 'GetController.ph
 					</div>
 				</div>
 
-				<div class="g-recaptcha" id="captcha" data-sitekey="6LcDO-sjAAAAACCLute0JPUrvTLRch1GqTy5myDd"></div>
+				<!-- <div class="g-recaptcha" id="captcha" data-sitekey="6LcDO-sjAAAAACCLute0JPUrvTLRch1GqTy5myDd"></div> -->
 
 				<button type="submit">Je crée mon compte</button>
 

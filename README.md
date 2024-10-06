@@ -236,7 +236,7 @@ We decided to use CodeIgniter 4 because it uses a MVC pattern. This allows us to
 
 The main features we developed are:
 - Authentification
-- Consultation of available products
+- Checking available products
 - Product size and color selection
 - Favorite products
 - Cart
